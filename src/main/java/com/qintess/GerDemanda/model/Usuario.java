@@ -1,23 +1,24 @@
 package com.qintess.GerDemanda.model;
 
 import java.util.Calendar;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
-import com.qintess.GerDemanda.model.Acesso;
+import com.qintess.GerDemanda.model.Cargo;
 import com.qintess.GerDemanda.model.Contrato;
 
 @Entity
 public class Usuario {
-	
+		
 	@Id
-	@GeneratedValue
 	private int id;
 	
 	@Column
@@ -38,7 +39,53 @@ public class Usuario {
 	
 	@Column(name="codigo_bb")
 	private String codigoBB;
+
+	@Column
+	private String empresa;
 	
+	@Column
+	private int demanda;
+	
+	@Column
+	private String Celular;
+	
+	@Temporal(TemporalType.DATE)
+	private Calendar nascimento;
+	
+	@Column
+	private String status;
+	
+	@ManyToOne
+	@JoinColumn(name="fk_contrato")
+	private Contrato contrato;
+	
+	@ManyToOne
+	@JoinColumn(name="fk_sigla")
+	private Sigla sigla;
+
+	@ManyToOne
+	@JoinColumn(name="fk_cargo")
+	private Cargo cargo;	
+	
+	@Transient
+	private List<Perfil> listaPerfil;
+	
+	public Sigla getSigla() {
+		return sigla;
+	}
+
+	public void setSigla(Sigla sigla) {
+		this.sigla = sigla;
+	}
+	
+	public List<Perfil> getListaPerfil() {
+		return listaPerfil;
+	}
+
+	public void setListaPerfil(List<Perfil> listaPerfil) {
+		this.listaPerfil = listaPerfil;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -53,10 +100,6 @@ public class Usuario {
 
 	public String getCpf() {
 		return cpf;
-	}
-
-	public String getSenha() {
-		return senha;
 	}
 
 	public String getCodigoRe() {
@@ -79,7 +122,7 @@ public class Usuario {
 		return Celular;
 	}
 
-	public Calendar getNascimento() {
+	public Calendar getNascimento() {		
 		return nascimento;
 	}
 
@@ -91,30 +134,33 @@ public class Usuario {
 		return contrato;
 	}
 
-	public Acesso getAcesso() {
-		return acesso;
-	}
-
-	@Column
-	private String empresa;
-	
-	@Column
-	private int demanda;
-	
-	@Column
-	private String Celular;
-	
-	@Temporal(TemporalType.DATE)
-	private Calendar nascimento;
-	
-	@Column
-	private String status;
-	
-	@ManyToOne
-	@JoinColumn(name="fk_contrato")
-	private Contrato contrato;
-	
-	@ManyToOne
-	@JoinColumn(name="fk_acesso")
-	private Acesso acesso;
+	public Cargo getCargo() {
+		return cargo;
+	}	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

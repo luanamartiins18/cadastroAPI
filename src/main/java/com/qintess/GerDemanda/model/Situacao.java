@@ -5,9 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class Contrato {
-
-	@Id	
+public class Situacao {
+	
+	@Id
 	private int id;
 	
 	@Column
@@ -19,6 +19,6 @@ public class Contrato {
 
 	public String getDescricao() {
 		return descricao;
-	}
-
+	}	
+	
 }
