@@ -7,11 +7,33 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import com.qintess.GerDemanda.model.OrdemFornecimento;
 import com.qintess.GerDemanda.model.Perfil;
 import com.qintess.GerDemanda.model.Sigla;
 import com.qintess.GerDemanda.model.Usuario;
 
 public class UsuarioService {
+	
+	
+	public List<Usuario> getUsuarioBySigla(int id){
+		
+		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManager em = entityManagerFactory.createEntityManager();					
+		
+		TypedQuery<Usuario> query = 
+				em.createQuery("from "
+								+ " Usuario usu "
+								+ "where usu.sigla.id = :id "
+								+ "order by usu.nome ", Usuario.class);			
+		query.setParameter("id", id);
+		
+		List<Usuario> listaUsu = query.getResultList();				
+		
+		
+		em.close();
+		entityManagerFactory.close();
+		return listaUsu;
+	}
 	
 	public Usuario getUsuarioById(int id){
 		

@@ -1,5 +1,7 @@
 package com.qintess.GerDemanda.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,4 +25,14 @@ public class UsuarioController {
 		
 		return (usuario == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(usuario);		
 	}	
+
+	@GetMapping("/usuario-sigla")
+	ResponseEntity<List<Usuario>> getUsuarioBySigla(@RequestParam(value = "id") int idSigla){
+		
+		UsuarioService usuarioService = new UsuarioService();		
+		List<Usuario> usuarios = usuarioService.getUsuarioBySigla(idSigla);				
+		
+		return (usuarios.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(usuarios);		
+	}	
+	
 }
