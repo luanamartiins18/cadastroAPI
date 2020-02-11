@@ -21,9 +21,11 @@ public class UsuarioService {
 		EntityManager em = entityManagerFactory.createEntityManager();					
 		
 		TypedQuery<Usuario> query = 
-				em.createQuery("from "
+				em.createQuery("select distinct usu from "
 								+ " Usuario usu "
-								+ "where usu.sigla.id = :id "
+								+ "inner join fetch usu.listaSiglas lis "
+								+ "inner join fetch usu.listaPerfil lp "
+								+ "where lis.sigla.id = :id "
 								+ "order by usu.nome ", Usuario.class);			
 		query.setParameter("id", id);
 		
@@ -53,46 +55,21 @@ public class UsuarioService {
 		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
 		EntityManager em = entityManagerFactory.createEntityManager();					
 		
-		TypedQuery<Usuario> query = 
-				em.createQuery("from Usuario u "
-					+ " where u.codigoRe = :re", Usuario.class);						
+		String sql = "FROM Usuario usu "
+						+ " join fetch usu.listaSiglas sgl"
+						+ " join fetch sgl.sigla "
+						+ " join fetch usu.listaPerfil lp "
+						+ " join fetch lp.perfil "				 		
+				 		+ "where usu.codigoRe = :re ";
 		
-		query.setParameter("re", re);
-		List<Usuario> usuarioList = query.getResultList();			
 		
-		if(usuarioList.size() == 0) {
-			return null;
-		}				
-		Usuario usuario = usuarioList.get(0);
-		
-		TypedQuery<Perfil> queryP = 
-				em.createQuery("select p from Usuario u, UsuarioPerfil up, Perfil p "
-					+ " where u.id = up.usuario.id and up.perfil.id = p.id "				
-					+ " and u.codigoRe = :re and up.status = 1", Perfil.class);
-		
-		queryP.setParameter("re", re);		
-		List<Perfil> listaPerfil = queryP.getResultList();
-		
-		if(listaPerfil.size() != 0) {
-			usuario.setListaPerfil(listaPerfil);
-		}			
-		
-		TypedQuery<Sigla> queryS = 
-				em.createQuery("select s from Usuario u, Sigla s"
-					+ " where u.sigla = s.id"				
-					+ " and u.codigoRe = :re", Sigla.class);
-		
-		queryS.setParameter("re", re);		
-		List<Sigla> listaSigla = queryS.getResultList();
-		
-		if(listaSigla.size() != 0) {
-			usuario.setSigla(listaSigla.get(0));
-		}	
+		TypedQuery<Usuario>  query = em.createQuery(sql, Usuario.class);
+		query.setParameter("re", re);		
+		List<Usuario> usuario = query.getResultList();
 		
 		em.close();
 		entityManagerFactory.close();
-				
-		return usuario;
+		return usuario.get(0);
 	}
 	
 	public boolean checkUsuario(String re, String senha) {

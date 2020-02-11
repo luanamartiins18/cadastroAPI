@@ -19,5 +19,5 @@ public class Sigla {
 
 	public String getDescricao() {
 		return descricao;
-	}		
+	}	 	
 }

@@ -9,6 +9,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import com.qintess.GerDemanda.model.OrdemFornecimento;
+import com.qintess.GerDemanda.model.Situacao;
 
 public class OrdemFornecimentoService {
 
@@ -17,25 +18,26 @@ public class OrdemFornecimentoService {
 		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
 		EntityManager em = entityManagerFactory.createEntityManager();					
 		
-		// Pega todas as OFs que estão em execução
-		TypedQuery<OrdemFornecimento> query = 
-				em.createQuery("select ofrn from "
-								+ " OrdemFornecimento ofrn, Situacao s "
-								+ "where ofrn.situacao.id = s.id and s.id = 6 "
-								+ "order by ofrn.sigla.descricao, ofrn.responsavelTecnico", OrdemFornecimento.class);						
+		String sql = "select distinct orf from OrdemFornecimento orf "
+					+ " join fetch orf.listaSituacoes"
+					+ " left join fetch orf.listaUsuarios";
 		
-		List<OrdemFornecimento> of = query.getResultList();				
 		
+		
+		TypedQuery<OrdemFornecimento> query = em.createQuery(sql, OrdemFornecimento.class);
+		List<OrdemFornecimento> ordemF = query.getResultList();		
 		
 		em.close();
 		entityManagerFactory.close();
-		return of;
+		
+		return ordemF;
 	}
 	
 	public void registraUsuSit(String usu, String sit, int id){
 		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
 		EntityManager em = entityManagerFactory.createEntityManager();		
 		
+		//TODO: Criar transação para poder executar o update
 		Query query = 
 				em.createQuery("update OrdemFornecimento ofrn "
 							 	+ "set ofrn.usuario.id = :usu,"
@@ -46,7 +48,7 @@ public class OrdemFornecimentoService {
 		query.setParameter("sit", Integer.parseInt(sit));
 		query.setParameter("id",  id);
 		
-		query.executeUpdate();	
+		query.executeUpdate();		
 		
 		em.close();
 		entityManagerFactory.close();		

@@ -11,32 +11,35 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@Entity
-@Table(name = "usuario_x_perfil")
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class UsuarioPerfil{
+@Entity
+@Table(name="situacao_x_of")
+public class SituacaoOrdemFornecimento {
 	
 	@Id
 	private int id;
 	
 	@Temporal(TemporalType.DATE)
-	@Column(name = "dt_criacao")
-	private Calendar dtCriacao;
+	@Column(name="dt_criacao")
+	Calendar dtCriacao;
 	
 	@Temporal(TemporalType.DATE)
-	@Column(name = "dt_exclusao")
-	private Calendar dtExclusao;
+	@Column(name="dt_exclusao")
+	Calendar dtExclusao;
 	
 	private int status;
 	
-	@ManyToOne
-	@JoinColumn(name = "fk_usuario")
-	private Usuario usuarioPerfil;
+	private String tipo;
 	
 	@ManyToOne
-	@JoinColumn(name = "fk_perfil")
-	private Perfil perfil;
-
+	@JoinColumn(name = "fk_situacao")	
+	private Situacao situacao;
+	
+	@ManyToOne
+	@JoinColumn(name = "fk_of")	
+	private OrdemFornecimento ordemFornecimento;			
+	
 	public int getId() {
 		return id;
 	}
@@ -53,21 +56,11 @@ public class UsuarioPerfil{
 		return status;
 	}
 
-	public Perfil getPerfil() {
-		return perfil;
+	public String getTipo() {
+		return tipo;
+	}
+
+	public Situacao getSituacao() {
+		return situacao;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

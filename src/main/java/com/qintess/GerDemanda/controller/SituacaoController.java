@@ -13,8 +13,8 @@ import com.qintess.GerDemanda.service.SituacaoService;
 @CrossOrigin
 public class SituacaoController {
 
-	
-	@GetMapping("/situacao")
+	//Lista todas as situações em ordem alfabética
+	@GetMapping("/situacoes")
 	ResponseEntity<List<Situacao>> getSituacao(){
 		
 		SituacaoService situacaoService = new SituacaoService();

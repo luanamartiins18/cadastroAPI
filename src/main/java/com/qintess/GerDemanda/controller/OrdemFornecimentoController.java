@@ -21,7 +21,7 @@ import com.qintess.GerDemanda.service.OrdemFornecimentoService;
 public class OrdemFornecimentoController {
 
 	
-	@GetMapping("/ordemfornecimento")
+	@GetMapping("/ordens-fornecimento")
 	public List<OrdemFornecimento> getOrdemDeFornecimento(){				
 		return new OrdemFornecimentoService().getOrdemDeFornecimento();			
 	}

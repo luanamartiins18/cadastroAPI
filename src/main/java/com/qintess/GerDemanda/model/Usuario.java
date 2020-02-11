@@ -1,12 +1,16 @@
 package com.qintess.GerDemanda.model;
 
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Column;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -58,34 +62,28 @@ public class Usuario {
 	@ManyToOne
 	@JoinColumn(name="fk_contrato")
 	private Contrato contrato;
-	
-	@ManyToOne
-	@JoinColumn(name="fk_sigla")
-	private Sigla sigla;
 
 	@ManyToOne
 	@JoinColumn(name="fk_cargo")
 	private Cargo cargo;	
 	
-	@Transient
-	private List<Perfil> listaPerfil;
+	@OneToMany(mappedBy = "usuario")
+	List<UsuarioOrdemFornecimento> listaOfs;	
 	
-	public Sigla getSigla() {
-		return sigla;
-	}
-
-	public void setSigla(Sigla sigla) {
-		this.sigla = sigla;
-	}
+	@OneToMany(mappedBy = "usuarioSigla", fetch = FetchType.EAGER)
+	Set<UsuarioSigla> listaSiglas = new HashSet<UsuarioSigla>();
 	
-	public List<Perfil> getListaPerfil() {
+	@OneToMany(mappedBy = "usuarioPerfil", fetch = FetchType.EAGER)
+	Set<UsuarioPerfil> listaPerfil= new HashSet<UsuarioPerfil>();	
+	
+	public Set<UsuarioPerfil> getListaPerfil(){
 		return listaPerfil;
 	}
-
-	public void setListaPerfil(List<Perfil> listaPerfil) {
-		this.listaPerfil = listaPerfil;
-	}
-
+	
+	public Set<UsuarioSigla> getListaSiglas(){
+		return listaSiglas;
+	}	
+	
 	public int getId() {
 		return id;
 	}

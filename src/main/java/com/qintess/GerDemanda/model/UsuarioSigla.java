@@ -12,9 +12,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "usuario_x_perfil")
+@Table(name = "usuario_x_sigla")
 
-public class UsuarioPerfil{
+public class UsuarioSigla {
 	
 	@Id
 	private int id;
@@ -31,11 +31,11 @@ public class UsuarioPerfil{
 	
 	@ManyToOne
 	@JoinColumn(name = "fk_usuario")
-	private Usuario usuarioPerfil;
+	private Usuario usuarioSigla;
 	
 	@ManyToOne
-	@JoinColumn(name = "fk_perfil")
-	private Perfil perfil;
+	@JoinColumn(name = "fk_sigla")
+	private Sigla sigla;
 
 	public int getId() {
 		return id;
@@ -53,8 +53,8 @@ public class UsuarioPerfil{
 		return status;
 	}
 
-	public Perfil getPerfil() {
-		return perfil;
+	public Sigla getSigla() {
+		return sigla;
 	}
 }
 

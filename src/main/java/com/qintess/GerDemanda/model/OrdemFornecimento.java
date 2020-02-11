@@ -1,12 +1,14 @@
 package com.qintess.GerDemanda.model;
-
 import java.util.Calendar;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -75,28 +77,30 @@ public class OrdemFornecimento {
 	@Temporal(TemporalType.DATE)
 	private Calendar dtAceite;
 	
-	@ManyToOne  
-	@JoinColumn(name = "fk_situacao")
-	private Situacao situacao;
-
-	@ManyToOne  
-	@JoinColumn(name = "fk_situacao_alm")
-	private Situacao situacaoAlm;
-	
-	@ManyToOne  
-	@JoinColumn(name = "fk_sigla")
-	private Sigla sigla;
-	
-	@ManyToOne  
-	@JoinColumn(name = "fk_usuario")
-	private Usuario usuario;
-	
 	@Column(name = "responsavel_t")
 	private String responsavelTecnico;
 	
 	@Column(name = "gerente_t")
 	private String gerenteTecnico;
-
+	
+	@ManyToOne  
+	@JoinColumn(name = "fk_sigla")
+	private Sigla sigla;
+	
+	@OneToMany(mappedBy="ordemFornecimento")
+	List<SituacaoOrdemFornecimento> listaSituacoes;
+	
+	@OneToMany(mappedBy="ordemFornecimento")
+	Set<UsuarioOrdemFornecimento> listaUsuarios;
+	
+	public Set<UsuarioOrdemFornecimento> getListaUsuarios(){
+		return listaUsuarios;
+	}
+	
+	public List<SituacaoOrdemFornecimento> getListaSituacoes(){
+		return listaSituacoes;
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -169,20 +173,8 @@ public class OrdemFornecimento {
 		return dtAceite;
 	}
 
-	public Situacao getSituacao() {
-		return situacao;
-	}
-
-	public Situacao getSituacaoAlm() {
-		return situacaoAlm;
-	}
-
 	public Sigla getSigla() {
 		return sigla;
-	}
-
-	public Usuario getUsuario() {
-		return usuario;
 	}
 
 	public String getResponsavelTecnico() {

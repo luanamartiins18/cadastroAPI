@@ -1,7 +1,5 @@
 package com.qintess.GerDemanda.model;
-
 import java.util.Calendar;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,9 +10,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "usuario_x_perfil")
-
-public class UsuarioPerfil{
+@Table(name = "usuario_X_of")
+public class UsuarioOrdemFornecimento {
 	
 	@Id
 	private int id;
@@ -31,11 +28,11 @@ public class UsuarioPerfil{
 	
 	@ManyToOne
 	@JoinColumn(name = "fk_usuario")
-	private Usuario usuarioPerfil;
+	private Usuario usuario;
 	
 	@ManyToOne
-	@JoinColumn(name = "fk_perfil")
-	private Perfil perfil;
+	@JoinColumn(name = "fk_ordem_forn")
+	private OrdemFornecimento ordemFornecimento;
 
 	public int getId() {
 		return id;
@@ -53,21 +50,7 @@ public class UsuarioPerfil{
 		return status;
 	}
 
-	public Perfil getPerfil() {
-		return perfil;
+	public Usuario getUsuario() {
+		return usuario;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
