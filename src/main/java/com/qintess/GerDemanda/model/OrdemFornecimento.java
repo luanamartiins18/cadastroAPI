@@ -1,6 +1,5 @@
 package com.qintess.GerDemanda.model;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -85,21 +84,36 @@ public class OrdemFornecimento {
 	
 	@ManyToOne  
 	@JoinColumn(name = "fk_sigla")
-	private Sigla sigla;
+	private Sigla sigla;	
 	
-	@OneToMany(mappedBy="ordemFornecimento")
-	List<SituacaoOrdemFornecimento> listaSituacoes;
+	/*TODO 
+	 * Renomear colunas no banco
+	 * fk_situacao -> fk_situacao_genti
+	 * fk_situacao_alm -> fk_situacao
+	 * */
+	
+	@ManyToOne
+	@JoinColumn(name = "fk_situacao")
+	private Situacao situacaoGenti;
+	
+	@ManyToOne
+	@JoinColumn(name = "fk_situacao_alm")
+	private Situacao situacao;
+	
+	public Situacao getSituacaoGenti() {
+		return situacaoGenti;
+	}
+	
+	public Situacao getSituacao() {
+		return situacao;
+	}
 	
 	@OneToMany(mappedBy="ordemFornecimento")
 	Set<UsuarioOrdemFornecimento> listaUsuarios;
 	
 	public Set<UsuarioOrdemFornecimento> getListaUsuarios(){
 		return listaUsuarios;
-	}
-	
-	public List<SituacaoOrdemFornecimento> getListaSituacoes(){
-		return listaSituacoes;
-	}
+	}	
 	
 	public int getId() {
 		return id;

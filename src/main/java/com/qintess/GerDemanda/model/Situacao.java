@@ -1,9 +1,7 @@
 package com.qintess.GerDemanda.model;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 @Entity
 public class Situacao {
@@ -21,7 +19,4 @@ public class Situacao {
 	public String getDescricao() {
 		return descricao;
 	}	
-	
-	@OneToMany(mappedBy = "situacao")
-	List<SituacaoOrdemFornecimento> listaOfs;
 }

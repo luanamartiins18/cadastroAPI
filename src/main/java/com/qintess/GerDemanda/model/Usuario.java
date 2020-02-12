@@ -4,7 +4,6 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -14,8 +13,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Column;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
 import com.qintess.GerDemanda.model.Cargo;
 import com.qintess.GerDemanda.model.Contrato;
 
