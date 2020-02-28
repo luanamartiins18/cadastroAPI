@@ -40,6 +40,20 @@ public class Mensagem {
 	@OneToMany(mappedBy = "mensagem", fetch = FetchType.EAGER)
 	private List<UsuarioMensagem> listaUsuarios;
 	
+	private String titulo;
+	
+	@ManyToOne
+	@JoinColumn(name="fk_sigla")
+	private Sigla sigla;	
+	
+	
+	public Sigla getSigla() {
+		return sigla;
+	}
+	
+	public String getTitulo() {
+		return titulo;
+	}	
 	
 	public List<UsuarioMensagem> getListaUsuarios() {
 		return listaUsuarios;

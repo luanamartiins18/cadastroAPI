@@ -86,26 +86,22 @@ public class OrdemFornecimento {
 	@JoinColumn(name = "fk_sigla")
 	private Sigla sigla;	
 	
-	/*TODO 
-	 * Renomear colunas no banco
-	 * fk_situacao -> fk_situacao_genti
-	 * fk_situacao_alm -> fk_situacao
-	 * */
-	
 	@ManyToOne
-	@JoinColumn(name = "fk_situacao")
+	@JoinColumn(name = "fk_situacao_genti")
 	private Situacao situacaoGenti;
 	
 	@ManyToOne
-	@JoinColumn(name = "fk_situacao_alm")
-	private Situacao situacao;
+	@JoinColumn(name = "fk_situacao_usu")
+	private Situacao situacaoUsu;
+	
+	private String referencia;
 	
 	public Situacao getSituacaoGenti() {
 		return situacaoGenti;
 	}
 	
-	public Situacao getSituacao() {
-		return situacao;
+	public Situacao getSituacaoUsu() {
+		return situacaoUsu;
 	}
 	
 	@OneToMany(mappedBy="ordemFornecimento")
@@ -114,6 +110,10 @@ public class OrdemFornecimento {
 	public Set<UsuarioOrdemFornecimento> getListaUsuarios(){
 		return listaUsuarios;
 	}	
+
+	public String getReferencia() {
+		return referencia;
+	}
 	
 	public int getId() {
 		return id;
