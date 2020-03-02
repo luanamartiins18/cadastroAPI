@@ -79,9 +79,23 @@ public class TarefaController {
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
+	@GetMapping("/usuario/{idUsu}/ordem-forn/{idOf}/valor-tarefa")
+	public ResponseEntity<HashMap<String, Integer>> getValorTarefa(@PathVariable int idUsu, @PathVariable int idOf){
+		TarefaService ts = new TarefaService();
+		
+		HashMap<String, Integer> resultado = ts.getValorTarefa(idUsu, idOf);
+		if(resultado == null) {
+			return new ResponseEntity<HashMap<String, Integer>>(HttpStatus.NOT_FOUND);
+		}else {
+			return new ResponseEntity<HashMap<String, Integer>>(HttpStatus.OK).ok().body(resultado);
+		}
+	}
 	
-	
-	
+	@GetMapping("/ordem-forn/{id}/numero")
+	public String getNumOf(@PathVariable int id) {
+		TarefaService ts = new TarefaService();
+		return ts.getNumOf(id);
+	}
 	
 	
 }

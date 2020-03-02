@@ -46,7 +46,7 @@ public class OrdemFornecimentoController {
 	
 	
 	@GetMapping("/ordens-fornecimento")
-	public List<OrdemFornecimento> getOrdemDeFornecimento(){				
+	public List<HashMap<String, Object>> getOrdemDeFornecimento(){				
 		return new OrdemFornecimentoService().getOrdemDeFornecimento();			
 	}
 	

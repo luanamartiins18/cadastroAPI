@@ -78,6 +78,23 @@ public class TarefaService {
 		return disciplinas;				
 	}
 	
+	public String getNumOf(int id) {
+		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManager em = entityManagerFactory.createEntityManager();	
+		
+		String sql = "select numero_of_genti from ordem_forn where id = :id";
+		Query query = em.createNativeQuery(sql);
+		query.setParameter("id", id);
+		
+		JSONArray json = new JSONArray(query.getResultList());
+		
+		em.close();
+		entityManagerFactory.close();
+		return json.getString(0);
+	}
+	
+	
+	
 	public boolean insereTarefa(String param) {
 		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
 		EntityManager em = entityManagerFactory.createEntityManager();	
@@ -123,6 +140,90 @@ public class TarefaService {
 		return true;
 	}
 	
+	
+	public HashMap<String, Integer> getValorTarefa(int idUsu, int idOf) {
+		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManager em = entityManagerFactory.createEntityManager();	
+		
+	
+		String sql = "select ig.valor, t.fk_situacao from usuario_x_of uof " + 
+					"	inner join tarefa_of t " + 
+					"		on t.fk_of_usuario = uof.id " + 
+					"	inner join item_guia ig " + 
+					"		on t.fk_item_guia = ig.id " +  
+					"where uof.fk_usuario = :idUsu and uof.fk_ordem_forn = :idOf and status = 1";
+		
+		int valorPlanejado = 0;
+		int valorExecutado = 0;
+		
+		Query query = em.createNativeQuery(sql);
+		query.setParameter("idUsu", idUsu);
+		query.setParameter("idOf", idOf);
+		
+		List<Object> listaValorSit = query.getResultList();
+		
+		for(Object obj: listaValorSit) {
+			JSONArray json = new JSONArray(obj);		
+			int valor = json.getInt(0);
+			int situ  = json.getInt(1);				
+			
+			if(situ == 4 || situ == 8) {
+				valorExecutado += valor;
+			}
+			
+			if(situ != 2 && situ != 5) {
+				valorPlanejado += valor;
+			}			
+		}
+		
+		HashMap<String, Integer> resultado = new HashMap<String, Integer>();		
+		
+		resultado.put("valorExecutado", valorExecutado);
+		resultado.put("valorPlanejado", valorPlanejado);
+
+		
+		sql = "select ig.valor, t.fk_situacao from usuario_x_of uof " + 
+				"	inner join tarefa_of t " + 
+				"		on t.fk_of_usuario = uof.id " + 
+				"	inner join item_guia ig " + 
+				"		on t.fk_item_guia = ig.id " +  
+				"where uof.fk_ordem_forn = :idOf and status = 1";
+	
+		valorPlanejado = 0;
+		valorExecutado = 0;
+		
+		query = em.createNativeQuery(sql);		
+		query.setParameter("idOf", idOf);
+		
+		listaValorSit = query.getResultList();
+		
+		
+		for(Object obj: listaValorSit) {
+			JSONArray json = new JSONArray(obj);		
+			int valor = json.getInt(0);
+			int situ  = json.getInt(1);				
+			
+			if(situ == 4 || situ == 8) {
+				valorExecutado += valor;
+			}
+			
+			if(situ != 2 && situ != 5) {
+				valorPlanejado += valor;
+			}			
+		}
+		
+	
+		
+		resultado.put("valorExecutadoTotal", valorExecutado);
+		resultado.put("valorPlanejadoTotal", valorPlanejado);	
+		
+		em.close();
+		entityManagerFactory.close();
+		return resultado;
+	}
+	
+	
+	
 	public void atualizaTarefa(String param) {
 		
 		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
@@ -162,10 +263,8 @@ public class TarefaService {
 		query.setParameter("perfil", perfil);
 		query.setParameter("idTrfOf", idTrfOf);
 		
-		em.getTransaction().begin();
-		System.out.println("!AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
-		query.executeUpdate();	
-		System.out.println("!AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
+		em.getTransaction().begin();	
+		query.executeUpdate();			
 		em.getTransaction().commit();
 		
 		em.close();
