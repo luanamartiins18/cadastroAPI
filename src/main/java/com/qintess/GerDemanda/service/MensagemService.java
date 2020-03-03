@@ -16,6 +16,51 @@ import com.qintess.GerDemanda.model.Usuario;
 
 public class MensagemService {
 	
+	public List<HashMap<String, Object>> getAllMensagensColaborador(int id){
+		
+		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManager em = entityManagerFactory.createEntityManager();	
+	
+		String sql = "select m.*, um.dt_leitura, um.id as idUM, s.descricao, u.nome from mensagem m " + 
+						"inner join usuario_x_mensagem um " + 
+						"on m.id = um.fk_mensagem " + 	
+						"left join sigla s " +
+						"on s.id = m.fk_sigla " +
+						"inner join usuario u " +
+						"on u.id = m.fk_responsavel " +
+						"where m.status = 1 " + 
+						"and um.fk_usuario = :id ;";
+		
+		Query query = em.createNativeQuery(sql).setParameter("id", id);
+		
+		List<Object> lista = query.getResultList();	
+		
+		List<HashMap<String, Object>> response = new ArrayList<HashMap<String,Object>>();
+		
+		for(Object obj: lista) {
+			HashMap<String, Object> atual = new HashMap<String, Object>();
+			JSONArray objAtual = new JSONArray(obj);
+			
+			atual.put("idMsg", objAtual.get(0));
+			atual.put("corpo", objAtual.get(1));
+			atual.put("dtCriacao", objAtual.get(2));
+			atual.put("dtExpiracao", objAtual.get(3));
+			atual.put("tpMsg", objAtual.get(4));
+			atual.put("status", objAtual.get(5));
+			atual.put("responsavel", objAtual.get(12));		
+			atual.put("titulo", objAtual.get(7));
+			atual.put("idUsuMsg", objAtual.get(10));	
+			atual.put("sigla", objAtual.get(11));
+			
+			response.add(atual);
+		}
+				
+		em.close();
+		entityManagerFactory.close();		
+		
+		return response;
+	}	
+	
 	
 	
 	public void marcaLida(int idMsgUsu) {

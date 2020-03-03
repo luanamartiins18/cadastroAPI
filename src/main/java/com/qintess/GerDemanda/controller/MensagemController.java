@@ -22,6 +22,12 @@ import com.qintess.GerDemanda.service.MensagemService;
 @CrossOrigin
 public class MensagemController {
 	
+	@GetMapping("historico-mensagens/usuario/{id}")
+	public List<HashMap<String, Object>> getAllMensagensColaborador(@PathVariable int id){
+		
+		MensagemService ms = new MensagemService();
+		return ms.getAllMensagensColaborador(id);
+	}
 	
 	@GetMapping("mensagens/usuario/{id}")
 	public List<HashMap<String, Object>> getMensagensColaborador(@PathVariable int id){
