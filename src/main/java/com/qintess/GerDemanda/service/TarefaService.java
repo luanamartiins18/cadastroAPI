@@ -21,31 +21,64 @@ public class TarefaService {
 		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
-		String sql = "select concat(concat(tarefa, ' - '), tg.descricao) as item, d.id disciplina, tg.id from tarefa_guia tg " + 
-						"inner join disciplina d " + 
-						"on tg.fk_disciplina = d.id ";
-		
-		Query query = em.createNativeQuery(sql);
-		
-		
-		List<Object> res = query.getResultList();
-		List<HashMap<String, Object>> itens = new ArrayList<HashMap<String, Object>>();		
-		
-		for(Object obj: res) {
-			HashMap<String, Object> atual = new HashMap<String, Object>();
-			JSONArray json = new JSONArray(obj);
+		String sql ="SELECT tg.*, um.descricao as desc_uni_med, ig.id as id_item, ig.limite_itens, ig.componente, cg.descricao as desc_complex, cg.id as id_complex, ig.descricao_complex, ig.valor  from tarefa_guia tg\r\n" + 
+					"	inner join item_guia ig " + 
+					"		on ig.fk_tarefa_guia = tg.id " + 
+					"	inner join uni_medida um " + 
+					"		on um.id = ig.fk_uni_medida " + 
+					"	inner join complex_guia cg " + 
+					"		on cg.id = ig.fk_complex_guia";
 			
-			atual.put("item", json.get(0));
-			atual.put("disciplina", json.get(1));
-			atual.put("id", json.get(2));
-			
-			itens.add(atual);			
-		}
+		Query query = em.createNativeQuery(sql);		
+		List<Object> res = query.getResultList();		
 		
+		String tarefaAnterior = "";
+		List<HashMap<String, Object>> guia = new ArrayList<HashMap<String, Object>>();
+		
+		for(Object obj: res) {		
+			
+			/*
+			 * Cada iteração insere um item novo na ultima tarefa adicionada
+			 * Uma tarefa é adicionada quando o número da tarefa muda entre as linhas
+			 * */
+			
+			JSONArray json = new JSONArray(obj);			
+			//Se a tarefa atual for diferente da tarefa anterior
+			if(!json.getString(3).equals(tarefaAnterior)) {
+				HashMap<String, Object> atual = new HashMap<String, Object>();
+				
+				atual.put("id_tarefa", json.get(0));
+				atual.put("plataforma", json.get(1));
+				atual.put("atividade", json.get(2));
+				atual.put("tarefa", json.get(3));
+				atual.put("descricao_tarefa", json.get(4));
+				atual.put("disciplina", json.get(5));
+				atual.put("uni_medida", json.get(6));
+				
+				atual.put("itens", new ArrayList<HashMap<String, Object>>());
+				
+				guia.add(atual);
+			}
+			
+			HashMap<String, Object> ultimoInserido = guia.get(guia.size() - 1);
+			List<HashMap<String, Object>> itens = (ArrayList<HashMap<String, Object>>)ultimoInserido.get("itens");
+			
+			HashMap<String, Object> itemGuia = new HashMap<String, Object>();
+			itemGuia.put("id_item", json.get(7));
+			itemGuia.put("quantidade", json.get(8));
+			itemGuia.put("componente", json.get(9));
+			itemGuia.put("complexidade", json.get(10));
+			itemGuia.put("id_complex", json.get(11));
+			itemGuia.put("descricao_complex", json.get(12));
+			itemGuia.put("valor", json.get(13));
+			
+			itens.add(itemGuia);	
+			tarefaAnterior = json.getString(3);
+		}		
 		
 		em.close();
-		entityManagerFactory.close();
-		return itens;
+		entityManagerFactory.close();		
+		return guia;
 	}
 	
 	public List<HashMap<String, Object>> getDisciplinas(){
@@ -104,13 +137,12 @@ public class TarefaService {
 		String historia = json.getString("historia");
 		String sprint = json.getString("sprint");
 		String observacao = json.getString("observacao");
-		String artefato = json.getString("artefato");	
-		int item = json.getInt("item");
+		String artefato = json.getString("artefato");		
 		int quantidade = json.getInt("quantidade");
 		int idUsu = json.getInt("usu");
-		int idOf = json.getInt("of");
-		int numTarefa = json.getInt("numTarefa");				
-		int idItem = getIdItemGuia(quantidade, item);
+		int idOf = json.getInt("of");	
+		int numTarefa = json.getInt("numTarefa");	
+		int idItem = json.getInt("numItemGuia");
 		int auxPerfil = json.getInt("perfil");
 		String perfil = (auxPerfil == 1) ? "Baixa" : "Alta";		
 				
@@ -129,8 +161,7 @@ public class TarefaService {
 		query.setParameter("idItem", idItem);
 		query.setParameter("usuOf", usuOf);
 		query.setParameter("numTarefa", numTarefa);
-		query.setParameter("perfil", perfil);
-		
+		query.setParameter("perfil", perfil);		
 		em.getTransaction().begin();
 		query.executeUpdate();	
 		em.getTransaction().commit();
@@ -140,6 +171,53 @@ public class TarefaService {
 		return true;
 	}
 	
+	
+	public void atualizaTarefa(String param) {
+		
+		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManager em = entityManagerFactory.createEntityManager();	
+		
+		JSONObject json = new JSONObject(param);
+		
+		String historia = json.getString("historia");
+		String sprint = json.getString("sprint");
+		String observacao = json.getString("observacao");
+		String artefato = json.getString("artefato");	
+		int item = json.getInt("item");
+		int quantidade = json.getInt("quantidade");
+		int numTarefa = json.getInt("numTarefa");				
+		int idItem = json.getInt("numItemGuia");
+		int auxPerfil = json.getInt("perfil");
+		String perfil = (auxPerfil == 1) ? "Baixa" : "Alta";	
+		int idTrfOf = json.getInt("idTrfOf");
+				
+		
+		
+		String sql = "update tarefa_of set historia = :historia, sprint = :sprint, dt_alteracao = current_timestamp(), "
+				+ "num_tarefa = :numTarefa, perfil = :perfil, quantidade = :quantidade, artefato = :artefato, "
+				+ "observacao = :observacao, fk_item_guia = :idItem "
+				+ "where id = :idTrfOf";
+				 
+		
+		Query query = em.createNativeQuery(sql);
+		
+		query.setParameter("historia", historia);
+		query.setParameter("sprint", sprint);
+		query.setParameter("quantidade", quantidade);
+		query.setParameter("artefato", artefato);
+		query.setParameter("observacao", observacao);
+		query.setParameter("idItem", idItem);
+		query.setParameter("numTarefa", numTarefa);
+		query.setParameter("perfil", perfil);
+		query.setParameter("idTrfOf", idTrfOf);
+		
+		em.getTransaction().begin();	
+		query.executeUpdate();			
+		em.getTransaction().commit();
+		
+		em.close();
+		entityManagerFactory.close();		
+	}
 	
 	public HashMap<String, Integer> getValorTarefa(int idUsu, int idOf) {
 		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
@@ -221,96 +299,7 @@ public class TarefaService {
 		entityManagerFactory.close();
 		return resultado;
 	}
-	
-	
-	
-	public void atualizaTarefa(String param) {
 		
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
-		EntityManager em = entityManagerFactory.createEntityManager();	
-		
-		JSONObject json = new JSONObject(param);
-		
-		String historia = json.getString("historia");
-		String sprint = json.getString("sprint");
-		String observacao = json.getString("observacao");
-		String artefato = json.getString("artefato");	
-		int item = json.getInt("item");
-		int quantidade = json.getInt("quantidade");
-		int numTarefa = json.getInt("numTarefa");				
-		int idItem = getIdItemGuia(quantidade, item);
-		int auxPerfil = json.getInt("perfil");
-		String perfil = (auxPerfil == 1) ? "Baixa" : "Alta";	
-		int idTrfOf = json.getInt("idTrfOf");
-				
-		
-		
-		String sql = "update tarefa_of set historia = :historia, sprint = :sprint, dt_alteracao = current_timestamp(), "
-				+ "num_tarefa = :numTarefa, perfil = :perfil, quantidade = :quantidade, artefato = :artefato, "
-				+ "observacao = :observacao, fk_item_guia = :idItem "
-				+ "where id = :idTrfOf";
-				 
-		
-		Query query = em.createNativeQuery(sql);
-		
-		query.setParameter("historia", historia);
-		query.setParameter("sprint", sprint);
-		query.setParameter("quantidade", quantidade);
-		query.setParameter("artefato", artefato);
-		query.setParameter("observacao", observacao);
-		query.setParameter("idItem", idItem);
-		query.setParameter("numTarefa", numTarefa);
-		query.setParameter("perfil", perfil);
-		query.setParameter("idTrfOf", idTrfOf);
-		
-		em.getTransaction().begin();	
-		query.executeUpdate();			
-		em.getTransaction().commit();
-		
-		em.close();
-		entityManagerFactory.close();		
-	}
-	
-	
-	
-	
-	private int getIdItemGuia(int quantidade, int idTarefa){
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
-		EntityManager em = entityManagerFactory.createEntityManager();
-		
-		String sql = "select limite_itens, id from item_guia where fk_tarefa_guia = :idTarefa order by limite_itens asc";
-		
-		Query query = em.createNativeQuery(sql);
-		query.setParameter("idTarefa", idTarefa);
-		List<Object> listaItens = query.getResultList();
-		
-		int id = -1;
-		for(Object obj: listaItens) {
-			
-			JSONArray json = new JSONArray(obj);
-			
-			if(quantidade <= json.getInt(0)) {
-				id = json.getInt(1);
-				break;
-			}
-			
-		}
-		
-		if(id == -1) {
-			JSONArray json = new JSONArray(listaItens.get(listaItens.size() - 1));
-			id = json.getInt(1);
-		}
-		
-		
-		
-		
-		
-		em.close();
-		entityManagerFactory.close();
-		
-		return id;
-	}
-	
 	private int getIdUsuOf(int usu, int of) {
 		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
 		EntityManager em = entityManagerFactory.createEntityManager();

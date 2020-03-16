@@ -1,8 +1,11 @@
 package com.qintess.GerDemanda.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.HTTP;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +32,18 @@ public class TarefaController {
 	}
 	
 	@GetMapping("/itens-guia")
-	public List<HashMap<String, Object>> getItensGuia() {
+	public ResponseEntity<List<HashMap<String, Object>>> getItensGuia() {
 		
 		TarefaService ts = new TarefaService();
-		return ts.getItensGuia();		
+		List<HashMap<String, Object>> res = new ArrayList<HashMap<String, Object>>();
+		
+		
+		try {
+			res = ts.getItensGuia();
+			return ResponseEntity.ok().body(res);
+		}catch(Exception excp) {
+			return new ResponseEntity<List<HashMap<String, Object>>>(HttpStatus.NOT_FOUND);			
+		}			
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/tarefa")	
