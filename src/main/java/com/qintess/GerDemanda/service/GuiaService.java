@@ -3,6 +3,11 @@ import javax.persistence.Query;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -128,7 +133,32 @@ public class GuiaService {
 		entityManagerFactory.close();
 		
 	}
-
+	
+	public List<HashMap<String, Object>> getAtividades(){
+		
+		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManager em = entityManagerFactory.createEntityManager();	
+		
+		
+		String sql = "select distinct atividade from tarefa_guia " + 
+						"order by fk_disciplina, cast(substring_index( substring_index(atividade, ' ', 1), '.', -1 ) as unsigned)";
+		
+		Query query = em.createNativeQuery(sql);
+		List<Object> listaAtividades = query.getResultList();
+		
+		List<HashMap<String, Object>> res = new ArrayList<HashMap<String,Object>>();
+		
+		for(Object i: listaAtividades) {
+			HashMap<String, Object> atual = new HashMap<String, Object>();
+			atual.put("atividade", i);
+			res.add(atual);
+		}
+		
+		em.close();
+		entityManagerFactory.close();
+		return res;		
+	}
+	
 }
 	
 
