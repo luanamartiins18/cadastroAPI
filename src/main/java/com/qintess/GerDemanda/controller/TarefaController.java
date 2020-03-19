@@ -24,11 +24,25 @@ import com.qintess.GerDemanda.service.TarefaService;
 @CrossOrigin
 public class TarefaController {	
 	
+	@GetMapping("/unidades-medidas")
+	public List<HashMap<String, Object>> getUniMedidas() {
+		
+		TarefaService ts = new TarefaService();
+		return ts.getUniMedidas();		
+	}
+	
 	@GetMapping("/disciplinas")
 	public List<HashMap<String, Object>> getDisciplinasUsu() {
 		
 		TarefaService ts = new TarefaService();
 		return ts.getDisciplinas();		
+	}
+	
+	@GetMapping("/complexidades")
+	public List<HashMap<String, Object>> getComplexidades() {
+		
+		TarefaService ts = new TarefaService();
+		return ts.getComplexidades();		
 	}
 	
 	@GetMapping("/itens-guia")

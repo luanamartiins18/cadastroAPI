@@ -16,6 +16,35 @@ import javax.persistence.Persistence;
 public class TarefaService {
 	
 	
+	public List<HashMap<String, Object>> getAtividades(){
+		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManager em = entityManagerFactory.createEntityManager();	
+		
+		String sql = "select tarefa, fk_disciplina from tarefa_guia";
+						
+		Query query = em.createNativeQuery(sql);		
+		
+		List<Object> res = query.getResultList();
+		List<HashMap<String, Object>> disciplinas = new ArrayList<HashMap<String, Object>>();		
+		
+		for(Object obj: res) {
+			HashMap<String, Object> atual = new HashMap<String, Object>();
+			JSONArray json = new JSONArray(obj);
+			
+			atual.put("id", json.get(0));
+			atual.put("descricao", json.get(1));
+			atual.put("perfil", json.get(2));
+			
+			disciplinas.add(atual);			
+		}
+		
+		
+		em.close();
+		entityManagerFactory.close();
+		return disciplinas;				
+	}
+	
+	
 	
 	public List<HashMap<String, Object>> getItensGuia(){
 		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
@@ -27,7 +56,9 @@ public class TarefaService {
 					"	inner join uni_medida um " + 
 					"		on um.id = ig.fk_uni_medida " + 
 					"	inner join complex_guia cg " + 
-					"		on cg.id = ig.fk_complex_guia";
+					"		on cg.id = ig.fk_complex_guia "
+					+ "	order by tg.id ";
+				
 			
 		Query query = em.createNativeQuery(sql);		
 		List<Object> res = query.getResultList();		
@@ -109,6 +140,60 @@ public class TarefaService {
 		em.close();
 		entityManagerFactory.close();
 		return disciplinas;				
+	}
+	
+	public List<HashMap<String, Object>> getComplexidades(){
+		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManager em = entityManagerFactory.createEntityManager();	
+		
+		String sql = "select * from complex_guia ; ";
+						
+		Query query = em.createNativeQuery(sql);		
+		
+		List<Object> res = query.getResultList();
+		List<HashMap<String, Object>> complexidades = new ArrayList<HashMap<String, Object>>();		
+		
+		for(Object obj: res) {
+			HashMap<String, Object> atual = new HashMap<String, Object>();
+			JSONArray json = new JSONArray(obj);
+			
+			atual.put("id", json.get(0));
+			atual.put("descricao", json.get(1));
+			
+			complexidades.add(atual);			
+		}
+		
+		
+		em.close();
+		entityManagerFactory.close();
+		return complexidades;				
+	}
+	
+	public List<HashMap<String, Object>> getUniMedidas(){
+		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManager em = entityManagerFactory.createEntityManager();	
+		
+		String sql = "select * from uni_medida order by descricao";
+						
+		Query query = em.createNativeQuery(sql);		
+		
+		List<Object> res = query.getResultList();
+		List<HashMap<String, Object>> uniMedidas = new ArrayList<HashMap<String, Object>>();		
+		
+		for(Object obj: res) {
+			HashMap<String, Object> atual = new HashMap<String, Object>();
+			JSONArray json = new JSONArray(obj);
+			
+			atual.put("id", json.get(0));
+			atual.put("descricao", json.get(1));
+			
+			uniMedidas.add(atual);			
+		}
+		
+		
+		em.close();
+		entityManagerFactory.close();
+		return uniMedidas;				
 	}
 	
 	public String getNumOf(int id) {
