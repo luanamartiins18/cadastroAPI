@@ -1,6 +1,8 @@
 package com.qintess.GerDemanda.controller;
 import java.util.HashMap;
 import java.util.List;
+
+import com.qintess.GerDemanda.model.Cargo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,5 +39,14 @@ public class UsuarioController {
 		UsuarioService us = new UsuarioService();
 		return us.getPerfilUsuario(id);
 	}
-	
+
+	@GetMapping("/usuario/{re}/cargo")
+	ResponseEntity<Cargo> getCargoByRe(@PathVariable String re){
+
+		UsuarioService usuarioService = new UsuarioService();
+		Cargo cargo = usuarioService.getCargoByRe(re);
+
+		return (cargo == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(cargo);
+	}
+
 }
