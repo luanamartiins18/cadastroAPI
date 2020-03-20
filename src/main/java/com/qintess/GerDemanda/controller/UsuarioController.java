@@ -1,16 +1,16 @@
 package com.qintess.GerDemanda.controller;
 
-import java.util.HashMap;
-import java.util.List;
-
+import com.qintess.GerDemanda.model.Usuario;
+import com.qintess.GerDemanda.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import com.qintess.GerDemanda.model.Usuario;
-import com.qintess.GerDemanda.service.UsuarioService;
+
+import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -35,5 +35,4 @@ public class UsuarioController {
     public HashMap<String, Object> getPerfilUsuario(@PathVariable Integer idUsuario) {
         return usuarioService.getPerfilUsuario(idUsuario);
     }
-
 }
