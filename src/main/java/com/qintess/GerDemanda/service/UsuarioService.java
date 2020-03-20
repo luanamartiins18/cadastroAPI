@@ -26,7 +26,7 @@ public class UsuarioService {
 	public HashMap<String, Object> getPerfilUsuario(int idUsu) {
 		UsuarioPerfil usuarioPerfil = usuarioPerfilRepository.findByUsuarioPerfilAndStatus(idUsu, STATUS_ATIVO_CODIGO);
 		HashMap<String, Object> perfil = new HashMap<String, Object>();
-		perfil.put("descricao", usuarioPerfil);
+		perfil.put("descricao", usuarioPerfil.getPerfil());
 		return perfil;
 
 	}

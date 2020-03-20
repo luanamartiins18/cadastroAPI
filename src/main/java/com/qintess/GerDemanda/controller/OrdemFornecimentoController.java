@@ -8,13 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.qintess.GerDemanda.model.OrdemFornecimento;
 import com.qintess.GerDemanda.service.OrdemFornecimentoService;
@@ -55,7 +49,7 @@ public class OrdemFornecimentoController {
 		return new OrdemFornecimentoService().getOrdemDeFornecimento(id);			
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/ordem-fornecimento/usuario-situacao")
+	@PostMapping(value = "/ordem-fornecimento/usuario-situacao")
 	public ResponseEntity<String> setSituacao(@RequestBody String request){
 		
 		OrdemFornecimentoService ofService = new OrdemFornecimentoService();		
