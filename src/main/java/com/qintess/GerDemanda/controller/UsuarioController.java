@@ -1,6 +1,9 @@
 package com.qintess.GerDemanda.controller;
+
 import java.util.HashMap;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,29 +16,24 @@ import com.qintess.GerDemanda.service.UsuarioService;
 @CrossOrigin
 public class UsuarioController {
 
-	
-	@GetMapping("/usuario/{re}")
-	ResponseEntity<Usuario> getUsuario(@PathVariable String re){
-		
-		UsuarioService usuarioService = new UsuarioService();		
-		Usuario usuario = usuarioService.getUsuarioByRe(re);				
-		
-		return (usuario == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(usuario);		
-	}	
+    @Autowired
+    UsuarioService usuarioService;
 
-	@GetMapping("/sigla/{id}/usuarios")
-	ResponseEntity<List<Usuario>> getUsuarioBySigla(@PathVariable int id){
-		
-		UsuarioService usuarioService = new UsuarioService();		
-		List<Usuario> usuarios = usuarioService.getUsuarioBySigla(id);				
-		
-		return ResponseEntity.ok().body(usuarios);		
-	}	
-	
-	@GetMapping("/usuario/{id}/perfil")
-	public HashMap<String, Object> getPerfilUsuario(@PathVariable int id){
-		UsuarioService us = new UsuarioService();
-		return us.getPerfilUsuario(id);
-	}
-	
+    @GetMapping("/usuario/{re}")
+    ResponseEntity<Usuario> getUsuario(@PathVariable String re) {
+        Usuario usuario = usuarioService.getUsuarioByRe(re);
+        return (usuario == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(usuario);
+    }
+
+    @GetMapping("/sigla/{idSigla}/usuarios")
+    ResponseEntity<List<Usuario>> getUsuarioBySigla(@PathVariable Integer idSigla) {
+        List<Usuario> usuarios = usuarioService.getUsuarioBySigla(idSigla);
+        return ResponseEntity.ok().body(usuarios);
+    }
+
+    @GetMapping("/usuario/{idUsuario}/perfil")
+    public HashMap<String, Object> getPerfilUsuario(@PathVariable Integer idUsuario) {
+        return usuarioService.getPerfilUsuario(idUsuario);
+    }
+
 }
