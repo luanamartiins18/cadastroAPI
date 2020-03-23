@@ -13,7 +13,10 @@ import java.util.List;
 @RestController
 @CrossOrigin
 public class MensagemController {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
     @Autowired
     MensagemService mensagemService;
 
@@ -36,6 +39,10 @@ public class MensagemController {
     public ResponseEntity<String> marcaLida(@RequestBody String param) {
         JSONObject json = new JSONObject(param);
         int idMsgUsu = json.getInt("idMsgUsu");
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         mensagemService.marcaLida(idMsgUsu);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
@@ -47,6 +54,10 @@ public class MensagemController {
         String dtExp = json.getString("dtExp");
         int idResp = json.getInt("idResp");
         String titulo = json.getString("titulo");
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         mensagemService.insereMensagemGeral(corpo, idResp, dtExp, titulo);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
@@ -59,6 +70,10 @@ public class MensagemController {
         int idResp = json.getInt("idResp");
         int idSigla = json.getInt("idSigla");
         String titulo = json.getString("titulo");
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         mensagemService.insereMensagemSigla(corpo, idResp, dtExp, idSigla, titulo);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
@@ -73,6 +88,10 @@ public class MensagemController {
         JSONObject json = new JSONObject(param);
         int idMsg = json.getInt("idMsg");
         String acao = json.getString("acao");
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         mensagemService.alteraStatusMsg(idMsg, acao);
         return new ResponseEntity<String>(HttpStatus.OK);
     }

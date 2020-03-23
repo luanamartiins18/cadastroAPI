@@ -11,15 +11,28 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+<<<<<<< HEAD
 
 @Service
+=======
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
 
+@Service
 public class TarefaService {
+<<<<<<< HEAD
 
     public List<HashMap<String, Object>> getAtividades() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
         EntityManager em = entityManagerFactory.createEntityManager();
         String sql = "select tarefa, fk_disciplina from tarefa_guia";
+=======
+    public List<HashMap<String, Object>> getAtividades() {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
+        EntityManager em = entityManagerFactory.createEntityManager();
+
+        String sql = "select tarefa, fk_disciplina from tarefa_guia";
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         Query query = em.createNativeQuery(sql);
         List<Object> res = query.getResultList();
         List<HashMap<String, Object>> disciplinas = new ArrayList<HashMap<String, Object>>();
@@ -39,6 +52,10 @@ public class TarefaService {
     public List<HashMap<String, Object>> getItensGuia() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
         EntityManager em = entityManagerFactory.createEntityManager();
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         String sql = "SELECT tg.*, um.descricao as desc_uni_med, ig.id as id_item, ig.limite_itens, ig.componente, cg.descricao as desc_complex, cg.id as id_complex, ig.descricao_complex, ig.valor  from tarefa_guia tg\r\n" +
                 "	inner join item_guia ig " +
                 "		on ig.fk_tarefa_guia = tg.id " +
@@ -47,6 +64,10 @@ public class TarefaService {
                 "	inner join complex_guia cg " +
                 "		on cg.id = ig.fk_complex_guia "
                 + "	order by tg.id ";
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         Query query = em.createNativeQuery(sql);
         List<Object> res = query.getResultList();
         String tarefaAnterior = "";
@@ -70,6 +91,10 @@ public class TarefaService {
                 atual.put("itens", new ArrayList<HashMap<String, Object>>());
                 guia.add(atual);
             }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
             HashMap<String, Object> ultimoInserido = guia.get(guia.size() - 1);
             List<HashMap<String, Object>> itens = (ArrayList<HashMap<String, Object>>) ultimoInserido.get("itens");
             HashMap<String, Object> itemGuia = new HashMap<String, Object>();
@@ -91,9 +116,17 @@ public class TarefaService {
     public List<HashMap<String, Object>> getDisciplinas() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
         EntityManager em = entityManagerFactory.createEntityManager();
+<<<<<<< HEAD
         String sql = "select d.id, d.descricao, p.descricao as p_descricao from disciplina d " +
                 "inner join perfil p " +
                 "on d.fk_perfil = p.id ";
+=======
+
+        String sql = "select d.id, d.descricao, p.descricao as p_descricao from disciplina d " +
+                "inner join perfil p " +
+                "on d.fk_perfil = p.id ";
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         Query query = em.createNativeQuery(sql);
         List<Object> res = query.getResultList();
         List<HashMap<String, Object>> disciplinas = new ArrayList<HashMap<String, Object>>();
@@ -103,7 +136,10 @@ public class TarefaService {
             atual.put("id", json.get(0));
             atual.put("descricao", json.get(1));
             atual.put("perfil", json.get(2));
+<<<<<<< HEAD
 
+=======
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
             disciplinas.add(atual);
         }
         em.close();
@@ -114,7 +150,13 @@ public class TarefaService {
     public List<HashMap<String, Object>> getComplexidades() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
         EntityManager em = entityManagerFactory.createEntityManager();
+<<<<<<< HEAD
         String sql = "select * from complex_guia ; ";
+=======
+
+        String sql = "select * from complex_guia ; ";
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         Query query = em.createNativeQuery(sql);
         List<Object> res = query.getResultList();
         List<HashMap<String, Object>> complexidades = new ArrayList<HashMap<String, Object>>();
@@ -133,7 +175,13 @@ public class TarefaService {
     public List<HashMap<String, Object>> getUniMedidas() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
         EntityManager em = entityManagerFactory.createEntityManager();
+<<<<<<< HEAD
         String sql = "select * from uni_medida order by descricao";
+=======
+
+        String sql = "select * from uni_medida order by descricao";
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         Query query = em.createNativeQuery(sql);
         List<Object> res = query.getResultList();
         List<HashMap<String, Object>> uniMedidas = new ArrayList<HashMap<String, Object>>();
@@ -152,6 +200,10 @@ public class TarefaService {
     public String getNumOf(int id) {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
         EntityManager em = entityManagerFactory.createEntityManager();
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         String sql = "select numero_of_genti from ordem_forn where id = :id";
         Query query = em.createNativeQuery(sql);
         query.setParameter("id", id);
@@ -161,6 +213,10 @@ public class TarefaService {
         return json.getString(0);
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
     public boolean insereTarefa(String param) {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
         EntityManager em = entityManagerFactory.createEntityManager();
@@ -212,10 +268,18 @@ public class TarefaService {
         int auxPerfil = json.getInt("perfil");
         String perfil = (auxPerfil == 1) ? "Baixa" : "Alta";
         int idTrfOf = json.getInt("idTrfOf");
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         String sql = "update tarefa_of set historia = :historia, sprint = :sprint, dt_alteracao = current_timestamp(), "
                 + "num_tarefa = :numTarefa, perfil = :perfil, quantidade = :quantidade, artefato = :artefato, "
                 + "observacao = :observacao, fk_item_guia = :idItem "
                 + "where id = :idTrfOf";
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         Query query = em.createNativeQuery(sql);
         query.setParameter("historia", historia);
         query.setParameter("sprint", sprint);
@@ -236,12 +300,20 @@ public class TarefaService {
     public HashMap<String, Integer> getValorTarefa(int idUsu, int idOf) {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
         EntityManager em = entityManagerFactory.createEntityManager();
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         String sql = "select ig.valor, t.fk_situacao from usuario_x_of uof " +
                 "	inner join tarefa_of t " +
                 "		on t.fk_of_usuario = uof.id " +
                 "	inner join item_guia ig " +
                 "		on t.fk_item_guia = ig.id " +
                 "where uof.fk_usuario = :idUsu and uof.fk_ordem_forn = :idOf and status = 1";
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         int valorPlanejado = 0;
         int valorExecutado = 0;
         Query query = em.createNativeQuery(sql);
@@ -252,11 +324,17 @@ public class TarefaService {
             JSONArray json = new JSONArray(obj);
             int valor = json.getInt(0);
             int situ = json.getInt(1);
+<<<<<<< HEAD
 
             if (situ == 4 || situ == 8) {
                 valorExecutado += valor;
             }
 
+=======
+            if (situ == 4 || situ == 8) {
+                valorExecutado += valor;
+            }
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
             if (situ != 2 && situ != 5) {
                 valorPlanejado += valor;
             }
@@ -296,8 +374,15 @@ public class TarefaService {
     private int getIdUsuOf(int usu, int of) {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
         EntityManager em = entityManagerFactory.createEntityManager();
+<<<<<<< HEAD
         String sql = "select id from usuario_x_of where fk_usuario = :usu and fK_ordem_forn = :of and status = 1";
         Query query = em.createNativeQuery(sql);
+=======
+
+        String sql = "select id from usuario_x_of where fk_usuario = :usu and fK_ordem_forn = :of and status = 1";
+        Query query = em.createNativeQuery(sql);
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         query.setParameter("usu", usu);
         query.setParameter("of", of);
         List<Object> usuOf = query.getResultList();
@@ -307,6 +392,10 @@ public class TarefaService {
         return json.getInt(0);
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
     public List<HashMap<String, Object>> getTarefasUsuario(int idUsu, int idOf) {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
         EntityManager em = entityManagerFactory.createEntityManager();
@@ -322,11 +411,19 @@ public class TarefaService {
                 "	inner join tarefa_guia tg " +
                 "		on tg.id = ig.fk_tarefa_guia " +
                 "	where u.fk_ordem_forn = :idOf and u.fk_usuario = :idUsu";
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         Query query = em.createNativeQuery(sql);
         query.setParameter("idUsu", idUsu);
         query.setParameter("idOf", idOf);
         List<Object> res = query.getResultList();
         List<HashMap<String, Object>> tarefasUsu = new ArrayList<HashMap<String, Object>>();
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         for (Object obj : res) {
             HashMap<String, Object> atual = new HashMap<String, Object>();
             JSONArray json = new JSONArray(obj);
@@ -350,6 +447,10 @@ public class TarefaService {
             atual.put("idTrfGuia", json.getInt(17));
             tarefasUsu.add(atual);
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         em.close();
         entityManagerFactory.close();
         return tarefasUsu;
@@ -371,8 +472,15 @@ public class TarefaService {
     public void alteraSituacaoTarefa(int idTrf, int idSit) {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
         EntityManager em = entityManagerFactory.createEntityManager();
+<<<<<<< HEAD
         String sql = "UPDATE tarefa_of set fk_situacao = :idSit, dt_alteracao = current_timestamp() where id = :idTrf";
         Query query = em.createNativeQuery(sql);
+=======
+
+        String sql = "UPDATE tarefa_of set fk_situacao = :idSit, dt_alteracao = current_timestamp() where id = :idTrf";
+        Query query = em.createNativeQuery(sql);
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         query.setParameter("idTrf", idTrf);
         query.setParameter("idSit", idSit);
         em.getTransaction().begin();

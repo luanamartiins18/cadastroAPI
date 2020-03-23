@@ -14,6 +14,10 @@ import java.util.List;
 @RestController
 @CrossOrigin
 public class TarefaController {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
     @Autowired
     TarefaService tarefaService;
 
@@ -70,6 +74,10 @@ public class TarefaController {
         JSONObject json = new JSONObject(param);
         int idTrf = json.getInt("idTrf");
         int idSit = json.getInt("idSit");
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         tarefaService.alteraSituacaoTarefa(idTrf, idSit);
         return new ResponseEntity<String>(HttpStatus.OK);
     }

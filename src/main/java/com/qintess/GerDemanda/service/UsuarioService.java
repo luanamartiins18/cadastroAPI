@@ -17,7 +17,10 @@ import java.util.List;
 
 @Service
 public class UsuarioService {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
     public static final int STATUS_ATIVO_CODIGO = 1;
     public static final String STATUS_ATIVO_DESCRICAO = "Ativo";
     public static final int CARGO_COLABORADOR = 3;
@@ -50,6 +53,7 @@ public class UsuarioService {
     public boolean checkUsuario(String re, String senha) {
         return this.usuarioRepository.existsByCodigoReAndSenha(re, senha);
     }
+<<<<<<< HEAD
 
     public Cargo getCargoByRe(String re) {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
@@ -62,4 +66,6 @@ public class UsuarioService {
         entityManagerFactory.close();
         return usuario.get(0).getCargo();
     }
+=======
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
 }

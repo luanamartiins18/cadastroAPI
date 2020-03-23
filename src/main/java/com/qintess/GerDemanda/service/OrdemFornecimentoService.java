@@ -13,6 +13,7 @@ import java.util.List;
 
 @Service
 public class OrdemFornecimentoService {
+<<<<<<< HEAD
 
     @Autowired
     OrdemFornecimentoRepository ordemFornecimentoRepository;
@@ -33,11 +34,39 @@ public class OrdemFornecimentoService {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
         EntityManager em = entityManagerFactory.createEntityManager();
         String sql = "select fk_situacao_usu, referencia from ordem_forn where id = :idOf ;";
+=======
+    @Autowired
+    OrdemFornecimentoRepository ordemFornecimentoRepository;
+
+    public List<Integer> getUsuariosOf(int idOf) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
+        EntityManager em = entityManagerFactory.createEntityManager();
+
+        String sql = "select fk_usuario from usuario_x_of where fk_ordem_forn = :idOf and status = 1;";
+        Query query = em.createNativeQuery(sql);
+
+        query.setParameter("idOf", idOf);
+        List<Integer> usuariosOf = query.getResultList();
+        em.close();
+        entityManagerFactory.close();
+        return usuariosOf;
+    }
+
+    public HashMap<String, Object> getSituacaoOf(int idOf) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
+        EntityManager em = entityManagerFactory.createEntityManager();
+
+        String sql = "select fk_situacao_usu, referencia from ordem_forn where id = :idOf ;";
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         Query query = em.createNativeQuery(sql);
         query.setParameter("idOf", idOf);
         List<Object> lista = query.getResultList();
         HashMap<String, Object> response = new HashMap<String, Object>();
+<<<<<<< HEAD
 
+=======
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         for (Object obj : lista) {
             HashMap<String, Object> atual = new HashMap<String, Object>();
             JSONArray objAtual = new JSONArray(obj);
@@ -53,6 +82,10 @@ public class OrdemFornecimentoService {
     public List<HashMap<String, Object>> getOrdemDeFornecimento() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
         EntityManager em = entityManagerFactory.createEntityManager();
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         String sql =
                 "select orf.id, orf.numero_OF_genti, orf.referencia, orf.responsavel_t, orf.gerente_t, orf.dt_abertura, " +
                         "		orf.dt_previsao, orf.dt_entrega, orf.dt_aceite, s.descricao sigla, sit.descricao sit_genti, st.descricao sit_alm, " +
@@ -87,6 +120,10 @@ public class OrdemFornecimentoService {
                         "group by orf.id, orf.numero_OF_genti, orf.referencia, orf.responsavel_t, orf.gerente_t, orf.dt_abertura, " +
                         "		orf.dt_previsao, orf.dt_entrega, orf.dt_aceite, s.descricao, sit.descricao, st.descricao "
                         + " order by st.descricao, s.descricao";
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         Query query = em.createNativeQuery(sql);
         List<Object> lista = query.getResultList();
         List<HashMap<String, Object>> response = new ArrayList<HashMap<String, Object>>();
@@ -117,6 +154,10 @@ public class OrdemFornecimentoService {
     public OrdemFornecimento getOrdemDeFornecimento(int id) {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
         EntityManager em = entityManagerFactory.createEntityManager();
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         String sql = "select distinct orf from OrdemFornecimento orf "
                 + " left join fetch orf.listaUsuarios "
                 + " inner join fetch orf.sigla "
@@ -124,6 +165,10 @@ public class OrdemFornecimentoService {
                 + " left join fetch orf.situacaoUsu "
                 + " where orf.situacaoGenti.id = 6 "
                 + " and orf.id = :id ";
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         TypedQuery<OrdemFornecimento> query = em.createQuery(sql, OrdemFornecimento.class);
         query.setParameter("id", id);
         List<OrdemFornecimento> ordemF = query.getResultList();
@@ -136,26 +181,50 @@ public class OrdemFornecimentoService {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
+<<<<<<< HEAD
         String sql = "update ordem_forn set referencia = '" + referencia
                 + "' where id = :ofId";
         Query query = em.createNativeQuery(sql);
         query.setParameter("ofId", ofId);
         query.executeUpdate();
+=======
+
+        String sql = "update ordem_forn set referencia = '" + referencia
+                + "' where id = :ofId";
+
+        Query query = em.createNativeQuery(sql);
+        query.setParameter("ofId", ofId);
+        query.executeUpdate();
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         sql = "update ordem_forn set fk_situacao_usu = :sit where id = :ofId";
         query = em.createNativeQuery(sql);
         query.setParameter("sit", situacao);
         query.setParameter("ofId", ofId);
         query.executeUpdate();
         /*Atualização da situação da OF*/
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         sql = "select fk_usuario from usuario_x_of where status = 1 and fk_ordem_forn = " + Integer.toString(ofId);
         query = em.createNativeQuery(sql);
         List<Integer> usuAtual = query.getResultList();
         String strListaUsu = "";
+<<<<<<< HEAD
         for (int usu : listaUsu) {
             strListaUsu += (strListaUsu.equals("")) ? Integer.toString(usu) : "," + Integer.toString(usu);
 
             /*Se um usuário marcado no checkbox não estiver relacionado a OF, relaciona*/
             if (!usuAtual.contains(usu)) {
+=======
+
+        for (int usu : listaUsu) {
+            strListaUsu += (strListaUsu.equals("")) ? Integer.toString(usu) : "," + Integer.toString(usu);
+            /*Se um usuário marcado no checkbox não estiver relacionado a OF, relaciona*/
+            if (!usuAtual.contains(usu)) {
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
                 sql = "INSERT INTO usuario_x_of (dt_criacao, fk_ordem_forn, fk_usuario, dt_exclusao, status) VALUES("
                         + "current_timestamp(), " + Integer.toString(ofId) + " , " + Integer.toString(usu) + " , null, 1);";
 
@@ -166,6 +235,10 @@ public class OrdemFornecimentoService {
         sql = "update usuario_x_of set status = 0, dt_exclusao = current_timestamp() "
                 + " where fk_ordem_forn = " + Integer.toString(ofId) + " and status = 1 and "
                 + " fk_usuario not in (" + strListaUsu + ");";
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         query = em.createNativeQuery(sql);
         query.executeUpdate();
         em.getTransaction().commit();
@@ -173,9 +246,17 @@ public class OrdemFornecimentoService {
         entityManagerFactory.close();
     }
 
+<<<<<<< HEAD
     public List<HashMap<String, Object>> getOrdensFornUsuario(int id) {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
         EntityManager em = entityManagerFactory.createEntityManager();
+=======
+
+    public List<HashMap<String, Object>> getOrdensFornUsuario(int id) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
+        EntityManager em = entityManagerFactory.createEntityManager();
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         String sql = "select orf.id as idOf, orf.numero_OF_genti, orf.gerente_t, orf.responsavel_t, "
                 + "orf.dt_abertura, orf.dt_previsao,  orf.usti_bb as ustibb_genti, "
                 + "uof.dt_criacao as dt_encaminhamento, s1.descricao as situacao_genti, "
@@ -197,14 +278,25 @@ public class OrdemFornecimentoService {
 
                 "where orf.fk_situacao_usu = 6 and  uof.fk_usuario = :id and uof.dt_exclusao is null and uof.status = 1 " +
                 "order by sg.descricao";
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
         Query query = em.createNativeQuery(sql);
         query.setParameter("id", id);
         List<Object> lista = query.getResultList();
         List<HashMap<String, Object>> response = new ArrayList<HashMap<String, Object>>();
+<<<<<<< HEAD
         for (Object obj : lista) {
             HashMap<String, Object> atual = new HashMap<String, Object>();
             JSONArray objAtual = new JSONArray(obj);
 
+=======
+
+        for (Object obj : lista) {
+            HashMap<String, Object> atual = new HashMap<String, Object>();
+            JSONArray objAtual = new JSONArray(obj);
+>>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
             atual.put("idOf", objAtual.get(0));
             atual.put("numOF", objAtual.get(1));
             atual.put("gerenteT", objAtual.get(2));
