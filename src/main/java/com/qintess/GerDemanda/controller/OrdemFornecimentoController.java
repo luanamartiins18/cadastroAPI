@@ -17,10 +17,6 @@ import java.util.List;
 @RestController
 @CrossOrigin
 public class OrdemFornecimentoController {
-<<<<<<< HEAD
-=======
-
->>>>>>> 14f0e7a3c511a0e2681fa5b6cba8a14eaed95004
     @Autowired
     OrdemFornecimentoService ordemFornecimentoService;
 
