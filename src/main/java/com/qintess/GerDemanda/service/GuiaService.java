@@ -272,7 +272,7 @@ public class GuiaService {
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
 		
-		String sql = "select distinct atividade from tarefa_guia " + 
+		String sql = "select distinct atividade, fk_disciplina from tarefa_guia " +
 						"order by fk_disciplina, cast(substring_index( substring_index(atividade, ' ', 1), '.', -1 ) as unsigned)";
 		
 		Query query = em.createNativeQuery(sql);
@@ -282,7 +282,10 @@ public class GuiaService {
 		
 		for(Object i: listaAtividades) {
 			HashMap<String, Object> atual = new HashMap<String, Object>();
-			atual.put("atividade", i);
+			JSONArray json = new JSONArray(i);
+
+			atual.put("atividade", json.get(0));
+			atual.put("disciplina", json.get(1));
 			res.add(atual);
 		}
 		
