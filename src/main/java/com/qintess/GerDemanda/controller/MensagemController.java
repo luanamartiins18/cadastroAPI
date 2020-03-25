@@ -1,6 +1,8 @@
 package com.qintess.GerDemanda.controller;
 
 import com.qintess.GerDemanda.service.MensagemService;
+import com.qintess.GerDemanda.service.dto.UsuarioMensagemDTO;
+import com.qintess.GerDemanda.service.dto.MensagemDTO;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,8 +20,8 @@ public class MensagemController {
     MensagemService mensagemService;
 
     @GetMapping("historico-mensagens/usuario/{id}")
-    public List<HashMap<String, Object>> getAllMensagensColaborador(@PathVariable int id) {
-        return mensagemService.getAllMensagensColaborador(id);
+    public List<UsuarioMensagemDTO> getAllMensagensByUsuario(@PathVariable int id) {
+        return mensagemService.getAllMensagensByUsuarios(id);
     }
 
     @GetMapping("mensagens/usuario/{id}")
@@ -41,25 +43,14 @@ public class MensagemController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/mensagem-geral")
-    public ResponseEntity<String> insereMensagemGeral(@RequestBody String param) {
-        JSONObject json = new JSONObject(param);
-        String corpo = json.getString("corpo");
-        String dtExp = json.getString("dtExp");
-        int idResp = json.getInt("idResp");
-        String titulo = json.getString("titulo");
-        mensagemService.insereMensagemGeral(corpo, idResp, dtExp, titulo);
+    public ResponseEntity<String> insereMensagemGeral(@RequestBody MensagemDTO dto) {
+        mensagemService.insereMensagem(dto, "GERAL");
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/mensagem-sigla")
-    public ResponseEntity<String> insereMensagemSigla(@RequestBody String param) {
-        JSONObject json = new JSONObject(param);
-        String corpo = json.getString("corpo");
-        String dtExp = json.getString("dtExp");
-        int idResp = json.getInt("idResp");
-        int idSigla = json.getInt("idSigla");
-        String titulo = json.getString("titulo");
-        mensagemService.insereMensagemSigla(corpo, idResp, dtExp, idSigla, titulo);
+    public ResponseEntity<String> insereMensagemSigla(@RequestBody MensagemDTO dto) {
+        mensagemService.insereMensagem(dto, "SIGLA");
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 

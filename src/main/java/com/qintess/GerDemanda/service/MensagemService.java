@@ -1,7 +1,15 @@
 package com.qintess.GerDemanda.service;
 
+import com.qintess.GerDemanda.model.Mensagem;
 import com.qintess.GerDemanda.model.Usuario;
+import com.qintess.GerDemanda.model.UsuarioMensagem;
 import com.qintess.GerDemanda.repositories.MensagemRepository;
+import com.qintess.GerDemanda.repositories.UsuarioMensagemRepository;
+import com.qintess.GerDemanda.service.dto.UsuarioMensagemDTO;
+import com.qintess.GerDemanda.service.dto.MensagemDTO;
+import com.qintess.GerDemanda.service.mapper.UsuarioMensagemDTOMapper;
+import com.qintess.GerDemanda.service.mapper.MensagemMapper;
+import org.hibernate.ObjectNotFoundException;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,62 +18,46 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MensagemService {
 
     @Autowired
     MensagemRepository mensagemRepository;
+    @Autowired
+    UsuarioMensagemRepository usuarioMensagemRepository;
+    @Autowired
+    UsuarioService usuarioService;
 
-    public List<HashMap<String, Object>> getAllMensagensColaborador(int id) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
-        EntityManager em = entityManagerFactory.createEntityManager();
-        String sql = "select m.*, um.dt_leitura, um.id as idUM, s.descricao, u.nome from mensagem m " +
-                "inner join usuario_x_mensagem um " +
-                "on m.id = um.fk_mensagem " +
-                "left join sigla s " +
-                "on s.id = m.fk_sigla " +
-                "inner join usuario u " +
-                "on u.id = m.fk_responsavel " +
-                "where m.status = 1 " +
-                "and um.fk_usuario = :id ;";
-        Query query = em.createNativeQuery(sql).setParameter("id", id);
-        List<Object> lista = query.getResultList();
-        List<HashMap<String, Object>> response = new ArrayList<HashMap<String, Object>>();
-        for (Object obj : lista) {
-            HashMap<String, Object> atual = new HashMap<String, Object>();
-            JSONArray objAtual = new JSONArray(obj);
-            atual.put("idMsg", objAtual.get(0));
-            atual.put("corpo", objAtual.get(1));
-            atual.put("dtCriacao", objAtual.get(2));
-            atual.put("dtExpiracao", objAtual.get(3));
-            atual.put("tpMsg", objAtual.get(4));
-            atual.put("status", objAtual.get(5));
-            atual.put("responsavel", objAtual.get(12));
-            atual.put("titulo", objAtual.get(7));
-            atual.put("idUsuMsg", objAtual.get(10));
-            atual.put("sigla", objAtual.get(11));
-            response.add(atual);
-        }
-        em.close();
-        entityManagerFactory.close();
-        return response;
+    public List<UsuarioMensagemDTO> getAllMensagensByUsuarios(int idUsuario) {
+        return this.usuarioMensagemRepository.findByMensagemStatusAndUsuarioMensId(1, idUsuario)
+                .stream().map(obj -> UsuarioMensagemDTOMapper.modelToDto(obj)).collect(Collectors.toList());
     }
 
-    public void marcaLida(int idMsgUsu) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
-        EntityManager em = entityManagerFactory.createEntityManager();
-        String sql = "UPDATE usuario_x_mensagem set dt_leitura = current_timestamp() where id = :idMsgUsu ;";
-        Query query = em.createNativeQuery(sql);
-        query.setParameter("idMsgUsu", idMsgUsu);
-        em.getTransaction().begin();
-        query.executeUpdate();
-        em.getTransaction().commit();
-        em.close();
-        entityManagerFactory.close();
+    public UsuarioMensagem getMensagemId(Integer id) {
+        return usuarioMensagemRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("id", UsuarioMensagem.class.getName()));
+    }
+
+    public void marcaLida(Integer idMsgUsu) {
+        UsuarioMensagem usuarioMensagem = this.getMensagemId(idMsgUsu);
+        usuarioMensagem.setDtLeitura(new Date());
+        this.usuarioMensagemRepository.save(usuarioMensagem);
+    }
+
+    @Transactional
+    public void insereMensagem(MensagemDTO dto, String tipo) {
+        List<Usuario> listUsu = usuarioService.getUsuarioBySigla(dto.getIdSigla());
+        Mensagem obj = MensagemMapper.dtoToModel(dto);
+        obj.setTipoMensagem(tipo);
+        obj.setListaUsuarios(listUsu.stream().map(usuario -> new UsuarioMensagem(usuario, obj)).collect(Collectors.toList()));
+        mensagemRepository.saveAndFlush(obj);
     }
 
     public List<HashMap<String, Object>> getMensagens() {
@@ -98,60 +90,7 @@ public class MensagemService {
         return response;
     }
 
-    public void insereMensagemGeral(String corpo, int idResponsavel, String dtExp, String titulo) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
-        EntityManager em = entityManagerFactory.createEntityManager();
-        UsuarioService usuarioService = new UsuarioService();
-        List<Usuario> listUsu = usuarioService.getUsuariosAtivos();
-        em.getTransaction().begin();
-        try {
-            String sql = "INSERT INTO MENSAGEM (corpo, dt_criacao, dt_expiracao, tp_mensagem, status, fk_responsavel, titulo) VALUES ( '"
-                    + corpo + "', CURRENT_TIMESTAMP(), '" + dtExp + "', 'GERAL', 1, "
-                    + Integer.toString(idResponsavel) + ",'" + titulo + "');";
-            System.out.println(sql);
-            Query query = em.createNativeQuery(sql);
-            query.executeUpdate();
-            for (Usuario usu : listUsu) {
-                sql = "INSERT INTO usuario_x_mensagem(fk_usuario, fk_mensagem, dt_leitura) VALUES ("
-                        + Integer.toString(usu.getId()) + ",  (SELECT MAX(id) from MENSAGEM), null);";
 
-                query = em.createNativeQuery(sql);
-                query.executeUpdate();
-            }
-        } catch (Exception excp) {
-            em.getTransaction().rollback();
-        }
-        em.getTransaction().commit();
-        em.close();
-        entityManagerFactory.close();
-    }
-
-    public void insereMensagemSigla(String corpo, int idResponsavel, String dtExp, int idSigla, String titulo) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
-        EntityManager em = entityManagerFactory.createEntityManager();
-        UsuarioService usuarioService = new UsuarioService();
-        List<Usuario> listUsu = usuarioService.getUsuarioBySigla(idSigla);
-        em.getTransaction().begin();
-        try {
-            String sql = "INSERT INTO MENSAGEM (corpo, dt_criacao, dt_expiracao, tp_mensagem, status, fk_responsavel, titulo, fk_sigla) VALUES ( '"
-                    + corpo + "', CURRENT_TIMESTAMP(), '" + dtExp + "', 'SIGLA', 1, " + Integer.toString(idResponsavel)
-                    + ",'" + titulo + "'," + Integer.toString(idSigla) + ");";
-            System.out.println(sql);
-            Query query = em.createNativeQuery(sql);
-            query.executeUpdate();
-            for (Usuario usu : listUsu) {
-                sql = "INSERT INTO usuario_x_mensagem(fk_usuario, fk_mensagem, dt_leitura) VALUES ("
-                        + Integer.toString(usu.getId()) + ",  (SELECT MAX(id) from MENSAGEM), null);";
-                query = em.createNativeQuery(sql);
-                query.executeUpdate();
-            }
-        } catch (Exception excp) {
-            em.getTransaction().rollback();
-        }
-        em.getTransaction().commit();
-        em.close();
-        entityManagerFactory.close();
-    }
 
     public List<HashMap<String, Object>> getMensagensColaborador(int id) {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");

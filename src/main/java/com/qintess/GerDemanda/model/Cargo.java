@@ -1,25 +1,26 @@
 package com.qintess.GerDemanda.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Cargo {
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@EqualsAndHashCode.Include
 	private int id;
-	
-	public int getId() {
-		return id;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	@Column
 	private String descricao;
+
+	@JsonManagedReference
+	@OneToMany(mappedBy = "cargo", fetch = FetchType.LAZY)
+	private List<Usuario> usuarios;
 }

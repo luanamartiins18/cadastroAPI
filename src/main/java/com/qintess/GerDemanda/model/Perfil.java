@@ -1,25 +1,23 @@
 package com.qintess.GerDemanda.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import lombok.*;
+
+import javax.persistence.*;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Perfil {
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@EqualsAndHashCode.Include
 	private int id;
 	
 	@Column
 	private String descricao;
-	
-	public int getId() {
-		return id;
-	}
 
-	public String getDescricao() {
-		return descricao;
-	}	
 }

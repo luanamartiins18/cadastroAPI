@@ -1,22 +1,23 @@
 package com.qintess.GerDemanda.model;
 
-import java.util.Calendar;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
+import java.util.Calendar;
 
 @Entity
 @Table(name = "usuario_x_sigla")
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UsuarioSigla {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@EqualsAndHashCode.Include
 	private int id;
 	
 	@Temporal(TemporalType.DATE)
@@ -28,34 +29,16 @@ public class UsuarioSigla {
 	private Calendar dtExclusao;
 	
 	private int status;
-	
+
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "fk_usuario")
 	private Usuario usuarioSigla;
-	
+
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "fk_sigla")
 	private Sigla sigla;
-
-	public int getId() {
-		return id;
-	}
-
-	public Calendar getDtCriacao() {
-		return dtCriacao;
-	}
-
-	public Calendar getDtExclusao() {
-		return dtExclusao;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public Sigla getSigla() {
-		return sigla;
-	}
 }
 
 

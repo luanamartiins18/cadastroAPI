@@ -1,22 +1,23 @@
 package com.qintess.GerDemanda.model;
-import java.util.Calendar;
-import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
+
+import javax.persistence.*;
+import java.util.Calendar;
 
 @Entity(name = "OrdemFornecimento")
 @Table(name = "ordem_forn")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class OrdemFornecimento {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@EqualsAndHashCode.Include
 	private int id;
 	
 	@Column(name = "numero_OF")
@@ -81,123 +82,21 @@ public class OrdemFornecimento {
 	
 	@Column(name = "gerente_t")
 	private String gerenteTecnico;
-	
+
+	@JsonBackReference
 	@ManyToOne  
 	@JoinColumn(name = "fk_sigla")
-	private Sigla sigla;	
-	
+	private Sigla sigla;
+
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "fk_situacao_genti")
 	private Situacao situacaoGenti;
-	
+
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "fk_situacao_usu")
 	private Situacao situacaoUsu;
-	
-	private String referencia;
-	
-	public Situacao getSituacaoGenti() {
-		return situacaoGenti;
-	}
-	
-	public Situacao getSituacaoUsu() {
-		return situacaoUsu;
-	}
-	
-	@OneToMany(mappedBy="ordemFornecimento")
-	Set<UsuarioOrdemFornecimento> listaUsuarios;
-	
-	public Set<UsuarioOrdemFornecimento> getListaUsuarios(){
-		return listaUsuarios;
-	}	
-
-	public String getReferencia() {
-		return referencia;
-	}
-	
-	public int getId() {
-		return id;
-	}
-
-	public String getNumeroOF() {
-		return numeroOF;
-	}
-
-	public String getNumeroOFGenti() {
-		return numeroOFGenti;
-	}
-
-	public String getFabrica() {
-		return fabrica;
-	}
-
-	public String getTema() {
-		return tema;
-	}
-
-	public boolean isAgil() {
-		return agil;
-	}
-
-	public double getUstiBB() {
-		return ustiBB;
-	}
-
-	public String getUor() {
-		return uor;
-	}
-
-	public String getDemanda() {
-		return demanda;
-	}
-
-	public String getAcao() {
-		return acao;
-	}
-
-	public String getTipo() {
-		return tipo;
-	}
-
-	public String getCdTI() {
-		return cdTI;
-	}
-
-	public Calendar getDtAbertura() {
-		return dtAbertura;
-	}
-
-	public Calendar getDtPrevisao() {
-		return dtPrevisao;
-	}
-
-	public Calendar getDtEntrega() {
-		return dtEntrega;
-	}
-
-	public Calendar getDtDevolvida() {
-		return dtDevolvida;
-	}
-
-	public Calendar getDtRecusa() {
-		return dtRecusa;
-	}
-
-	public Calendar getDtAceite() {
-		return dtAceite;
-	}
-
-	public Sigla getSigla() {
-		return sigla;
-	}
-
-	public String getResponsavelTecnico() {
-		return responsavelTecnico;
-	}
-
-	public String getGerenteTecnico() {
-		return gerenteTecnico;
-	}
 }
 
 

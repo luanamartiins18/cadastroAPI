@@ -1,22 +1,23 @@
 package com.qintess.GerDemanda.model;
 
-import java.util.Calendar;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
+import java.util.Calendar;
 
 @Entity
 @Table(name = "usuario_x_perfil")
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UsuarioPerfil{
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@EqualsAndHashCode.Include
 	private int id;
 	
 	@Temporal(TemporalType.DATE)
@@ -28,34 +29,16 @@ public class UsuarioPerfil{
 	private Calendar dtExclusao;
 	
 	private int status;
-	
+
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "fk_usuario")
 	private Usuario usuarioPerfil;
-	
+
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "fk_perfil")
 	private Perfil perfil;
-
-	public int getId() {
-		return id;
-	}
-
-	public Calendar getDtCriacao() {
-		return dtCriacao;
-	}
-
-	public Calendar getDtExclusao() {
-		return dtExclusao;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public Perfil getPerfil() {
-		return perfil;
-	}
 }
 
 

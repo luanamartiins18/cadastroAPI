@@ -1,89 +1,53 @@
 package com.qintess.GerDemanda.model;
 
-import java.util.Calendar;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+
+import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Mensagem {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@EqualsAndHashCode.Include
 	private int id;
-	
+
 	private String corpo;
-	
+
+	private int status;
+
+	private String titulo;
+
 	@Column(name="tp_mensagem")
 	private String tipoMensagem;
-	
-	private int status;
-	
+
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name="fk_responsavel")
 	private Usuario responsavel;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name="dt_criacao")
-	private Calendar dtCriacao;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="dt_criacao")
+	private Date dtCriacao;
+
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="dt_expiracao")
-	private Calendar dtExpiracao;
-	
-	@OneToMany(mappedBy = "mensagem", fetch = FetchType.EAGER)
+	private Date dtExpiracao;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "mensagem", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<UsuarioMensagem> listaUsuarios;
-	
-	private String titulo;
-	
+
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name="fk_sigla")
-	private Sigla sigla;	
-	
-	
-	public Sigla getSigla() {
-		return sigla;
-	}
-	
-	public String getTitulo() {
-		return titulo;
-	}	
-	
-	public List<UsuarioMensagem> getListaUsuarios() {
-		return listaUsuarios;
-	}	
-
-	public int getId() {
-		return id;
-	}
-
-	public String getCorpo() {
-		return corpo;
-	}
-
-	public String getTipoMensagem() {
-		return tipoMensagem;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public Usuario getResponsavel() {
-		return responsavel;
-	}
-
-	public Calendar getDtCriacao() {
-		return dtCriacao;
-	}
-
-	public Calendar getDtExpiracao() {
-		return dtExpiracao;
-	}
+	private Sigla sigla;
 }

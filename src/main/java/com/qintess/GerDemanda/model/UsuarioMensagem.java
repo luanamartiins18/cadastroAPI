@@ -1,45 +1,45 @@
 package com.qintess.GerDemanda.model;
 
-import java.util.Calendar;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Entity
 @Table(name = "usuario_x_mensagem")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UsuarioMensagem {
-	
+
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@EqualsAndHashCode.Include
 	private int id;
-	
+
 	@Temporal(TemporalType.DATE)
 	@Column(name = "dt_leitura")
-	private Calendar dtLeitura;
-	
+	private Date dtLeitura;
+
+	@JsonBackReference
 	@ManyToOne
-	@JoinColumn(name = "fk_usuario")
+	@JoinColumn(name = "fk_usuario", nullable=false)
+	@NotNull
 	private Usuario usuarioMens;
-	
+
+	@JsonBackReference
 	@ManyToOne
-	@JoinColumn(name = "fk_mensagem")
+	@JoinColumn(name = "fk_mensagem", nullable=false)
+	@NotNull
 	private Mensagem mensagem;
 
-	public int getId() {
-		return id;
-	}
-
-	public Calendar getDtLeitura() {
-		return dtLeitura;
-	}
-
-	public Usuario getUsuarioMens() {
-		return usuarioMens;
+	public UsuarioMensagem(Usuario usuario, Mensagem mensagem) {
+		this.usuarioMens = usuario;
+		this.mensagem = mensagem;
 	}
 }
 

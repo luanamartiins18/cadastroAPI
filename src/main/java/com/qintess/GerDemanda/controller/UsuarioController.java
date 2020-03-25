@@ -2,6 +2,7 @@ package com.qintess.GerDemanda.controller;
 
 import com.qintess.GerDemanda.model.Cargo;
 import com.qintess.GerDemanda.model.Usuario;
+import com.qintess.GerDemanda.service.CargoService;
 import com.qintess.GerDemanda.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,9 @@ public class UsuarioController {
 
     @Autowired
     UsuarioService usuarioService;
+
+    @Autowired
+    CargoService cargoService;
 
     @GetMapping("/usuario/{re}")
     ResponseEntity<Usuario> getUsuario(@PathVariable String re) {
@@ -39,8 +43,7 @@ public class UsuarioController {
 
     @GetMapping("/usuario/{re}/cargo")
     ResponseEntity<Cargo> getCargoByRe(@PathVariable String re) {
-        UsuarioService usuarioService = new UsuarioService();
-        Cargo cargo = usuarioService.getCargoByRe(re);
+        Cargo cargo = cargoService.getCargoByRe(re);
         return (cargo == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(cargo);
     }
 }
