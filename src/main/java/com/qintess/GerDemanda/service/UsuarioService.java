@@ -4,6 +4,8 @@ import com.qintess.GerDemanda.model.Usuario;
 import com.qintess.GerDemanda.model.UsuarioPerfil;
 import com.qintess.GerDemanda.repositories.UsuarioPerfilRepository;
 import com.qintess.GerDemanda.repositories.UsuarioRepository;
+import com.qintess.GerDemanda.service.dto.UsuarioDTO;
+import com.qintess.GerDemanda.service.mapper.UsuarioMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,9 @@ public class UsuarioService {
     @Autowired
     UsuarioPerfilRepository usuarioPerfilRepository;
 
+    @Autowired
+    private UsuarioMapper usuarioMapper;
+
     public HashMap<String, Object> getPerfilUsuario(int idUsu) {
         UsuarioPerfil usuarioPerfil = usuarioPerfilRepository.findByUsuarioPerfilAndStatus(idUsu, STATUS_ATIVO_CODIGO);
         HashMap<String, Object> perfil = new HashMap<String, Object>();
@@ -30,16 +35,20 @@ public class UsuarioService {
         return perfil;
     }
 
-    public List<Usuario> getUsuariosAtivos() {
-        return usuarioRepository.findByStatusAndCargoIdOrderByNomeAsc(STATUS_ATIVO_DESCRICAO, CARGO_COLABORADOR);
+    public List<UsuarioDTO> getUsuariosAtivos() {
+        return usuarioMapper.toDto(usuarioRepository.findByStatusAndCargoIdOrderByNomeAsc(STATUS_ATIVO_DESCRICAO, CARGO_COLABORADOR));
     }
 
     public List<Usuario> getUsuarioBySigla(int id) {
-        return usuarioRepository.findByStatusAndCargoIdAndListaSiglasSiglaIdOrderByNomeAsc(STATUS_ATIVO_DESCRICAO, CARGO_COLABORADOR, id);
+        return (usuarioRepository.findByStatusAndCargoIdAndListaSiglasSiglaIdOrderByNomeAsc(STATUS_ATIVO_DESCRICAO, CARGO_COLABORADOR, id));
     }
 
-    public Usuario getUsuarioByRe(String re) {
-        return usuarioRepository.findFirstByCodigoRe(re);
+    public List<UsuarioDTO> getUsuarioBySiglaDTO(int id) {
+        return usuarioMapper.toDto(this.getUsuarioBySigla(id));
+    }
+
+    public UsuarioDTO getUsuarioByRe(String re) {
+        return usuarioMapper.toDto(usuarioRepository.findFirstByCodigoRe(re));
     }
 
     public boolean checkUsuario(String re, String senha) {

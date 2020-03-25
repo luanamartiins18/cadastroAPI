@@ -31,6 +31,7 @@ public class Usuario {
 	@Column
 	private String cpf;
 
+	@JsonIgnore
 	@Column
 	private String senha;
 
@@ -68,6 +69,10 @@ public class Usuario {
 	@JsonIgnore
 	@OneToMany(mappedBy = "usuarioSigla", fetch = FetchType.LAZY)
 	Set<UsuarioSigla> listaSiglas = new HashSet<UsuarioSigla>();
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "usuarioPerfil", fetch = FetchType.LAZY)
+	Set<UsuarioPerfil> listaPerfil = new HashSet<UsuarioPerfil>();
 }
 
 

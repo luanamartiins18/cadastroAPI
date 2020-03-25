@@ -1,9 +1,9 @@
 package com.qintess.GerDemanda.controller;
 
 import com.qintess.GerDemanda.model.Cargo;
-import com.qintess.GerDemanda.model.Usuario;
 import com.qintess.GerDemanda.service.CargoService;
 import com.qintess.GerDemanda.service.UsuarioService;
+import com.qintess.GerDemanda.service.dto.UsuarioDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,14 +25,14 @@ public class UsuarioController {
     CargoService cargoService;
 
     @GetMapping("/usuario/{re}")
-    ResponseEntity<Usuario> getUsuario(@PathVariable String re) {
-        Usuario usuario = usuarioService.getUsuarioByRe(re);
+    ResponseEntity<UsuarioDTO> getUsuario(@PathVariable String re) {
+        UsuarioDTO usuario = usuarioService.getUsuarioByRe(re);
         return (usuario == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(usuario);
     }
 
     @GetMapping("/sigla/{idSigla}/usuarios")
-    ResponseEntity<List<Usuario>> getUsuarioBySigla(@PathVariable Integer idSigla) {
-        List<Usuario> usuarios = usuarioService.getUsuarioBySigla(idSigla);
+    ResponseEntity<List<UsuarioDTO>> getUsuarioBySigla(@PathVariable Integer idSigla) {
+        List<UsuarioDTO> usuarios = usuarioService.getUsuarioBySiglaDTO(idSigla);
         return ResponseEntity.ok().body(usuarios);
     }
 
