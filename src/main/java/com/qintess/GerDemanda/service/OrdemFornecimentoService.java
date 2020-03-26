@@ -3,21 +3,27 @@ package com.qintess.GerDemanda.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import com.qintess.GerDemanda.PersistenceHelper;
+import com.qintess.GerDemanda.repositories.OrdemFornecimentoRepository;
+import com.qintess.GerDemanda.service.dto.OrdensConcluidasDTO;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import com.qintess.GerDemanda.model.OrdemFornecimento;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class OrdemFornecimentoService {
-	
+
+	@Autowired
+	OrdemFornecimentoRepository ordemFornecimentoRepository;
 	
 	public List<Integer> getUsuariosOf(int idOf){
 		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
@@ -271,6 +277,11 @@ public class OrdemFornecimentoService {
 
 		
 		return response;
+	}
+
+	public List<OrdensConcluidasDTO> findOrdensConcluidas() {
+		return this.ordemFornecimentoRepository.findOrdensConcluidas()
+				.stream().map(obj-> new OrdensConcluidasDTO(obj)).collect(Collectors.toList());
 	}
 
 }
