@@ -1,35 +1,32 @@
 package com.qintess.GerDemanda.service.mapper;
 
+
 import com.qintess.GerDemanda.model.Mensagem;
-import com.qintess.GerDemanda.model.Sigla;
-import com.qintess.GerDemanda.model.Usuario;
-import com.qintess.GerDemanda.service.dto.MensagemDTO;
+import com.qintess.GerDemanda.service.dto.UsuarioMensagemDTO;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-import java.util.ArrayList;
-import java.util.Date;
+@Mapper(componentModel = "spring", uses = {})
+public interface MensagemMapper extends EntityMapper<UsuarioMensagemDTO, Mensagem>  {
+    @Mapping(target = "id", source = "idMsg")
+    @Mapping(target = "dtExpiracao", source = "dtExpiracao")
+    @Mapping(target = "dtCriacao", source = "dtCriacao")
+    @Mapping(target = "corpo", source = "corpo")
+    @Mapping(target = "sigla.descricao", source = "sigla")
+    @Mapping(target = "titulo", source = "titulo")
+    @Mapping(target = "responsavel.nome", source = "responsavel")
+    @Mapping(target = "status", source = "status")
+    @Mapping(target = "tipoMensagem", source = "tpMsg")
+    Mensagem toEntity(UsuarioMensagemDTO dto);
 
-public abstract class MensagemMapper {
-
-    public static Mensagem dtoToModel(MensagemDTO dto) {
-        return Mensagem.builder()
-                .corpo(dto.getCorpo())
-                .responsavel(Usuario.builder().id(dto.getIdResp()).build())
-                .dtExpiracao(dto.getDtExp())
-                .sigla(Sigla.builder().id(dto.getIdSigla()).build())
-                .titulo(dto.getTitulo())
-                .dtCriacao(new Date())
-                .listaUsuarios(new ArrayList<>())
-                .status(1)
-                .build();
-    }
-
-    public static MensagemDTO modelToDto(Mensagem model) {
-        return MensagemDTO.builder()
-                .corpo(model.getCorpo())
-                .idResp(model.getResponsavel().getId())
-                .dtExp(model.getDtExpiracao())
-                .idSigla(model.getSigla().getId())
-                .titulo(model.getTitulo())
-                .build();
-    }
+    @Mapping(target = "idMsg", source = "id")
+    @Mapping(target = "dtExpiracao", source = "dtExpiracao")
+    @Mapping(target = "dtCriacao", source = "dtCriacao")
+    @Mapping(target = "corpo", source = "corpo")
+    @Mapping(target = "sigla", source = "sigla.descricao")
+    @Mapping(target = "titulo", source = "titulo")
+    @Mapping(target = "responsavel", source = "responsavel.nome")
+    @Mapping(target = "status", source = "status")
+    @Mapping(target = "tpMsg", source = "tipoMensagem")
+    UsuarioMensagemDTO toDto(Mensagem entity);
 }

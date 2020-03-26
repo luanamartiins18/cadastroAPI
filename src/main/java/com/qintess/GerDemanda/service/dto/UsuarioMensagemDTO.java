@@ -16,15 +16,15 @@ import java.util.Objects;
 @Builder
 public class UsuarioMensagemDTO {
     private Integer idMsg;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private Date dtExpiracao;
     private String corpo;
     private String tpMsg;
     private String sigla;
     private Integer idUsuMsg;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private Date dtCriacao;
     private String titulo;
     private String responsavel;
     private Integer status;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private Date dtExpiracao;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private Date dtCriacao;
 }

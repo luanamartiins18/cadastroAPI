@@ -2,7 +2,7 @@ package com.qintess.GerDemanda.controller;
 
 import com.qintess.GerDemanda.service.MensagemService;
 import com.qintess.GerDemanda.service.dto.UsuarioMensagemDTO;
-import com.qintess.GerDemanda.service.dto.MensagemDTO;
+import com.qintess.GerDemanda.service.dto.MensagemInDTO;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,20 +43,21 @@ public class MensagemController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/mensagem-geral")
-    public ResponseEntity<String> insereMensagemGeral(@RequestBody MensagemDTO dto) {
+    public ResponseEntity<String> insereMensagemGeral(@RequestBody MensagemInDTO dto) {
         mensagemService.insereMensagem(dto, "GERAL");
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/mensagem-sigla")
-    public ResponseEntity<String> insereMensagemSigla(@RequestBody MensagemDTO dto) {
+    public ResponseEntity<String> insereMensagemSigla(@RequestBody MensagemInDTO dto) {
         mensagemService.insereMensagem(dto, "SIGLA");
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
     @GetMapping("/mensagens")
-    public ResponseEntity<List<HashMap<String, Object>>> getMensagens() {
-        return ResponseEntity.ok().body(mensagemService.listaMensagens());
+    ResponseEntity<List<UsuarioMensagemDTO>> getMensagem() {
+        List<UsuarioMensagemDTO> listaMensagem = mensagemService.getMensagem();
+        return (listaMensagem.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listaMensagem);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/mensagem-status")

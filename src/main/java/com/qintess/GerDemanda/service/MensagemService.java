@@ -5,10 +5,11 @@ import com.qintess.GerDemanda.model.Usuario;
 import com.qintess.GerDemanda.model.UsuarioMensagem;
 import com.qintess.GerDemanda.repositories.MensagemRepository;
 import com.qintess.GerDemanda.repositories.UsuarioMensagemRepository;
-import com.qintess.GerDemanda.service.dto.MensagemDTO;
+import com.qintess.GerDemanda.service.dto.MensagemInDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioMensagemDTO;
+import com.qintess.GerDemanda.service.mapper.MensagemInMapper;
 import com.qintess.GerDemanda.service.mapper.MensagemMapper;
-import com.qintess.GerDemanda.service.mapper.UsuarioMensagemDTOMapper;
+import com.qintess.GerDemanda.service.mapper.UsuarioMensagemMapper;
 import org.hibernate.ObjectNotFoundException;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,13 @@ public class MensagemService {
     UsuarioMensagemRepository usuarioMensagemRepository;
     @Autowired
     UsuarioService usuarioService;
+    @Autowired
+    UsuarioMensagemMapper usuarioMensagemMapper;
+    @Autowired
+    MensagemMapper mensagemMapper;
 
     public List<UsuarioMensagemDTO> getAllMensagensByUsuarios(int idUsuario) {
-        return this.usuarioMensagemRepository.findByMensagemStatusAndUsuarioMensId(1, idUsuario)
-                .stream().map(obj -> UsuarioMensagemDTOMapper.modelToDto(obj)).collect(Collectors.toList());
+        return usuarioMensagemMapper.toDto(this.usuarioMensagemRepository.findByMensagemStatusAndUsuarioMensId(1, idUsuario));
     }
 
     public UsuarioMensagem getMensagemId(Integer id) {
@@ -52,45 +56,17 @@ public class MensagemService {
     }
 
     @Transactional
-    public void insereMensagem(MensagemDTO dto, String tipo) {
+    public void insereMensagem(MensagemInDTO dto, String tipo) {
         List<Usuario> listUsu = usuarioService.getUsuarioBySigla(dto.getIdSigla());
-        Mensagem obj = MensagemMapper.dtoToModel(dto);
+        Mensagem obj = MensagemInMapper.dtoToModel(dto);
         obj.setTipoMensagem(tipo);
         obj.setListaUsuarios(listUsu.stream().map(usuario -> new UsuarioMensagem(usuario, obj)).collect(Collectors.toList()));
         mensagemRepository.saveAndFlush(obj);
     }
 
-    public List<HashMap<String, Object>> getMensagens() {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
-        EntityManager em = entityManagerFactory.createEntityManager();
-        String sql = "select m.id, m.corpo, m.dt_criacao, m.dt_expiracao, m.tp_mensagem, m.status, u.nome , u2.nome as responsavel, m.titulo from mensagem m " +
-                "inner join usuario_x_mensagem um on m.id = um.fk_mensagem " +
-                "inner join usuario u on um.fk_usuario = u.id " +
-                "inner join usuario u2 on m.fk_responsavel = u2.id "
-                + "order by m.dt_expiracao asc;";
-        Query query = em.createNativeQuery(sql);
-        List<Object> lista = query.getResultList();
-        List<HashMap<String, Object>> response = new ArrayList<HashMap<String, Object>>();
-        for (Object obj : lista) {
-            HashMap<String, Object> atual = new HashMap<String, Object>();
-            JSONArray objAtual = new JSONArray(obj);
-            atual.put("idMsg", objAtual.get(0));
-            atual.put("corpo", objAtual.get(1));
-            atual.put("dtCriacao", objAtual.get(2));
-            atual.put("dtExpiracao", objAtual.get(3));
-            atual.put("tpMsg", objAtual.get(4));
-            atual.put("status", objAtual.get(5));
-            atual.put("usuario", objAtual.get(6));
-            atual.put("responsavel", objAtual.get(7));
-            atual.put("titulo", objAtual.get(8));
-            response.add(atual);
-        }
-        em.close();
-        entityManagerFactory.close();
-        return response;
+    public List<UsuarioMensagemDTO> getMensagem() {
+       return mensagemMapper.toDto(mensagemRepository.findByOrderByDtExpiracaoAsc());
     }
-
-
 
     public List<HashMap<String, Object>> getMensagensColaborador(int id) {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");

@@ -12,7 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MensagemDTO {
+public class MensagemInDTO {
     private String corpo;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dtExp;

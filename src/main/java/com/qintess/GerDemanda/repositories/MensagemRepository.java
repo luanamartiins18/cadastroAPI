@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface MensagemRepository extends JpaRepository<Mensagem, Integer> {
-
+    List<Mensagem> findByOrderByDtExpiracaoAsc();
 }
