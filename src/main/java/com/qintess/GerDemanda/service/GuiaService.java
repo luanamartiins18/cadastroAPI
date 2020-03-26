@@ -1,5 +1,7 @@
 package com.qintess.GerDemanda.service;
 import javax.persistence.Query;
+
+import com.qintess.GerDemanda.PersistenceHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +17,7 @@ import javax.persistence.Persistence;
 public class GuiaService {
 	
 	public void atualizaTarefaGuia(String json) {
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();			
 		JSONObject tarefa = new JSONObject(json);
 		
@@ -70,7 +72,7 @@ public class GuiaService {
 		}finally {
 			
 			em.close();
-			entityManagerFactory.close();
+
 			
 		}	
 
@@ -110,7 +112,7 @@ public class GuiaService {
 	}	
 	
 	public boolean atividadeJaExiste(String atividade) {
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();			
 		
 		
@@ -124,18 +126,18 @@ public class GuiaService {
 			String trfAtual = (String)i;
 			if(atividade.equals(trfAtual)) {
 				em.close();
-				entityManagerFactory.close();
+
 				return true;
 			}			
 		}
 		
 		em.close();
-		entityManagerFactory.close();
+
 		return false;	
 	}
 	
 	public Integer criaNumeroAtividade(int idDisciplina) {
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();			
 
 		String sql = "select distinct atividade from tarefa_guia " + 
@@ -153,13 +155,13 @@ public class GuiaService {
 		int numAtividade = Integer.parseInt(ultimaAtividade.substring(comeco, fim)) + 1;
 		
 		em.close();
-		entityManagerFactory.close();
+
 		
 		return numAtividade;
 	}
 	
 	public Integer criaNumeroTarefa(int idDisciplina, String atividade) {
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();
 
 		//Valor default para quando a atividade está sendo criada e não possui nenhuma tarefa ainda
@@ -187,7 +189,7 @@ public class GuiaService {
 		}
 
 		em.close();
-		entityManagerFactory.close();
+
 
 		return numTrf;	
 	}
@@ -199,7 +201,7 @@ public class GuiaService {
 	}
 
 	public void insereTarefaGuia(String param) {
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();
 
 		em.getTransaction().begin();
@@ -263,12 +265,12 @@ public class GuiaService {
 
 		em.getTransaction().commit();
 		em.close();
-		entityManagerFactory.close();
+
 	}
 	
 	public List<HashMap<String, Object>> getAtividades(){
 		
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
 		
@@ -290,10 +292,31 @@ public class GuiaService {
 		}
 		
 		em.close();
-		entityManagerFactory.close();
+
 		return res;		
 	}
-	
+
+	public HashMap<String, String> getVersaoAtualGuia(){
+
+        EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
+        EntityManager em = entityManagerFactory.createEntityManager();
+
+        String sql  = "Select descricao from versao_guia";
+        Query query = em.createNativeQuery(sql);
+
+        List<Object> resVersaoGuia = query.getResultList();
+        HashMap<String, String> res = new HashMap<String, String>();
+
+        if(!resVersaoGuia.isEmpty()){
+           String versao = (String)resVersaoGuia.get(0);
+           res.put("descricao", versao);
+        }
+
+        em.close();
+
+
+        return res;
+    }
 }
 	
 

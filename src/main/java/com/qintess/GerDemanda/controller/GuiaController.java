@@ -100,6 +100,20 @@ public class GuiaController {
 		}		
 		
 	}
+
+	@GetMapping("/versao-guia")
+	public ResponseEntity<HashMap<String, String>> getVersaoAtualGuia(){
+		GuiaService gs = new GuiaService();
+		HashMap<String, String> res = gs.getVersaoAtualGuia();
+
+		if(res.isEmpty()){
+			return new ResponseEntity<HashMap<String, String>>(HttpStatus.NOT_FOUND);
+		}else{
+			return new ResponseEntity<HashMap<String, String>>(HttpStatus.OK).ok().body(res);
+		}
+
+
+	}
 	
 	
 }

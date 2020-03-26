@@ -8,6 +8,7 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import com.qintess.GerDemanda.PersistenceHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -18,7 +19,7 @@ public class MensagemService {
 	
 	public List<HashMap<String, Object>> getAllMensagensColaborador(int id){
 		
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 	
 		String sql = "select m.*, um.dt_leitura, um.id as idUM, s.descricao, u.nome from mensagem m " + 
@@ -56,8 +57,6 @@ public class MensagemService {
 		}
 				
 		em.close();
-		entityManagerFactory.close();		
-		
 		return response;
 	}	
 	
@@ -65,7 +64,7 @@ public class MensagemService {
 	
 	public void marcaLida(int idMsgUsu) {
 		
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();					
 		
 		String sql = "UPDATE usuario_x_mensagem set dt_leitura = current_timestamp() where id = :idMsgUsu ;";
@@ -77,12 +76,11 @@ public class MensagemService {
 		em.getTransaction().commit();
 		
 		em.close();
-		entityManagerFactory.close();		
 	}
 	
 	public List<HashMap<String, Object>> getMensagens() {
 		
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();					
 		
 		String sql = "select m.id, m.corpo, m.dt_criacao, m.dt_expiracao, m.tp_mensagem, m.status, u.nome , u2.nome as responsavel, m.titulo from mensagem m " + 
@@ -112,13 +110,12 @@ public class MensagemService {
 		}
 			
 		em.close();
-		entityManagerFactory.close();
 		return response;		
 	}
 	
 	public void insereMensagemGeral(String corpo, int idResponsavel, String dtExp, String titulo) {
 		
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
 		UsuarioService usuarioService = new UsuarioService();
@@ -139,7 +136,7 @@ public class MensagemService {
 			for(Usuario usu: listUsu) {
 				
 				sql = "INSERT INTO usuario_x_mensagem(fk_usuario, fk_mensagem, dt_leitura) VALUES ("
-						+ Integer.toString(usu.getId()) + ",  (SELECT MAX(id) from MENSAGEM), null);";
+						+ Integer.toString(usu.getId()) + ",  (SELECT MAX(id) from mensagem), null);";
 				
 				query = em.createNativeQuery(sql);
 				query.executeUpdate();				
@@ -152,12 +149,11 @@ public class MensagemService {
 		
 		em.getTransaction().commit();
 		em.close();
-		entityManagerFactory.close();	
 	}
 	
 	public void insereMensagemSigla(String corpo, int idResponsavel, String dtExp, int idSigla, String titulo) {
 		
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
 		UsuarioService usuarioService = new UsuarioService();
@@ -166,7 +162,7 @@ public class MensagemService {
 		em.getTransaction().begin();
 		
 		try {
-			String sql = "INSERT INTO MENSAGEM (corpo, dt_criacao, dt_expiracao, tp_mensagem, status, fk_responsavel, titulo, fk_sigla) VALUES ( '"
+			String sql = "INSERT INTO mensagem (corpo, dt_criacao, dt_expiracao, tp_mensagem, status, fk_responsavel, titulo, fk_sigla) VALUES ( '"
 					+ corpo + "', CURRENT_TIMESTAMP(), '" + dtExp + "', 'SIGLA', 1, " + Integer.toString(idResponsavel) 
 					+ ",'" + titulo + "'," + Integer.toString(idSigla) + ");";
 			
@@ -180,7 +176,7 @@ public class MensagemService {
 			for(Usuario usu: listUsu) {
 				
 				sql = "INSERT INTO usuario_x_mensagem(fk_usuario, fk_mensagem, dt_leitura) VALUES ("
-						+ Integer.toString(usu.getId()) + ",  (SELECT MAX(id) from MENSAGEM), null);";
+						+ Integer.toString(usu.getId()) + ",  (SELECT MAX(id) from mensagem), null);";
 				
 				query = em.createNativeQuery(sql);
 				query.executeUpdate();				
@@ -193,12 +189,11 @@ public class MensagemService {
 		
 		em.getTransaction().commit();
 		em.close();
-		entityManagerFactory.close();	
 	}
 	
 	public List<HashMap<String, Object>> getMensagensColaborador(int id){
 		
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 	
 		String sql = "select m.*, um.dt_leitura, um.id as idUM, s.descricao, u.nome from mensagem m " + 
@@ -236,14 +231,12 @@ public class MensagemService {
 		}
 				
 		em.close();
-		entityManagerFactory.close();		
-		
 		return response;
 	}	
 	
 	public List<HashMap<String, Object>> listaMensagens(){
 		
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 	
 		String sql = "select m.*, u.nome, s.descricao from mensagem m "
@@ -275,14 +268,12 @@ public class MensagemService {
 		}
 				
 		em.close();
-		entityManagerFactory.close();		
-		
 		return response;
 	}	
 	
 	public List<HashMap<String, Object>> detalhaMensagem(int id){
 		
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 	
 		String sql = "select m.id as idM, m.corpo, m.dt_criacao, m.dt_expiracao, m.tp_mensagem, m.status, m.titulo," + 
@@ -319,14 +310,14 @@ public class MensagemService {
 		}
 				
 		em.close();
-		entityManagerFactory.close();		
+
 		
 		return response;
 	}
 	
 	public void alteraStatusMsg(int idMsg, String acao) {
 		
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();					
 		String sql = "";
 		
@@ -345,7 +336,6 @@ public class MensagemService {
 		em.getTransaction().commit();
 		
 		em.close();
-		entityManagerFactory.close();		
 	}	
 }
 

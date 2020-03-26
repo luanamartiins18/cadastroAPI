@@ -10,6 +10,7 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import com.qintess.GerDemanda.PersistenceHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,7 +20,7 @@ public class OrdemFornecimentoService {
 	
 	
 	public List<Integer> getUsuariosOf(int idOf){
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
 		String sql = "select fk_usuario from usuario_x_of where fk_ordem_forn = :idOf and status = 1;";
@@ -29,12 +30,12 @@ public class OrdemFornecimentoService {
 		List<Integer> usuariosOf = query.getResultList();		
 			
 		em.close();
-		entityManagerFactory.close();		
+
 		return usuariosOf;
 	}
 	
 	public HashMap<String, Object> getSituacaoOf(int idOf){
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
 		String sql = "select fk_situacao_usu, referencia from ordem_forn where id = :idOf ;";
@@ -57,14 +58,14 @@ public class OrdemFornecimentoService {
 		}
 				
 		em.close();
-		entityManagerFactory.close();		
+
 		
 		return response;
 	}	
 	
 	public List<HashMap<String, Object>> getOrdemDeFornecimento() {
 		
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();					
 		
 		String sql = 
@@ -130,14 +131,14 @@ public class OrdemFornecimentoService {
 			
 		
 		em.close();
-		entityManagerFactory.close();
+
 		
 		return response;
 	}
 	
 	public OrdemFornecimento getOrdemDeFornecimento(int id) {
 		
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();					
 		
 		String sql = "select distinct orf from OrdemFornecimento orf "
@@ -155,13 +156,13 @@ public class OrdemFornecimentoService {
 		List<OrdemFornecimento> ordemF = query.getResultList();		
 		
 		em.close();
-		entityManagerFactory.close();
+
 		
 		return ordemF.get(0);
 	}
 	
 	public void registraUsuSit(List<Integer> listaUsu, int situacao, int ofId, String referencia){
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();			
 		em.getTransaction().begin();
 		
@@ -208,13 +209,13 @@ public class OrdemFornecimentoService {
 			
 		em.getTransaction().commit();		
 		em.close();
-		entityManagerFactory.close();		
+
 	}	
 	
 		
 	public List<HashMap<String, Object>> getOrdensFornUsuario(int id){
 		
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 	
 		String sql = "select orf.id as idOf, orf.numero_OF_genti, orf.gerente_t, orf.responsavel_t, "
@@ -267,7 +268,7 @@ public class OrdemFornecimentoService {
 		}
 				
 		em.close();
-		entityManagerFactory.close();		
+
 		
 		return response;
 	}

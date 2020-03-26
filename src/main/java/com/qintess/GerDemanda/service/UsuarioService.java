@@ -8,6 +8,7 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import com.qintess.GerDemanda.PersistenceHelper;
 import com.qintess.GerDemanda.model.*;
 
 public class UsuarioService {
@@ -15,7 +16,7 @@ public class UsuarioService {
 
 	public HashMap<String, Object> getPerfilUsuario(int idUsu){
 
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();
 
 		String sql = "select p.descricao from usuario_x_perfil up " +
@@ -32,19 +33,18 @@ public class UsuarioService {
 		perfil.put("descricao", res.get(0));
 
 		em.close();
-		entityManagerFactory.close();
 		return perfil;
 	}
 
 
 	public List<Usuario> getUsuariosAtivos(){
 
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();
 
 		TypedQuery<Usuario> query =
 				em.createQuery("select distinct usu from "
-								+ " Usuario usu "
+								+ " usuario usu "
 								+ "left join fetch usu.listaSiglas lis "
 								+ "left join fetch usu.listaPerfil lp "
 								+ "where usu.status = 'Ativo' and usu.cargo.id = 3", Usuario.class);
@@ -52,13 +52,12 @@ public class UsuarioService {
 		List<Usuario> listaUsu = query.getResultList();
 
 		em.close();
-		entityManagerFactory.close();
 		return listaUsu;
 	}
 
 	public List<Usuario> getUsuarioBySigla(int id){
 
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();
 
 		TypedQuery<Usuario> query =
@@ -75,26 +74,26 @@ public class UsuarioService {
 
 
 		em.close();
-		entityManagerFactory.close();
+
 		return listaUsu;
 	}
 
 	public Usuario getUsuarioById(int id){
 
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();
 
 		Usuario usuario = em.find(Usuario.class, id);
 
 
 		em.close();
-		entityManagerFactory.close();
+
 		return usuario;
 	}
 
 	public Usuario getUsuarioByRe(String re) {
 
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();
 
 		String sql = "FROM Usuario usu "
@@ -110,13 +109,13 @@ public class UsuarioService {
 		List<Usuario> usuario = query.getResultList();
 
 		em.close();
-		entityManagerFactory.close();
+
 		return usuario.get(0);
 	}
 
 	public boolean checkUsuario(String re, String senha) {
 
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();
 
 		boolean resultado = true;
@@ -131,13 +130,12 @@ public class UsuarioService {
 		}
 
 		em.close();
-		entityManagerFactory.close();
 		return resultado;
 	}
 
 	public Cargo getCargoByRe(String re) {
 
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();
 
 		String sql = "FROM Usuario usu where usu.codigoRe = :re ";
@@ -147,7 +145,7 @@ public class UsuarioService {
 		List<Usuario> usuario = query.getResultList();
 
 		em.close();
-		entityManagerFactory.close();
+
 		return usuario.get(0).getCargo();
 	}
 

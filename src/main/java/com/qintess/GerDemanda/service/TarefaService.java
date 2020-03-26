@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import com.qintess.GerDemanda.PersistenceHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,7 +18,7 @@ public class TarefaService {
 	
 	
 	public List<HashMap<String, Object>> getAtividades(){
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
 		String sql = "select tarefa, fk_disciplina from tarefa_guia";
@@ -40,14 +41,14 @@ public class TarefaService {
 		
 		
 		em.close();
-		entityManagerFactory.close();
+
 		return disciplinas;				
 	}
 	
 	
 	
 	public List<HashMap<String, Object>> getItensGuia(){
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
 		String sql ="SELECT tg.*, um.descricao as desc_uni_med, ig.id as id_item, ig.limite_itens, ig.componente, cg.descricao as desc_complex, cg.id as id_complex, ig.descricao_complex, ig.valor  from tarefa_guia tg\r\n" + 
@@ -108,12 +109,12 @@ public class TarefaService {
 		}		
 		
 		em.close();
-		entityManagerFactory.close();		
+
 		return guia;
 	}
 	
 	public List<HashMap<String, Object>> getDisciplinas(){
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
 		String sql = "select d.id, d.descricao, p.descricao as p_descricao from disciplina d " + 
@@ -138,12 +139,12 @@ public class TarefaService {
 		
 		
 		em.close();
-		entityManagerFactory.close();
+
 		return disciplinas;				
 	}
 	
 	public List<HashMap<String, Object>> getComplexidades(){
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
 		String sql = "select * from complex_guia ; ";
@@ -165,12 +166,12 @@ public class TarefaService {
 		
 		
 		em.close();
-		entityManagerFactory.close();
+
 		return complexidades;				
 	}
 	
 	public List<HashMap<String, Object>> getUniMedidas(){
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
 		String sql = "select * from uni_medida order by descricao";
@@ -192,12 +193,12 @@ public class TarefaService {
 		
 		
 		em.close();
-		entityManagerFactory.close();
+
 		return uniMedidas;				
 	}
 	
 	public String getNumOf(int id) {
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
 		String sql = "select numero_of_genti from ordem_forn where id = :id";
@@ -207,23 +208,23 @@ public class TarefaService {
 		JSONArray json = new JSONArray(query.getResultList());
 		
 		em.close();
-		entityManagerFactory.close();
+
 		return json.getString(0);
 	}
 	
 	
 	
 	public boolean insereTarefa(String param) {
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
 		JSONObject json = new JSONObject(param);
-		
+		System.out.println(json);
 		String historia = json.getString("historia");
 		String sprint = json.getString("sprint");
 		String observacao = json.getString("observacao");
 		String artefato = json.getString("artefato");		
-		int quantidade = json.getInt("quantidade");
+		String quantidade = json.getString("quantidade");
 		int idUsu = json.getInt("usu");
 		int idOf = json.getInt("of");	
 		int numTarefa = json.getInt("numTarefa");	
@@ -240,7 +241,7 @@ public class TarefaService {
 		
 		query.setParameter("historia", historia);
 		query.setParameter("sprint", sprint);
-		query.setParameter("quantidade", quantidade);
+		query.setParameter("quantidade", quantidade.equals("") ? null : quantidade);
 		query.setParameter("artefato", artefato);
 		query.setParameter("observacao", observacao);
 		query.setParameter("idItem", idItem);
@@ -252,14 +253,14 @@ public class TarefaService {
 		em.getTransaction().commit();
 		
 		em.close();
-		entityManagerFactory.close();		
+
 		return true;
 	}
 	
 	
 	public void atualizaTarefa(String param) {
 		
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
 		JSONObject json = new JSONObject(param);
@@ -301,11 +302,11 @@ public class TarefaService {
 		em.getTransaction().commit();
 		
 		em.close();
-		entityManagerFactory.close();		
+
 	}
 	
 	public HashMap<String, Integer> getValorTarefa(int idUsu, int idOf) {
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
 	
@@ -381,12 +382,12 @@ public class TarefaService {
 		resultado.put("valorPlanejadoTotal", valorPlanejado);	
 		
 		em.close();
-		entityManagerFactory.close();
+
 		return resultado;
 	}
 		
 	private int getIdUsuOf(int usu, int of) {
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();
 		
 		String sql = "select id from usuario_x_of where fk_usuario = :usu and fK_ordem_forn = :of and status = 1";
@@ -399,17 +400,17 @@ public class TarefaService {
 		JSONArray json = new JSONArray(usuOf);	
 		
 		em.close();
-		entityManagerFactory.close();
+
 		
 		return json.getInt(0);		
 	}
 	
 	
 	public List<HashMap<String, Object>> getTarefasUsuario(int idUsu, int idOf){
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
-		String sql = "select t.* , s.descricao, ig.valor, cg.descricao as complexidade, tg.fk_disciplina, tg.id as idTrf from tarefa_of t " + 
+		String sql = "select t.* , s.descricao, ig.valor, cg.descricao as complexidade, tg.fk_disciplina, tg.id as idTrf, ig.componente from tarefa_of t " +
 				"	inner join usuario_x_of u " + 
 				"		on t.fk_of_usuario = u.id " + 
 				"	inner join situacao s " + 
@@ -451,6 +452,7 @@ public class TarefaService {
 			atual.put("complexidade", json.get(15));
 			atual.put("disciplina", json.getInt(16));
 			atual.put("idTrfGuia", json.getInt(17));
+			atual.put("componente", json.get(18));
 			
 			
 			tarefasUsu.add(atual);			
@@ -458,12 +460,12 @@ public class TarefaService {
 		
 		
 		em.close();
-		entityManagerFactory.close();
+
 		return tarefasUsu;				
 	}
 	
 	public void deletaTarefa(int idTrf) {
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
 		String sql = "DELETE FROM tarefa_of where id = :idTrf";
@@ -475,12 +477,12 @@ public class TarefaService {
 		em.getTransaction().commit();		
 		
 		em.close();
-		entityManagerFactory.close();	
+
 	}
 	
 	
 	public void alteraSituacaoTarefa(int idTrf, int idSit) {
-		EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
 		String sql = "UPDATE tarefa_of set fk_situacao = :idSit, dt_alteracao = current_timestamp() where id = :idTrf";
@@ -494,7 +496,7 @@ public class TarefaService {
 		em.getTransaction().commit();		
 		
 		em.close();
-		entityManagerFactory.close();	
+
 	}
 	
 	

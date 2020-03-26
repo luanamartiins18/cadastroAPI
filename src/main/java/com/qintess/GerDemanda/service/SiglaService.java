@@ -6,6 +6,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
+import com.qintess.GerDemanda.PersistenceHelper;
 import com.qintess.GerDemanda.model.Sigla;
 
 public class SiglaService {
@@ -13,15 +14,14 @@ public class SiglaService {
 	
 	public List<Sigla> getSiglas() {
 		
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager(); 
 		
-		Query query = em.createQuery("from Sigla sig order by sig.descricao");	
+		Query query = em.createQuery("from sigla sig order by sig.descricao");
 		
 		List<Sigla> listaSit = query.getResultList();		
 		
 		em.close();
-		entityManagerFactory.close();		
 		return listaSit;	
 	}
 }

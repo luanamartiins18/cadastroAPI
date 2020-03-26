@@ -6,6 +6,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
+import com.qintess.GerDemanda.PersistenceHelper;
 import com.qintess.GerDemanda.model.Situacao;
 
 public class SituacaoService {
@@ -13,7 +14,7 @@ public class SituacaoService {
 	
 	public List<Situacao> getSituacao() {
 		
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager(); 
 		
 		Query query = em.createQuery("from Situacao sit order by sit.descricao");	
@@ -21,7 +22,6 @@ public class SituacaoService {
 		List<Situacao> listaSit = query.getResultList();		
 		
 		em.close();
-		entityManagerFactory.close();		
 		return listaSit;	
 	}
 }
