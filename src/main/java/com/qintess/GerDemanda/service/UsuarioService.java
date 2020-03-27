@@ -1,15 +1,16 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.model.Usuario;
-import com.qintess.GerDemanda.model.UsuarioPerfil;
 import com.qintess.GerDemanda.repositories.UsuarioPerfilRepository;
 import com.qintess.GerDemanda.repositories.UsuarioRepository;
+import com.qintess.GerDemanda.service.dto.PerfilDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
+import com.qintess.GerDemanda.service.dto.UsuarioPerfilDTO;
 import com.qintess.GerDemanda.service.mapper.UsuarioMapper;
+import com.qintess.GerDemanda.service.mapper.UsuarioPerfilMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -28,15 +29,18 @@ public class UsuarioService {
     @Autowired
     private UsuarioMapper usuarioMapper;
 
-    public HashMap<String, Object> getPerfilUsuario(int idUsu) {
-        UsuarioPerfil usuarioPerfil = usuarioPerfilRepository.findByUsuarioPerfilAndStatus(idUsu, STATUS_ATIVO_CODIGO);
-        HashMap<String, Object> perfil = new HashMap<String, Object>();
-        perfil.put("descricao", usuarioPerfil.getPerfil());
-        return perfil;
+    @Autowired
+    private UsuarioPerfilMapper usuarioPerfilMapper;
+
+    public PerfilDTO getPerfilUsuario(int idUsu) {
+        UsuarioPerfilDTO dto = usuarioPerfilMapper.toDto(
+                usuarioPerfilRepository.findByUsuarioPerfilIdAndStatus(idUsu, STATUS_ATIVO_CODIGO));
+        return dto.getPerfil();
     }
 
     public List<UsuarioDTO> getUsuariosAtivos() {
-        return usuarioMapper.toDto(usuarioRepository.findByStatusAndCargoIdOrderByNomeAsc(STATUS_ATIVO_DESCRICAO, CARGO_COLABORADOR));
+        return usuarioMapper.toDto(
+                usuarioRepository.findByStatusAndCargoIdOrderByNomeAsc(STATUS_ATIVO_DESCRICAO, CARGO_COLABORADOR));
     }
 
     public List<Usuario> getUsuarioBySigla(int id) {

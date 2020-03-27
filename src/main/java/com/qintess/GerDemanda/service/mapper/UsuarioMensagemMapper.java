@@ -1,9 +1,6 @@
 package com.qintess.GerDemanda.service.mapper;
 
 
-import com.qintess.GerDemanda.model.Mensagem;
-import com.qintess.GerDemanda.model.Sigla;
-import com.qintess.GerDemanda.model.Usuario;
 import com.qintess.GerDemanda.model.UsuarioMensagem;
 import com.qintess.GerDemanda.service.dto.UsuarioMensagemDTO;
 import org.mapstruct.Mapper;
@@ -20,7 +17,8 @@ public interface UsuarioMensagemMapper extends EntityMapper<UsuarioMensagemDTO, 
     @Mapping(target = "mensagem.responsavel.nome", source = "responsavel")
     @Mapping(target = "mensagem.status", source = "status")
     @Mapping(target = "mensagem.tipoMensagem", source = "tpMsg")
-    @Mapping(target = "usuarioMens.id", source = "idUsuMsg")
+    @Mapping(target = "mensagem.responsavel.id", source = "idUsuMsg")
+    @Mapping(target = "usuarioMens.nome", source = "nomeUsu")
     UsuarioMensagem toEntity(UsuarioMensagemDTO dto);
 
     @Mapping(target = "idMsg", source = "mensagem.id")
@@ -32,6 +30,7 @@ public interface UsuarioMensagemMapper extends EntityMapper<UsuarioMensagemDTO, 
     @Mapping(target = "responsavel", source = "mensagem.responsavel.nome")
     @Mapping(target = "status", source = "mensagem.status")
     @Mapping(target = "tpMsg", source = "mensagem.tipoMensagem")
-    @Mapping(target = "idUsuMsg", source = "usuarioMens.id")
+    @Mapping(target = "idUsuMsg", source = "usuarioMens.id") // ANTIGO ERA idU
+    @Mapping(target = "nomeUsu", source = "usuarioMens.nome")
     UsuarioMensagemDTO toDto(UsuarioMensagem entity);
 }

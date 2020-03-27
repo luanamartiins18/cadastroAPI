@@ -3,6 +3,7 @@ package com.qintess.GerDemanda.controller;
 import com.qintess.GerDemanda.model.Cargo;
 import com.qintess.GerDemanda.service.CargoService;
 import com.qintess.GerDemanda.service.UsuarioService;
+import com.qintess.GerDemanda.service.dto.PerfilDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -37,7 +37,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/usuario/{idUsuario}/perfil")
-    public HashMap<String, Object> getPerfilUsuario(@PathVariable Integer idUsuario) {
+    public PerfilDTO getPerfilUsuario(@PathVariable Integer idUsuario) {
         return usuarioService.getPerfilUsuario(idUsuario);
     }
 

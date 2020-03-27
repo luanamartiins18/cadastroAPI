@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UsuarioPerfilRepository extends JpaRepository<UsuarioPerfil, Integer> {
-    UsuarioPerfil findByUsuarioPerfilAndStatus(int idUsu, int statusAtivoCodigo);
+    UsuarioPerfil findByUsuarioPerfilIdAndStatus(int idUsu, int statusAtivoCodigo);
 }

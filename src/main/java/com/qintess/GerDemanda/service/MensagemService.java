@@ -5,24 +5,15 @@ import com.qintess.GerDemanda.model.Usuario;
 import com.qintess.GerDemanda.model.UsuarioMensagem;
 import com.qintess.GerDemanda.repositories.MensagemRepository;
 import com.qintess.GerDemanda.repositories.UsuarioMensagemRepository;
+import com.qintess.GerDemanda.service.dto.MensagemDTO;
 import com.qintess.GerDemanda.service.dto.MensagemInDTO;
-import com.qintess.GerDemanda.service.dto.UsuarioMensagemDTO;
 import com.qintess.GerDemanda.service.mapper.MensagemInMapper;
 import com.qintess.GerDemanda.service.mapper.MensagemMapper;
-import com.qintess.GerDemanda.service.mapper.UsuarioMensagemMapper;
 import org.hibernate.ObjectNotFoundException;
-import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,24 +27,7 @@ public class MensagemService {
     @Autowired
     UsuarioService usuarioService;
     @Autowired
-    UsuarioMensagemMapper usuarioMensagemMapper;
-    @Autowired
     MensagemMapper mensagemMapper;
-
-    public List<UsuarioMensagemDTO> getAllMensagensByUsuarios(int idUsuario) {
-        return usuarioMensagemMapper.toDto(this.usuarioMensagemRepository.findByMensagemStatusAndUsuarioMensId(1, idUsuario));
-    }
-
-    public UsuarioMensagem getMensagemId(Integer id) {
-        return usuarioMensagemRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("id", UsuarioMensagem.class.getName()));
-    }
-
-    public void marcaLida(Integer idMsgUsu) {
-        UsuarioMensagem usuarioMensagem = this.getMensagemId(idMsgUsu);
-        usuarioMensagem.setDtLeitura(new Date());
-        this.usuarioMensagemRepository.save(usuarioMensagem);
-    }
 
     @Transactional
     public void insereMensagem(MensagemInDTO dto, String tipo) {
@@ -64,124 +38,24 @@ public class MensagemService {
         mensagemRepository.saveAndFlush(obj);
     }
 
-    public List<UsuarioMensagemDTO> getMensagem() {
-       return mensagemMapper.toDto(mensagemRepository.findByOrderByDtExpiracaoAsc());
+    public List<MensagemDTO> getMensagem() {
+        return mensagemMapper.toDto(mensagemRepository.findByOrderByDtExpiracaoAsc());
     }
 
-    public List<HashMap<String, Object>> getMensagensColaborador(int id) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
-        EntityManager em = entityManagerFactory.createEntityManager();
-        String sql = "select m.*, um.dt_leitura, um.id as idUM, s.descricao, u.nome from mensagem m " +
-                "inner join usuario_x_mensagem um " +
-                "on m.id = um.fk_mensagem " +
-                "left join sigla s " +
-                "on s.id = m.fk_sigla " +
-                "inner join usuario u " +
-                "on u.id = m.fk_responsavel " +
-                "where m.status = 1 and  dt_leitura is null and curdate() <= m.dt_expiracao " +
-                "and um.fk_usuario = :id ;";
-        Query query = em.createNativeQuery(sql).setParameter("id", id);
-        List<Object> lista = query.getResultList();
-        List<HashMap<String, Object>> response = new ArrayList<HashMap<String, Object>>();
-        for (Object obj : lista) {
-            HashMap<String, Object> atual = new HashMap<String, Object>();
-            JSONArray objAtual = new JSONArray(obj);
-            atual.put("idMsg", objAtual.get(0));
-            atual.put("corpo", objAtual.get(1));
-            atual.put("dtCriacao", objAtual.get(2));
-            atual.put("dtExpiracao", objAtual.get(3));
-            atual.put("tpMsg", objAtual.get(4));
-            atual.put("status", objAtual.get(5));
-            atual.put("responsavel", objAtual.get(12));
-            atual.put("titulo", objAtual.get(7));
-            atual.put("idUsuMsg", objAtual.get(10));
-            atual.put("sigla", objAtual.get(11));
-            response.add(atual);
-        }
-        em.close();
-        entityManagerFactory.close();
-        return response;
-    }
-
-    public List<HashMap<String, Object>> listaMensagens() {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
-        EntityManager em = entityManagerFactory.createEntityManager();
-        String sql = "select m.*, u.nome, s.descricao from mensagem m "
-                + "inner join usuario u on m.fk_responsavel = u.id "
-                + " left join sigla s on s.id = m.fk_sigla "
-                + "order by m.status desc, m.dt_expiracao asc;";
-        Query query = em.createNativeQuery(sql);
-        List<Object> lista = query.getResultList();
-        List<HashMap<String, Object>> response = new ArrayList<HashMap<String, Object>>();
-        for (Object obj : lista) {
-            HashMap<String, Object> atual = new HashMap<String, Object>();
-            JSONArray objAtual = new JSONArray(obj);
-            atual.put("idMsg", objAtual.get(0));
-            atual.put("corpo", objAtual.get(1));
-            atual.put("dtCriacao", objAtual.get(2));
-            atual.put("dtExpiracao", objAtual.get(3));
-            atual.put("tpMsg", objAtual.get(4));
-            atual.put("status", objAtual.get(5));
-            atual.put("responsavel", objAtual.get(9));
-            atual.put("titulo", objAtual.get(7));
-            atual.put("sigla", objAtual.get(10));
-            response.add(atual);
-        }
-        em.close();
-        entityManagerFactory.close();
-        return response;
-    }
-
-    public List<HashMap<String, Object>> detalhaMensagem(int id) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
-        EntityManager em = entityManagerFactory.createEntityManager();
-        String sql = "select m.id as idM, m.corpo, m.dt_criacao, m.dt_expiracao, m.tp_mensagem, m.status, m.titulo," +
-                "um.id as idUM, um.dt_leitura, u.id as idU, u.nome " +
-                "from mensagem m " +
-                "inner join usuario_X_mensagem um on m.id = um.fk_mensagem " +
-                "inner join usuario u on um.fk_usuario = u.id " +
-                "where m.id = " + Integer.toString(id);
-        Query query = em.createNativeQuery(sql);
-        List<Object> lista = query.getResultList();
-        List<HashMap<String, Object>> response = new ArrayList<HashMap<String, Object>>();
-        for (Object obj : lista) {
-            HashMap<String, Object> atual = new HashMap<String, Object>();
-            JSONArray objAtual = new JSONArray(obj);
-            atual.put("idM", objAtual.get(0));
-            atual.put("corpo", objAtual.get(1));
-            atual.put("dtCriacao", objAtual.get(2));
-            atual.put("dtExpiracao", objAtual.get(3));
-            atual.put("tpMsg", objAtual.get(4));
-            atual.put("status", objAtual.get(5));
-            atual.put("titulo", objAtual.get(6));
-            atual.put("idUM", objAtual.get(7));
-            atual.put("dtLeitura", objAtual.get(8));
-            atual.put("idU", objAtual.get(9));
-            atual.put("nomeUsu", objAtual.get(10));
-            response.add(atual);
-        }
-        em.close();
-        entityManagerFactory.close();
-        return response;
+    public Mensagem findById(Integer id) {
+        return mensagemRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("id", Mensagem.class.getName()));
     }
 
     public void alteraStatusMsg(int idMsg, String acao) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
-        EntityManager em = entityManagerFactory.createEntityManager();
-        String sql = "";
+        Mensagem mensagem = this.findById(idMsg);
+        mensagem.setStatus(1);
         if (acao.equals("desativar")) {
-            sql = "UPDATE mensagem set status = 0 where id = :id";
-        } else {
-            sql = "UPDATE mensagem set status = 1 where id = :id";
+            mensagem.setStatus(0);
         }
-        Query query = em.createNativeQuery(sql);
-        query.setParameter("id", idMsg);
-        em.getTransaction().begin();
-        query.executeUpdate();
-        em.getTransaction().commit();
-        em.close();
-        entityManagerFactory.close();
+        this.mensagemRepository.save(mensagem);
     }
+
 }
 
 

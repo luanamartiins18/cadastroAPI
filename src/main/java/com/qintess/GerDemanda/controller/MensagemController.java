@@ -1,15 +1,15 @@
 package com.qintess.GerDemanda.controller;
 
 import com.qintess.GerDemanda.service.MensagemService;
-import com.qintess.GerDemanda.service.dto.UsuarioMensagemDTO;
+import com.qintess.GerDemanda.service.UsuarioMensagemService;
+import com.qintess.GerDemanda.service.dto.MensagemDTO;
 import com.qintess.GerDemanda.service.dto.MensagemInDTO;
+import com.qintess.GerDemanda.service.dto.UsuarioMensagemDTO;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -19,26 +19,29 @@ public class MensagemController {
     @Autowired
     MensagemService mensagemService;
 
+    @Autowired
+    UsuarioMensagemService usuarioMensagemService;
+
     @GetMapping("historico-mensagens/usuario/{id}")
     public List<UsuarioMensagemDTO> getAllMensagensByUsuario(@PathVariable int id) {
-        return mensagemService.getAllMensagensByUsuarios(id);
+        return usuarioMensagemService.getAllMensagensByUsuarios(id);
     }
 
     @GetMapping("mensagens/usuario/{id}")
-    public List<HashMap<String, Object>> getMensagensColaborador(@PathVariable int id) {
-        return mensagemService.getMensagensColaborador(id);
+    public List<UsuarioMensagemDTO> getMensagensColaborador(@PathVariable int id) {
+        return usuarioMensagemService.getMensagensColaborador(id);
     }
 
     @GetMapping("mensagem/{id}")
-    public List<HashMap<String, Object>> detalhaMensagem(@PathVariable int id) {
-        return mensagemService.detalhaMensagem(id);
+    public List<UsuarioMensagemDTO> detalhaMensagem(@PathVariable int id) {
+        return usuarioMensagemService.detalhaMensagem(id);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/mensagem-lida")
     public ResponseEntity<String> marcaLida(@RequestBody String param) {
         JSONObject json = new JSONObject(param);
         int idMsgUsu = json.getInt("idMsgUsu");
-        mensagemService.marcaLida(idMsgUsu);
+        usuarioMensagemService.marcaLida(idMsgUsu);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
@@ -55,8 +58,8 @@ public class MensagemController {
     }
 
     @GetMapping("/mensagens")
-    ResponseEntity<List<UsuarioMensagemDTO>> getMensagem() {
-        List<UsuarioMensagemDTO> listaMensagem = mensagemService.getMensagem();
+    ResponseEntity<List<MensagemDTO>> getMensagem() {
+        List<MensagemDTO> listaMensagem = mensagemService.getMensagem();
         return (listaMensagem.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listaMensagem);
     }
 
