@@ -1,7 +1,17 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.model.OrdemFornecimento;
+import com.qintess.GerDemanda.model.UsuarioMensagem;
+import com.qintess.GerDemanda.model.UsuarioOrdemFornecimento;
 import com.qintess.GerDemanda.repositories.OrdemFornecimentoRepository;
+import com.qintess.GerDemanda.repositories.UsuarioOrdemFornecimentoRepository;
+import com.qintess.GerDemanda.service.dto.OrdemFornecimentoDTO;
+import com.qintess.GerDemanda.service.dto.OrdemFornecimentoResumidaDTO;
+import com.qintess.GerDemanda.service.dto.UsuarioMensagemDTO;
+import com.qintess.GerDemanda.service.dto.UsuarioOrdemFornecimentoDTO;
+import com.qintess.GerDemanda.service.mapper.OrdemFornecimentoMapper;
+import com.qintess.GerDemanda.service.mapper.UsuarioOrdemFornecimentoMapper;
+import org.hibernate.ObjectNotFoundException;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,108 +20,33 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrdemFornecimentoService {
 
+    public static final int USUARIO_STATUS_ATIVO = 1;
     @Autowired
     OrdemFornecimentoRepository ordemFornecimentoRepository;
+    @Autowired
+    UsuarioOrdemFornecimentoRepository usuarioOrdemFornecimentoRepository;
+    @Autowired
+    OrdemFornecimentoMapper ordemFornecimentoMapper;
 
     public List<Integer> getUsuariosOf(int idOf) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
-        EntityManager em = entityManagerFactory.createEntityManager();
-        String sql = "select fk_usuario from usuario_x_of where fk_ordem_forn = :idOf and status = 1;";
-        Query query = em.createNativeQuery(sql);
-        query.setParameter("idOf", idOf);
-        List<Integer> usuariosOf = query.getResultList();
-        em.close();
-        entityManagerFactory.close();
-        return usuariosOf;
+        return (List<Integer>) this.usuarioOrdemFornecimentoRepository
+                .findByStatusAndOrdemFornecimentoId(USUARIO_STATUS_ATIVO,idOf)
+                .stream().map(obj->obj.getUsuario().getId()).collect(Collectors.toList());
     }
 
-    public HashMap<String, Object> getSituacaoOf(int idOf) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
-        EntityManager em = entityManagerFactory.createEntityManager();
-        String sql = "select fk_situacao_usu, referencia from ordem_forn where id = :idOf ;";
-        Query query = em.createNativeQuery(sql);
-        query.setParameter("idOf", idOf);
-        List<Object> lista = query.getResultList();
-        HashMap<String, Object> response = new HashMap<String, Object>();
-
-        for (Object obj : lista) {
-            HashMap<String, Object> atual = new HashMap<String, Object>();
-            JSONArray objAtual = new JSONArray(obj);
-            atual.put("fk_situacao_usu", objAtual.get(0));
-            atual.put("referencia", objAtual.get(1));
-            response = atual;
-        }
-        em.close();
-        entityManagerFactory.close();
-        return response;
+    public OrdemFornecimentoResumidaDTO getSituacaoOf(int idOf) {
+        return ordemFornecimentoMapper.toDto(this.ordemFornecimentoRepository.findById(idOf)
+                .orElseThrow(() -> new ObjectNotFoundException("id", OrdemFornecimento.class.getName())));
     }
 
-    public List<HashMap<String, Object>> getOrdemDeFornecimento() {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
-        EntityManager em = entityManagerFactory.createEntityManager();
-        String sql =
-                "select orf.id, orf.numero_OF_genti, orf.referencia, orf.responsavel_t, orf.gerente_t, orf.dt_abertura, " +
-                        "		orf.dt_previsao, orf.dt_entrega, orf.dt_aceite, s.descricao sigla, sit.descricao sit_genti, st.descricao sit_alm, " +
-                        "		sum( " +
-                        "			case  " +
-                        "				when (t.fk_situacao = 4 or t.fk_situacao = 8) " +
-                        "				then ig.valor " +
-                        "                else 0 " +
-                        "                end " +
-                        "        ) as valorExecutado, " +
-                        "		sum( " +
-                        "			case  " +
-                        "				when (t.fk_situacao != 2 and t.fk_situacao != 5) " +
-                        "				then ig.valor " +
-                        "                else 0 " +
-                        "                end " +
-                        "        ) as valorPlanejado " +
-                        "from ordem_forn orf " +
-                        "inner join sigla s " +
-                        "	on s.id = orf.fk_sigla " +
-                        "inner join situacao sit " +
-                        "	on orf.fk_situacao_genti = sit.id " +
-                        "left join situacao st " +
-                        "	on orf.fk_situacao_usu = st.id     " +
-                        "left join usuario_x_of uof " +
-                        "	on uof.fk_ordem_forn = orf.id " +
-                        "left join tarefa_of t " +
-                        "	on t.fk_of_usuario = uof.id " +
-                        "left join item_guia ig " +
-                        "	on ig.id = t.fk_item_guia " +
-                        "where orf.fk_situacao_genti = 6  and (uof.status = 1 or uof.status is null) " +
-                        "group by orf.id, orf.numero_OF_genti, orf.referencia, orf.responsavel_t, orf.gerente_t, orf.dt_abertura, " +
-                        "		orf.dt_previsao, orf.dt_entrega, orf.dt_aceite, s.descricao, sit.descricao, st.descricao "
-                        + " order by st.descricao, s.descricao";
-        Query query = em.createNativeQuery(sql);
-        List<Object> lista = query.getResultList();
-        List<HashMap<String, Object>> response = new ArrayList<HashMap<String, Object>>();
-        for (Object obj : lista) {
-            HashMap<String, Object> atual = new HashMap<String, Object>();
-            JSONArray objAtual = new JSONArray(obj);
-            atual.put("id", objAtual.get(0));
-            atual.put("numeroOFGenti", objAtual.get(1));
-            atual.put("referencia", objAtual.get(2));
-            atual.put("responsavelTecnico", objAtual.get(3));
-            atual.put("gerenteTecnico", objAtual.get(4));
-            atual.put("dtAbertura", objAtual.get(5));
-            atual.put("dtPrevisao", objAtual.get(6));
-            atual.put("dtEntrega", objAtual.get(7));
-            atual.put("dtAceite", objAtual.get(8));
-            atual.put("sigla", objAtual.get(9));
-            atual.put("situacaoGenti", objAtual.get(10));
-            atual.put("situacaoAlm", objAtual.get(11));
-            atual.put("valorExecutado", objAtual.get(12));
-            atual.put("valorPlanejado", objAtual.get(13));
-            response.add(atual);
-        }
-        em.close();
-        entityManagerFactory.close();
-        return response;
+    public List<OrdemFornecimentoDTO> getOrdemDeFornecimento() {
+        return this.ordemFornecimentoRepository.getOrdemDeFornecimento()
+                .stream().map(obj-> new OrdemFornecimentoDTO(obj)).collect(Collectors.toList());
     }
 
     public OrdemFornecimento getOrdemDeFornecimento(int id) {

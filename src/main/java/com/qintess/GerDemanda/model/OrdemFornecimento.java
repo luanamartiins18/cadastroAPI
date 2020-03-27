@@ -97,6 +97,8 @@ public class OrdemFornecimento {
 	@ManyToOne
 	@JoinColumn(name = "fk_situacao_usu")
 	private Situacao situacaoUsu;
+
+	private String referencia;
 }
 
 

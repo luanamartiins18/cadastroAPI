@@ -2,6 +2,8 @@ package com.qintess.GerDemanda.controller;
 
 import com.qintess.GerDemanda.model.OrdemFornecimento;
 import com.qintess.GerDemanda.service.OrdemFornecimentoService;
+import com.qintess.GerDemanda.service.dto.OrdemFornecimentoDTO;
+import com.qintess.GerDemanda.service.dto.OrdemFornecimentoResumidaDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +29,15 @@ public class OrdemFornecimentoController {
     }
 
     @GetMapping("/ordem-fornecimento/{id}/situacao")
-    public ResponseEntity<HashMap<String, Object>> getSituacaoOf(@PathVariable int id) {
-        HashMap<String, Object> sitOf = ordemFornecimentoService.getSituacaoOf(id);
-        return ResponseEntity.ok().body(sitOf);
+    public ResponseEntity<OrdemFornecimentoResumidaDTO> getSituacaoOf(@PathVariable int id) {
+        OrdemFornecimentoResumidaDTO ordemFornecimentoResumidaDTO = ordemFornecimentoService.getSituacaoOf(id);
+        return ResponseEntity.ok().body(ordemFornecimentoResumidaDTO);
     }
 
     @GetMapping("/ordens-fornecimento")
-    public List<HashMap<String, Object>> getOrdemDeFornecimento() {
-        return new OrdemFornecimentoService().getOrdemDeFornecimento();
+    ResponseEntity<List<OrdemFornecimentoDTO>> getOrdemDeFornecimento() {
+        List<OrdemFornecimentoDTO> ordensfornecimento = ordemFornecimentoService.getOrdemDeFornecimento();
+        return (ordensfornecimento == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(ordensfornecimento);
     }
 
     @GetMapping("/ordem-fornecimento/{id}")
