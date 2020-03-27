@@ -1,8 +1,8 @@
 package com.qintess.GerDemanda.controller;
 
-import com.qintess.GerDemanda.model.Cargo;
 import com.qintess.GerDemanda.service.CargoService;
 import com.qintess.GerDemanda.service.UsuarioService;
+import com.qintess.GerDemanda.service.dto.CargoDTO;
 import com.qintess.GerDemanda.service.dto.PerfilDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,8 @@ public class UsuarioController {
     }
 
     @GetMapping("/sigla/{idSigla}/usuarios")
-    ResponseEntity<List<UsuarioDTO>> getUsuarioBySigla(@PathVariable Integer idSigla) {
-        List<UsuarioDTO> usuarios = usuarioService.getUsuarioBySiglaDTO(idSigla);
+    ResponseEntity<List<UsuarioDTO>> getUsuariosBySigla(@PathVariable Integer idSigla) {
+        List<UsuarioDTO> usuarios = usuarioService.getUsuariosBySiglaDTO(idSigla);
         return ResponseEntity.ok().body(usuarios);
     }
 
@@ -42,8 +42,8 @@ public class UsuarioController {
     }
 
     @GetMapping("/usuario/{re}/cargo")
-    ResponseEntity<Cargo> getCargoByRe(@PathVariable String re) {
-        Cargo cargo = cargoService.getCargoByRe(re);
+    ResponseEntity<CargoDTO> getCargoUsuarioByRe(@PathVariable String re) {
+        CargoDTO cargo = usuarioService.getCargoUsuarioByRe(re);
         return (cargo == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(cargo);
     }
 }

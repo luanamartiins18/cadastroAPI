@@ -11,7 +11,4 @@ public class CargoService {
     @Autowired
     CargoRepository cargoRepository;
 
-    public Cargo getCargoByRe(String re) {
-        return cargoRepository.findFirstByUsuariosCodigoRe(re);
-    }
 }

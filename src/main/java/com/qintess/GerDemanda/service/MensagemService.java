@@ -31,7 +31,7 @@ public class MensagemService {
 
     @Transactional
     public void insereMensagem(MensagemInDTO dto, String tipo) {
-        List<Usuario> listUsu = usuarioService.getUsuarioBySigla(dto.getIdSigla());
+        List<Usuario> listUsu = usuarioService.getUsuariosBySigla(dto.getIdSigla());
         Mensagem obj = MensagemInMapper.dtoToModel(dto);
         obj.setTipoMensagem(tipo);
         obj.setListaUsuarios(listUsu.stream().map(usuario -> new UsuarioMensagem(usuario, obj)).collect(Collectors.toList()));

@@ -11,7 +11,9 @@ import java.util.List;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
+
     boolean existsByCodigoReAndSenha(String re, String senha);
+
     Usuario findFirstByCodigoRe(String re);
 
     List<Usuario> findByStatusAndCargoIdOrderByNomeAsc(String ativo, int i);
