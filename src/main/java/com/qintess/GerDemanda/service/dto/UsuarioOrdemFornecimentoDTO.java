@@ -5,7 +5,9 @@ import com.qintess.GerDemanda.model.OrdemFornecimento;
 import com.qintess.GerDemanda.model.Usuario;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -14,10 +16,10 @@ import java.util.Calendar;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UsuarioOrdemFornecimentoDTO {
     private int id;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Calendar dtCriacao;
-    private Calendar dtExclusao;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime dtCriacao;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime dtExclusao;
     private int status;
-    private Usuario usuario;
-    private OrdemFornecimento ordemFornecimento;
+    private UsuarioDTO usuario;
 }

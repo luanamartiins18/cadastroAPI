@@ -15,5 +15,4 @@ public class UsuarioResumidoDTO {
     private String email;
     private String codigoRe;
     private CargoDTO cargo;
-
 }

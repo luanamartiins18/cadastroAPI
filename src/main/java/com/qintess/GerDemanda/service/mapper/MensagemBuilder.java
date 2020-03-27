@@ -5,12 +5,13 @@ import com.qintess.GerDemanda.model.Sigla;
 import com.qintess.GerDemanda.model.Usuario;
 import com.qintess.GerDemanda.service.dto.MensagemInDTO;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
-public abstract class MensagemInMapper {
+public abstract class MensagemBuilder {
 
-    public static Mensagem dtoToModel(MensagemInDTO dto) {
+    public static Mensagem toDtoBuild(MensagemInDTO dto) {
         return Mensagem.builder()
                 .corpo(dto.getCorpo())
                 .responsavel(Usuario.builder().id(dto.getIdResp()).build())

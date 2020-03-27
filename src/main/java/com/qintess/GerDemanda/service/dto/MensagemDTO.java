@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -21,7 +22,7 @@ public class MensagemDTO {
     private String responsavel;
     private Integer status;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private Date dtExpiracao;
+    private LocalDateTime dtExpiracao;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private Date dtCriacao;
+    private LocalDateTime dtCriacao;
 }

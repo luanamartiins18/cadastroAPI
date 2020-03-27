@@ -1,49 +1,53 @@
 package com.qintess.GerDemanda.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class OrdemFornecimentoDTO {
-
-    private Integer id;
-    private String numeroOFGenti;
-    private String referencia;
-    private String responsavelTecnico;
-    private String gerenteTecnico;
-    private Calendar dtAbertura;
-    private Calendar dtPrevisao;
-    private Calendar dtEntrega;
-    private Calendar dtAceite;
-    private String sigla;
-    private String situacaoGenti;
-    private String situacaoAlm;
-    private Double valorExecutado;
-    private Double valorPlanejado;
-
-    public OrdemFornecimentoDTO(Object[] obj) {
-        this.id = (Integer) obj[0];
-        this.numeroOFGenti = (String) obj[1];
-        this.referencia = (String) obj[2];
-        this.responsavelTecnico = (String) obj[3];
-        this.gerenteTecnico = (String) obj[4];
-        this.dtAbertura = (Calendar) obj[5];
-        this.dtPrevisao = (Calendar) obj[6];
-        this.dtEntrega = (Calendar) obj[7];
-        this.dtAceite = (Calendar) obj[8];
-        this.sigla = (String) obj[9];
-        this.situacaoGenti = (String) obj[10];
-        this.situacaoAlm = (String) obj[11];
-        this.valorExecutado = (Double) obj[12];
-        this.valorPlanejado = (Double) obj[13];
-    }
+	private int id;
+	private String numeroOF;
+	private String numeroOFGenti;
+	private String fabrica;
+	private String tema;
+	private boolean agil;
+	private double ustiBB;
+	private String uor;
+	private String demanda;
+	private String acao;
+	private String tipo;
+	private String cdTI;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime dtAbertura;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime dtPrevisao;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime dtEntrega;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime dtDevolvida;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime dtRecusa;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime dtAceite;
+	private String responsavelTecnico;
+	private String gerenteTecnico;
+	private SiglaDTO sigla;
+	private SituacaoDTO situacaoGenti;
+	private SituacaoDTO situacaoUsu;
+	private String referencia;
+	private List<UsuarioOrdemFornecimentoDTO> listaUsuarios;
 }
 
 

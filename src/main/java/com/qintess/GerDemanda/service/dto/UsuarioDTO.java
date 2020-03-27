@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class UsuarioDTO {
     private String empresa;
     private Integer demanda;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date nascimento;
+    private LocalDate nascimento;
     private String status;
     private ContratoDTO contrato;
     private CargoDTO cargo;

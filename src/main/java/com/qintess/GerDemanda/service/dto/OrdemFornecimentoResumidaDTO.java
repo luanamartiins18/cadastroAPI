@@ -1,12 +1,9 @@
 package com.qintess.GerDemanda.service.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.qintess.GerDemanda.model.Sigla;
-import com.qintess.GerDemanda.model.Situacao;
-import lombok.*;
-
-import javax.persistence.*;
-import java.util.Calendar;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor

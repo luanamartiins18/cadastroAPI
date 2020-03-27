@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -14,7 +15,7 @@ import java.util.Date;
 @Builder
 public class MensagemInDTO {
     private String corpo;
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date dtExp;
     private Integer idResp;
     private String titulo;

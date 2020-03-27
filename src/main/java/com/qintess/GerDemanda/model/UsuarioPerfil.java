@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Calendar;
+import java.util.Date;
 
 @Entity
 @Table(name = "usuario_x_perfil")
@@ -19,14 +19,14 @@ public class UsuarioPerfil{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
 	private int id;
-	
-	@Temporal(TemporalType.DATE)
+
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "dt_criacao")
-	private Calendar dtCriacao;
-	
-	@Temporal(TemporalType.DATE)
+	private Date dtCriacao;
+
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "dt_exclusao")
-	private Calendar dtExclusao;
+	private Date dtExclusao;
 	
 	private int status;
 

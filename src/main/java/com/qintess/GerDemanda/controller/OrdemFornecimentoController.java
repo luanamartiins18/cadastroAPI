@@ -1,8 +1,10 @@
 package com.qintess.GerDemanda.controller;
 
 import com.qintess.GerDemanda.model.OrdemFornecimento;
+import com.qintess.GerDemanda.model.UsuarioOrdemFornecimento;
 import com.qintess.GerDemanda.service.OrdemFornecimentoService;
 import com.qintess.GerDemanda.service.dto.OrdemFornecimentoDTO;
+import com.qintess.GerDemanda.service.dto.OrdemFornecimentoDetalhadoDTO;
 import com.qintess.GerDemanda.service.dto.OrdemFornecimentoResumidaDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,14 +37,14 @@ public class OrdemFornecimentoController {
     }
 
     @GetMapping("/ordens-fornecimento")
-    ResponseEntity<List<OrdemFornecimentoDTO>> getOrdemDeFornecimento() {
-        List<OrdemFornecimentoDTO> ordensfornecimento = ordemFornecimentoService.getOrdemDeFornecimento();
+    ResponseEntity<List<OrdemFornecimentoDetalhadoDTO>> getOrdemDeFornecimento() {
+        List<OrdemFornecimentoDetalhadoDTO> ordensfornecimento = ordemFornecimentoService.getOrdemDeFornecimento();
         return (ordensfornecimento == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(ordensfornecimento);
     }
 
     @GetMapping("/ordem-fornecimento/{id}")
-    public OrdemFornecimento getOrdemDeFornecimento(@PathVariable int id) {
-        return new OrdemFornecimentoService().getOrdemDeFornecimento(id);
+    ResponseEntity<List<OrdemFornecimentoDTO>> getOrdemDeFornecimento(@PathVariable Integer id) {
+        return ResponseEntity.ok().body(ordemFornecimentoService.getOrdemDeFornecimento(id));
     }
 
     @PostMapping(value = "/ordem-fornecimento/usuario-situacao")
@@ -61,8 +63,8 @@ public class OrdemFornecimentoController {
     }
 
     @GetMapping("ordens-fornecimento/usuario/{id}")
-    public List<HashMap<String, Object>> getOrdensFornUsu(@PathVariable int id) {
-        return ordemFornecimentoService.getOrdensFornUsuario(id);
+    ResponseEntity<List<UsuarioOrdemFornecimento>> getOrdensFornUsuario(@PathVariable Integer id) {
+        return ResponseEntity.ok().body(ordemFornecimentoService.getOrdensFornUsuario(id));
     }
 }
 

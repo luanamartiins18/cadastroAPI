@@ -1,10 +1,13 @@
 package com.qintess.GerDemanda.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Set;
 
 @Entity(name = "OrdemFornecimento")
 @Table(name = "ordem_forn")
@@ -14,77 +17,80 @@ import java.util.Calendar;
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class OrdemFornecimento {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
 	private int id;
-	
+
 	@Column(name = "numero_OF")
 	private String numeroOF;
-	
+
 	@Column(name = "numero_OF_genti")
 	private String numeroOFGenti;
-	
+
 	@Column
 	private String fabrica;
-	
+
 	@Column
 	private String tema;
-	
+
 	@Column
 	private boolean agil;
-	
+
 	@Column(name = "usti_bb")
 	private double ustiBB;
-	
+
 	@Column
 	private String uor;
-	
+
 	@Column
 	private String demanda;
-	
+
 	@Column
 	private String acao;
-	
+
+	@Column
+	private String referencia;
+
 	@Column
 	private String tipo;
-	
+
 	@Column(name = "cd_ti")
 	private String cdTI;
-	
+
 	@Column(name = "dt_abertura")
-	@Temporal(TemporalType.DATE)
-	private Calendar dtAbertura;
-	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dtAbertura;
+
 	@Column(name = "dt_previsao")
-	@Temporal(TemporalType.DATE)
-	private Calendar dtPrevisao;
-	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dtPrevisao;
+
 	@Column(name = "dt_entrega")
-	@Temporal(TemporalType.DATE)
-	private Calendar dtEntrega;
-	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dtEntrega;
+
 	@Column(name = "dt_devolvida")
-	@Temporal(TemporalType.DATE)
-	private Calendar dtDevolvida;
-	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dtDevolvida;
+
 	@Column(name = "dt_recusa")
-	@Temporal(TemporalType.DATE)
-	private Calendar dtRecusa;
-	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dtRecusa;
+
 	@Column(name = "dt_aceite")
-	@Temporal(TemporalType.DATE)
-	private Calendar dtAceite;
-	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dtAceite;
+
 	@Column(name = "responsavel_t")
 	private String responsavelTecnico;
-	
+
 	@Column(name = "gerente_t")
 	private String gerenteTecnico;
 
 	@JsonBackReference
-	@ManyToOne  
+	@ManyToOne
 	@JoinColumn(name = "fk_sigla")
 	private Sigla sigla;
 
@@ -98,7 +104,10 @@ public class OrdemFornecimento {
 	@JoinColumn(name = "fk_situacao_usu")
 	private Situacao situacaoUsu;
 
-	private String referencia;
+	@JsonIgnore
+	@OneToMany(mappedBy="ordemFornecimento")
+	Set<UsuarioOrdemFornecimento> listaUsuarios;
+
 }
 
 

@@ -7,7 +7,7 @@ import com.qintess.GerDemanda.repositories.MensagemRepository;
 import com.qintess.GerDemanda.repositories.UsuarioMensagemRepository;
 import com.qintess.GerDemanda.service.dto.MensagemDTO;
 import com.qintess.GerDemanda.service.dto.MensagemInDTO;
-import com.qintess.GerDemanda.service.mapper.MensagemInMapper;
+import com.qintess.GerDemanda.service.mapper.MensagemBuilder;
 import com.qintess.GerDemanda.service.mapper.MensagemMapper;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class MensagemService {
     @Transactional
     public void insereMensagem(MensagemInDTO dto, String tipo) {
         List<Usuario> listUsu = usuarioService.getUsuariosBySigla(dto.getIdSigla());
-        Mensagem obj = MensagemInMapper.dtoToModel(dto);
+        Mensagem obj = MensagemBuilder.toDtoBuild(dto);
         obj.setTipoMensagem(tipo);
         obj.setListaUsuarios(listUsu.stream().map(usuario -> new UsuarioMensagem(usuario, obj)).collect(Collectors.toList()));
         mensagemRepository.saveAndFlush(obj);

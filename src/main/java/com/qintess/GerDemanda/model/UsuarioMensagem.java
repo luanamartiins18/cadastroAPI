@@ -21,7 +21,7 @@ public class UsuarioMensagem {
 	@EqualsAndHashCode.Include
 	private int id;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "dt_leitura")
 	private Date dtLeitura;
 

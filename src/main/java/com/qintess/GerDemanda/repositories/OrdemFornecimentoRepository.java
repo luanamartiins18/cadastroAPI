@@ -43,7 +43,10 @@ public interface OrdemFornecimentoRepository extends JpaRepository<OrdemFornecim
             "where orf.fk_situacao_genti = 6  and (uof.status = 1 or uof.status is null) " +
             "group by orf.id, orf.numero_OF_genti, orf.referencia, orf.responsavel_t, orf.gerente_t, orf.dt_abertura, " +
             "		orf.dt_previsao, orf.dt_entrega, orf.dt_aceite, s.descricao, sit.descricao, st.descricao "
-            + " order by st.descricao, s.descricao")
+            + " order by st.descricao, s.descricao", nativeQuery = true)
     List<Object[]> getOrdemDeFornecimento();
+
+    List<OrdemFornecimento> findByIdAndSituacaoGentiId(int id, int i);
+
 
 }

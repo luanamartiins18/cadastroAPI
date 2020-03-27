@@ -10,4 +10,6 @@ import java.util.List;
 public interface UsuarioOrdemFornecimentoRepository extends JpaRepository<UsuarioOrdemFornecimento, Integer> {
 
     List<UsuarioOrdemFornecimento> findByStatusAndOrdemFornecimentoId(int usuarioStatusAtivo, int idOf);
+
+    List<UsuarioOrdemFornecimento> findByOrdemFornecimentoSituacaoUsuIdAndUsuarioIdAndDtExclusaoIsNullAndStatusOrderByOrdemFornecimentoSiglaDescricaoAsc(int situcaoEmExecucao, int id, int statusAtivo);
 }

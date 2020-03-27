@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,8 +51,8 @@ public class Usuario {
 	@Column
 	private String Celular;
 
-	@Temporal(TemporalType.DATE)
-	private Calendar nascimento;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date nascimento;
 
 	@Column
 	private String status;
