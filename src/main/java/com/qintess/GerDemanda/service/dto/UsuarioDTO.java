@@ -31,8 +31,6 @@ public class UsuarioDTO {
     @Length(min=6,max=80,message = "O campo email precisa ter no mínimo 6 caracteres e no máximo 80.")
     private String email;
 
-    @NotNull(message = "O campo senha é obrigatório!")
-    @Length(min=3,max=80,message = "O campo senha precisa ter no mínimo 6 caracteres e no máximo 80.")
     private String senha;
 
     @CPF(message = "Informe um cpf válido!")

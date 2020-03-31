@@ -13,32 +13,32 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class UsuarioPerfil{
+public class UsuarioPerfil {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@EqualsAndHashCode.Include
-	private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    private Integer id;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dt_criacao")
-	private Date dtCriacao;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_criacao")
+    private Date dtCriacao;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dt_exclusao")
-	private Date dtExclusao;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_exclusao")
+    private Date dtExclusao;
 
-	private Integer status;
+    private Integer status;
 
-	@JsonBackReference
-	@ManyToOne
-	@JoinColumn(name = "fk_usuario")
-	private Usuario usuarioPerfil;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_usuario")
+    private Usuario usuarioPerfil;
 
-	@JsonBackReference
-	@ManyToOne
-	@JoinColumn(name = "fk_perfil")
-	private Perfil perfil;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_perfil")
+    private Perfil perfil;
 }
 
 

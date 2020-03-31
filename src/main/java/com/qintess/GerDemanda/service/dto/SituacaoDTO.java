@@ -1,14 +1,15 @@
 package com.qintess.GerDemanda.service.dto;
 
-import lombok.*;
-
-import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class SituacaoDTO {
-	private Integer id;
-	private String descricao;
+    private Integer id;
+    private String descricao;
 }

@@ -13,12 +13,12 @@ import javax.persistence.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Contrato {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@EqualsAndHashCode.Include
-	private Integer id;
-	
-	@Column
-	private String descricao;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    private Integer id;
+
+    @Column
+    private String descricao;
 
 }

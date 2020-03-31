@@ -13,13 +13,13 @@ import javax.persistence.*;
 @Table(name = "situacao")
 public class Situacao {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@EqualsAndHashCode.Include
-	private Integer id;
-	
-	@Column
-	private String descricao;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    private Integer id;
+
+    @Column
+    private String descricao;
 
 
 }

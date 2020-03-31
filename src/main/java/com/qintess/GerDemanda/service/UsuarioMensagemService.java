@@ -4,6 +4,7 @@ import com.qintess.GerDemanda.model.UsuarioMensagem;
 import com.qintess.GerDemanda.repositories.UsuarioMensagemRepository;
 import com.qintess.GerDemanda.service.dto.UsuarioMensagemDTO;
 import com.qintess.GerDemanda.service.mapper.UsuarioMensagemMapper;
+import com.qintess.GerDemanda.service.util.DateUtil;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class UsuarioMensagemService {
     public List<UsuarioMensagemDTO> getMensagensColaborador(int usuarioMensId) {
         return usuarioMensagemMapper.toDto(this.usuarioMensagemRepository
                 .findByDtLeituraIsNullAndMensagemDtExpiracaoGreaterThanEqualAndMensagemStatusAndUsuarioMensId(
-                        new Date(), MENSAGEM_STATUS_ATIVO, usuarioMensId));
+                        DateUtil.getCurrentDateTimeZero(), MENSAGEM_STATUS_ATIVO, usuarioMensId));
     }
 
     public List<UsuarioMensagemDTO> detalhaMensagem(Integer idMensagem) {

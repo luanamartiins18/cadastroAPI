@@ -5,9 +5,9 @@ import com.qintess.GerDemanda.repositories.PerfilRepository;
 import com.qintess.GerDemanda.repositories.UsuarioPerfilRepository;
 import com.qintess.GerDemanda.service.dto.PerfilDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioPerfilDTO;
+import com.qintess.GerDemanda.service.mapper.UsuarioPerfilMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.qintess.GerDemanda.service.mapper.UsuarioPerfilMapper;
 
 import java.util.List;
 

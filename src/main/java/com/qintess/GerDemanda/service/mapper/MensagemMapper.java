@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = {})
-public interface MensagemMapper extends EntityMapper<MensagemDTO, Mensagem>  {
+public interface MensagemMapper extends EntityMapper<MensagemDTO, Mensagem> {
     @Mapping(target = "id", source = "idMsg")
     @Mapping(target = "dtExpiracao", source = "dtExpiracao")
     @Mapping(target = "dtCriacao", source = "dtCriacao")

@@ -1,10 +1,8 @@
 package com.qintess.GerDemanda.service.mapper;
 
 
-import com.qintess.GerDemanda.model.OrdemFornecimento;
 import com.qintess.GerDemanda.model.UsuarioOrdemFornecimento;
 import com.qintess.GerDemanda.service.dto.OrdemFornecimentoFiltradoDTO;
-import com.qintess.GerDemanda.service.dto.OrdemFornecimentoResumidaDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -38,7 +36,6 @@ public interface OrdemFornecimentoFiltradoMapper extends EntityMapper<OrdemForne
     @Mapping(target = "dtPrevisao", source = "ordemFornecimento.dtPrevisao")
     @Mapping(target = "gerenteT", source = "ordemFornecimento.gerenteTecnico")
     OrdemFornecimentoFiltradoDTO toDto(UsuarioOrdemFornecimento entity);
-
 
 
 }

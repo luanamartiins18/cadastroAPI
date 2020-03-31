@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = {})
-public interface UsuarioMensagemMapper extends EntityMapper<UsuarioMensagemDTO, UsuarioMensagem>  {
+public interface UsuarioMensagemMapper extends EntityMapper<UsuarioMensagemDTO, UsuarioMensagem> {
 
     @Override
     @Mapping(target = "mensagem.id", source = "idMsg")

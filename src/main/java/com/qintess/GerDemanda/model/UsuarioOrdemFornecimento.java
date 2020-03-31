@@ -15,28 +15,28 @@ import java.util.Date;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UsuarioOrdemFornecimento {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@EqualsAndHashCode.Include
-	private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    private Integer id;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dt_criacao")
-	private Date dtCriacao;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_criacao")
+    private Date dtCriacao;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dt_exclusao")
-	private Date dtExclusao;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_exclusao")
+    private Date dtExclusao;
 
-	private Integer status;
+    private Integer status;
 
-	@JsonBackReference
-	@ManyToOne
-	@JoinColumn(name = "fk_usuario")
-	private Usuario usuario;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_usuario")
+    private Usuario usuario;
 
-	@JsonBackReference
-	@ManyToOne
-	@JoinColumn(name = "fk_ordem_forn")
-	private OrdemFornecimento ordemFornecimento;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_ordem_forn")
+    private OrdemFornecimento ordemFornecimento;
 }

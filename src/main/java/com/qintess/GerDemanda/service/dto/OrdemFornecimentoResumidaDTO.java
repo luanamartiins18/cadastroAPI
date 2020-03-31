@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class OrdemFornecimentoResumidaDTO {
-	private Integer fk_situacao_usu;
-	private String referencia;
+    private Integer fk_situacao_usu;
+    private String referencia;
 }
 
 

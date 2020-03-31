@@ -1,6 +1,5 @@
 package com.qintess.GerDemanda.service;
 
-import com.qintess.GerDemanda.repositories.CargoRepository;
 import com.qintess.GerDemanda.service.dto.CargoDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
 import org.springframework.beans.factory.annotation.Autowired;
