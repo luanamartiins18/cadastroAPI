@@ -2,6 +2,7 @@ package com.qintess.GerDemanda.controller;
 
 import com.qintess.GerDemanda.service.CargoService;
 import com.qintess.GerDemanda.service.UsuarioService;
+import com.qintess.GerDemanda.service.PerfilService;
 import com.qintess.GerDemanda.service.dto.CargoDTO;
 import com.qintess.GerDemanda.service.dto.PerfilDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
@@ -21,6 +22,9 @@ public class UsuarioController {
     UsuarioService usuarioService;
 
     @Autowired
+    PerfilService perfilService;
+
+    @Autowired
     CargoService cargoService;
 
     @GetMapping("/usuario/{re}")
@@ -37,12 +41,12 @@ public class UsuarioController {
 
     @GetMapping("/usuario/{idUsuario}/perfil")
     public PerfilDTO getPerfilUsuario(@PathVariable Integer idUsuario) {
-        return usuarioService.getPerfilUsuario(idUsuario);
+        return perfilService.getPerfilUsuario(idUsuario);
     }
 
     @GetMapping("/usuario/{re}/cargo")
     ResponseEntity<CargoDTO> getCargoUsuarioByRe(@PathVariable String re) {
-        CargoDTO cargo = usuarioService.getCargoUsuarioByRe(re);
+        CargoDTO cargo = cargoService.getCargoUsuarioByRe(re);
         return (cargo == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(cargo);
     }
 

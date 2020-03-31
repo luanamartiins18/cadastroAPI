@@ -1,5 +1,6 @@
 package com.qintess.GerDemanda.service;
 
+
 import com.qintess.GerDemanda.model.Mensagem;
 import com.qintess.GerDemanda.model.Usuario;
 import com.qintess.GerDemanda.model.UsuarioMensagem;

@@ -3,7 +3,6 @@ package com.qintess.GerDemanda.service.mapper;
 
 import com.qintess.GerDemanda.model.Mensagem;
 import com.qintess.GerDemanda.service.dto.MensagemDTO;
-import com.qintess.GerDemanda.service.dto.UsuarioMensagemDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

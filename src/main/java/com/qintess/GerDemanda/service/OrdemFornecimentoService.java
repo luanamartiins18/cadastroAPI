@@ -1,6 +1,9 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.model.OrdemFornecimento;
+import com.qintess.GerDemanda.model.Situacao;
+import com.qintess.GerDemanda.model.Usuario;
+import com.qintess.GerDemanda.model.UsuarioOrdemFornecimento;
 import com.qintess.GerDemanda.repositories.OrdemFornecimentoRepository;
 import com.qintess.GerDemanda.repositories.UsuarioOrdemFornecimentoRepository;
 import com.qintess.GerDemanda.service.dto.*;
@@ -11,11 +14,10 @@ import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,14 +42,19 @@ public class OrdemFornecimentoService {
                 .stream().map(obj -> obj.getUsuario().getId()).collect(Collectors.toList());
     }
 
-    public OrdemFornecimentoResumidaDTO getSituacaoOf(Integer idOf) {
-        return ordemFornecimentoResumidaMapper.toDto(this.ordemFornecimentoRepository.findById(idOf)
-                .orElseThrow(() -> new ObjectNotFoundException("id", OrdemFornecimento.class.getName())));
+    public OrdemFornecimento findOrdemFornecimentoById(Integer id) {
+        return this.ordemFornecimentoRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("id", OrdemFornecimento.class.getName()));
     }
-	public List<OrdensConcluidasDTO> findOrdensConcluidas() {
-		return this.ordemFornecimentoRepository.findOrdensConcluidas()
-				.stream().map(obj-> new OrdensConcluidasDTO(obj)).collect(Collectors.toList());
-	}
+
+    public OrdemFornecimentoResumidaDTO findOrdemFornecimentoByIdDTO(Integer id) {
+        return ordemFornecimentoResumidaMapper.toDto(this.findOrdemFornecimentoById(id));
+    }
+
+    public List<OrdensConcluidasDTO> findOrdensConcluidas() {
+        return this.ordemFornecimentoRepository.findOrdensConcluidas()
+                .stream().map(obj -> new OrdensConcluidasDTO(obj)).collect(Collectors.toList());
+    }
 
     public List<OrdemFornecimentoDetalhadoDTO> getOrdemDeFornecimento() {
         return this.ordemFornecimentoRepository.getOrdemDeFornecimento()
@@ -58,47 +65,45 @@ public class OrdemFornecimentoService {
         return ordemFornecimentoMapper.toDto(ordemFornecimentoRepository.findFirstByIdAndSituacaoGentiId(id, SITUCAO_EM_EXECUCAO));
     }
 
-    public void registraUsuSit(List<Integer> listaUsu, Integer situacao, Integer ofId, String referencia) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PU");
-        EntityManager em = entityManagerFactory.createEntityManager();
-        em.getTransaction().begin();
-        String sql = "update ordem_forn set referencia = '" + referencia
-                + "' where id = :ofId";
-        Query query = em.createNativeQuery(sql);
-        query.setParameter("ofId", ofId);
-        query.executeUpdate();
-        sql = "update ordem_forn set fk_situacao_usu = :sit where id = :ofId";
-        query = em.createNativeQuery(sql);
-        query.setParameter("sit", situacao);
-        query.setParameter("ofId", ofId);
-        query.executeUpdate();
-        /*Atualização da situação da OF*/
-        sql = "select fk_usuario from usuario_x_of where status = 1 and fk_ordem_forn = " + Integer.toString(ofId);
-        query = em.createNativeQuery(sql);
-        List<Integer> usuAtual = query.getResultList();
-        String strListaUsu = "";
-        for (int usu : listaUsu) {
-            strListaUsu += (strListaUsu.equals("")) ? Integer.toString(usu) : "," + Integer.toString(usu);
+    public void registraUsuSit(OrdemFornecimentoInDTO dto) {
+        OrdemFornecimento of = this.findOrdemFornecimentoById(dto.getOf());
+        of.setReferencia(dto.getRef());
+        of.setSituacaoUsu(Situacao.builder().id(dto.getSit()).build());
 
-            /*Se um usuário marcado no checkbox não estiver relacionado a OF, relaciona*/
-            if (!usuAtual.contains(usu)) {
-                sql = "INSERT INTO usuario_x_of (dt_criacao, fk_ordem_forn, fk_usuario, dt_exclusao, status) VALUES("
-                        + "current_timestamp(), " + Integer.toString(ofId) + " , " + Integer.toString(usu) + " , null, 1);";
+        List<UsuarioOrdemFornecimento> uofs = new ArrayList<>();
+        List<UsuarioOrdemFornecimento> usuariosDaOf = dto.getUsu().stream()
+                .map(id -> {
+                    UsuarioOrdemFornecimento uof = of.getListaUsuarios().stream()
+                            .filter(obj -> obj.getId().equals(id)).findFirst().orElse(null);
+                    if (Objects.nonNull(uof)) {
+                        uof.setDtExclusao(null);
+                        uof.setStatus(1);
+                        return uof;
+                    }
+                    return UsuarioOrdemFornecimento.builder()
+                            .usuario(Usuario.builder().id(id).build())
+                            .dtCriacao(new Date())
+                            .status(STATUS_ATIVO)
+                            .ordemFornecimento(
+                                    OrdemFornecimento.builder()
+                                            .id(dto.getOf())
+                                            .build()
+                            ).build();
+                }).collect(Collectors.toList());
 
-                query = em.createNativeQuery(sql);
-                query.executeUpdate();
-            }
-        }
-        sql = "update usuario_x_of set status = 0, dt_exclusao = current_timestamp() "
-                + " where fk_ordem_forn = " + Integer.toString(ofId) + " and status = 1 and "
-                + " fk_usuario not in (" + strListaUsu + ");";
-        query = em.createNativeQuery(sql);
-        query.executeUpdate();
-        em.getTransaction().commit();
-        em.close();
-        entityManagerFactory.close();
+        List<UsuarioOrdemFornecimento> usuarioExcluidos = of.getListaUsuarios().stream()
+                .filter(obj -> dto.getUsu().stream()
+                        .filter(id -> !id.equals(obj.getId())).findFirst().isPresent()
+                ).map(obj -> {
+                    obj.setDtExclusao(new Date());
+                    obj.setStatus(0);
+                    return obj;
+                }).collect(Collectors.toList());
+        uofs.addAll(usuarioExcluidos);
+        uofs.addAll(usuariosDaOf);
+        of.setListaUsuarios(uofs);
+        this.ordemFornecimentoRepository.saveAndFlush(of);
     }
-
 
     public List<OrdemFornecimentoFiltradoDTO> getOrdensFornUsuario(Integer id) {
         return ordemFornecimentoFiltradoMapper.toDto(usuarioOrdemFornecimentoRepository

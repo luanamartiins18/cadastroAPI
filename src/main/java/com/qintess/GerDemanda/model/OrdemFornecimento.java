@@ -2,10 +2,12 @@ package com.qintess.GerDemanda.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity(name = "OrdemFornecimento")
@@ -104,8 +106,9 @@ public class OrdemFornecimento {
 	private Situacao situacaoUsu;
 
 	@JsonIgnore
-	@OneToMany(mappedBy="ordemFornecimento")
-	Set<UsuarioOrdemFornecimento> listaUsuarios;
+	@JsonManagedReference
+	@OneToMany(mappedBy="ordemFornecimento",cascade = CascadeType.MERGE)
+	List<UsuarioOrdemFornecimento> listaUsuarios;
 
 }
 

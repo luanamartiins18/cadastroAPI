@@ -1,22 +1,12 @@
 package com.qintess.GerDemanda.controller;
 
-import com.qintess.GerDemanda.model.OrdemFornecimento;
-import com.qintess.GerDemanda.model.UsuarioOrdemFornecimento;
 import com.qintess.GerDemanda.service.OrdemFornecimentoService;
-import com.qintess.GerDemanda.service.dto.OrdemFornecimentoDTO;
-import com.qintess.GerDemanda.service.dto.OrdensConcluidasDTO;
-import com.qintess.GerDemanda.service.dto.OrdemFornecimentoDetalhadoDTO;
-import com.qintess.GerDemanda.service.dto.OrdemFornecimentoFiltradoDTO;
-import com.qintess.GerDemanda.service.dto.OrdemFornecimentoResumidaDTO;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.qintess.GerDemanda.service.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -34,7 +24,7 @@ public class OrdemFornecimentoController {
 
 	@GetMapping("/ordem-fornecimento/{id}/situacao")
 	public ResponseEntity<OrdemFornecimentoResumidaDTO> getSituacaoOf(@PathVariable Integer id) {
-		OrdemFornecimentoResumidaDTO ordemFornecimentoResumidaDTO = ordemFornecimentoService.getSituacaoOf(id);
+		OrdemFornecimentoResumidaDTO ordemFornecimentoResumidaDTO = ordemFornecimentoService.findOrdemFornecimentoByIdDTO(id);
 		return ResponseEntity.ok().body(ordemFornecimentoResumidaDTO);
 	}
 
@@ -50,18 +40,9 @@ public class OrdemFornecimentoController {
 	}
 
 	@PostMapping(value = "/ordem-fornecimento/usuario-situacao")
-	public ResponseEntity<String> setSituacao(@RequestBody String request) {
-		JSONObject json = new JSONObject(request);
-		int situacao = json.getInt("sit");
-		int of = json.getInt("of");
-		String ref = json.getString("ref");
-		ArrayList<Integer> listaUsu = new ArrayList<Integer>();
-		JSONArray usuarios = json.getJSONArray("usu");
-		for (int i = 0; i < usuarios.length(); i++) {
-			listaUsu.add(usuarios.getInt(i));
-		}
-		ordemFornecimentoService.registraUsuSit(listaUsu, situacao, of, ref);
-		return new ResponseEntity<String>(HttpStatus.OK);
+	public ResponseEntity<OrdemFornecimentoDTO> setSituacao(@RequestBody OrdemFornecimentoInDTO dto) {
+		ordemFornecimentoService.registraUsuSit(dto);
+		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping("ordens-fornecimento/usuario/{id}")
