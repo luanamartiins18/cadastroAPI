@@ -4,11 +4,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Calendar;
 import java.util.Date;
 
 @Entity
-@Table(name = "usuario_X_of")
+@Table(name = "usuario_x_of")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

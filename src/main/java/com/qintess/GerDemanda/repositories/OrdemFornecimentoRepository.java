@@ -48,5 +48,33 @@ public interface OrdemFornecimentoRepository extends JpaRepository<OrdemFornecim
 
     OrdemFornecimento findFirstByIdAndSituacaoGentiId(Integer id, Integer i);
 
+    @Query(value = "SELECT " +
+            "	orf.referencia, " +
+            "	orf.numero_OF_genti num_of, " +
+            "	s.descricao as sigla, " +
+            "    orf.responsavel_t, " +
+            "    orf.gerente_t, " +
+            "    SUM(ig.valor) as utsibb, " +
+            "    ((select valor from valor_ustibb where ativo = 1) * SUM(ig.valor)) as valor, " +
+            "    st.descricao as status         " +
+            "	FROM ordem_forn orf " +
+            "		INNER JOIN usuario_x_of uof " +
+            "		INNER JOIN tarefa_of tof " +
+            "			on uof.fk_ordem_forn = orf.id  " +
+            "			on tof.fk_of_usuario = uof.id " +
+            "        INNER JOIN item_guia ig " +
+            "			on tof.fk_item_guia = ig.id " +
+            "		INNER JOIN sigla s " +
+            "			on orf.fk_sigla = s.id " +
+            "		INNER JOIN situacao st " +
+            "			on orf.fk_situacao_usu = st.id " +
+            "		orf.fk_situacao_usu = 8 " +
+            "    WHERE  " +
+            "	GROUP BY " +
+            "		orf.responsavel_t, " +
+            "    	orf.numero_OF_genti, " +
+            "		orf.gerente_t, " +
+            "		s.descricao ", nativeQuery = true)
+    List<Object[]> findOrdensConcluidas();
 
 }

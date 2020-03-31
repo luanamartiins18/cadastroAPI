@@ -1,9 +1,14 @@
 package com.qintess.GerDemanda.service;
 
-import com.qintess.GerDemanda.model.*;
+import com.qintess.GerDemanda.model.Cargo;
+import com.qintess.GerDemanda.model.Contrato;
+import com.qintess.GerDemanda.model.Usuario;
 import com.qintess.GerDemanda.repositories.UsuarioPerfilRepository;
 import com.qintess.GerDemanda.repositories.UsuarioRepository;
-import com.qintess.GerDemanda.service.dto.*;
+import com.qintess.GerDemanda.service.dto.CargoDTO;
+import com.qintess.GerDemanda.service.dto.PerfilDTO;
+import com.qintess.GerDemanda.service.dto.UsuarioDTO;
+import com.qintess.GerDemanda.service.dto.UsuarioPerfilDTO;
 import com.qintess.GerDemanda.service.mapper.UsuarioMapper;
 import com.qintess.GerDemanda.service.mapper.UsuarioPerfilMapper;
 import org.springframework.beans.factory.annotation.Autowired;
