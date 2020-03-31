@@ -50,7 +50,7 @@ public class UsuarioController {
         return (cargo == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(cargo);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/usuario")
+    @PostMapping( value = "/usuario")
     public ResponseEntity<String> insereUsuario(@Valid @RequestBody UsuarioDTO dto) {
         usuarioService.insereUsuario(dto);
         return new ResponseEntity<String>(HttpStatus.OK);
