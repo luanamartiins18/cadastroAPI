@@ -2,16 +2,13 @@ package com.qintess.GerDemanda.controller;
 
 import com.qintess.GerDemanda.service.CargoService;
 import com.qintess.GerDemanda.service.UsuarioService;
-import com.qintess.GerDemanda.service.dto.CargoDTO;
-import com.qintess.GerDemanda.service.dto.PerfilDTO;
-import com.qintess.GerDemanda.service.dto.UsuarioDTO;
+import com.qintess.GerDemanda.service.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -45,5 +42,11 @@ public class UsuarioController {
     ResponseEntity<CargoDTO> getCargoUsuarioByRe(@PathVariable String re) {
         CargoDTO cargo = usuarioService.getCargoUsuarioByRe(re);
         return (cargo == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(cargo);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/usuario")
+    public ResponseEntity<String> insereUsuario(@Valid @RequestBody UsuarioDTO dto) {
+        usuarioService.insereUsuario(dto);
+        return new ResponseEntity<String>(HttpStatus.OK);
     }
 }

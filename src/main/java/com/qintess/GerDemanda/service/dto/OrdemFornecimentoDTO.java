@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class OrdemFornecimentoDTO {
-	private int id;
+	private Integer id;
 	private String numeroOF;
 	private String numeroOFGenti;
 	private String fabrica;

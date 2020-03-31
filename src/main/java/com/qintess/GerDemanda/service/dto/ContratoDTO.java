@@ -8,6 +8,6 @@ import lombok.*;
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ContratoDTO {
-    private int id;
+    private Integer id;
     private String descricao;
 }

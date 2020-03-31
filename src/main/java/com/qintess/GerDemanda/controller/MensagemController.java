@@ -23,17 +23,17 @@ public class MensagemController {
     UsuarioMensagemService usuarioMensagemService;
 
     @GetMapping("historico-mensagens/usuario/{id}")
-    public List<UsuarioMensagemDTO> getAllMensagensByUsuario(@PathVariable int id) {
+    public List<UsuarioMensagemDTO> getAllMensagensByUsuario(@PathVariable Integer id) {
         return usuarioMensagemService.getAllMensagensByUsuarios(id);
     }
 
     @GetMapping("mensagens/usuario/{id}")
-    public List<UsuarioMensagemDTO> getMensagensColaborador(@PathVariable int id) {
+    public List<UsuarioMensagemDTO> getMensagensColaborador(@PathVariable Integer id) {
         return usuarioMensagemService.getMensagensColaborador(id);
     }
 
     @GetMapping("mensagem/{id}")
-    public List<UsuarioMensagemDTO> detalhaMensagem(@PathVariable int id) {
+    public List<UsuarioMensagemDTO> detalhaMensagem(@PathVariable Integer id) {
         return usuarioMensagemService.detalhaMensagem(id);
     }
 
@@ -47,13 +47,13 @@ public class MensagemController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/mensagem-geral")
     public ResponseEntity<String> insereMensagemGeral(@RequestBody MensagemInDTO dto) {
-        mensagemService.insereMensagem(dto, "GERAL");
+        mensagemService.insereMensagemGeral(dto);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/mensagem-sigla")
     public ResponseEntity<String> insereMensagemSigla(@RequestBody MensagemInDTO dto) {
-        mensagemService.insereMensagem(dto, "SIGLA");
+        mensagemService.insereMensagemSigla(dto);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 

@@ -8,6 +8,6 @@ import lombok.*;
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class PerfilDTO {
-    private int id;
+    private Integer id;
     private String descricao;
 }

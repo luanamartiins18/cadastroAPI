@@ -6,8 +6,10 @@ import com.qintess.GerDemanda.model.Usuario;
 import com.qintess.GerDemanda.service.dto.MensagemInDTO;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 public abstract class MensagemBuilder {
 
@@ -16,9 +18,9 @@ public abstract class MensagemBuilder {
                 .corpo(dto.getCorpo())
                 .responsavel(Usuario.builder().id(dto.getIdResp()).build())
                 .dtExpiracao(dto.getDtExp())
-                .sigla(Sigla.builder().id(dto.getIdSigla()).build())
+                .sigla(Objects.nonNull(dto.getIdSigla())?Sigla.builder().id(dto.getIdSigla()).build():null)
                 .titulo(dto.getTitulo())
-                .dtCriacao(new Date())
+                .dtCriacao(Date.from( LocalDateTime.now().atZone( ZoneId.systemDefault()).toInstant()))
                 .listaUsuarios(new ArrayList<>())
                 .status(1)
                 .build();

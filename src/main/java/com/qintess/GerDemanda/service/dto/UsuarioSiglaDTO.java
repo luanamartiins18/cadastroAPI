@@ -13,12 +13,12 @@ import java.util.Date;
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UsuarioSiglaDTO {
-    private int id;
+    private Integer id;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dtCriacao;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dtExclusao;
-    private int status;
+    private Integer status;
     private SiglaDTO sigla;
 }
 

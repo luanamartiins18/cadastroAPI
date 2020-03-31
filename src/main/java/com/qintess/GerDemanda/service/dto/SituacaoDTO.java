@@ -9,6 +9,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 public class SituacaoDTO {
-	private int id;
+	private Integer id;
 	private String descricao;
 }

@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 @Service
 public class MensagemService {
 
+    public static final String GERAL = "GERAL";
+    public static final String SIGLA = "SIGLA";
     @Autowired
     MensagemRepository mensagemRepository;
     @Autowired
@@ -29,9 +31,16 @@ public class MensagemService {
     @Autowired
     MensagemMapper mensagemMapper;
 
+    public void insereMensagemGeral(MensagemInDTO dto) {
+        insert(dto, GERAL, usuarioService.getUsuariosAtivos());
+    }
+
+    public void insereMensagemSigla(MensagemInDTO dto) {
+        insert(dto, SIGLA, usuarioService.getUsuariosBySigla(dto.getIdSigla()));
+    }
+
     @Transactional
-    public void insereMensagem(MensagemInDTO dto, String tipo) {
-        List<Usuario> listUsu = usuarioService.getUsuariosBySigla(dto.getIdSigla());
+    private void insert(MensagemInDTO dto, String tipo, List<Usuario> listUsu) {
         Mensagem obj = MensagemBuilder.toDtoBuild(dto);
         obj.setTipoMensagem(tipo);
         obj.setListaUsuarios(listUsu.stream().map(usuario -> new UsuarioMensagem(usuario, obj)).collect(Collectors.toList()));

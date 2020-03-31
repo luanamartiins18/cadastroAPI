@@ -5,6 +5,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -16,31 +18,31 @@ import java.util.Date;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UsuarioMensagem {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@EqualsAndHashCode.Include
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    private Integer id;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dt_leitura")
-	private Date dtLeitura;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_leitura")
+    private Date dtLeitura;
 
-	@JsonBackReference
-	@ManyToOne
-	@JoinColumn(name = "fk_usuario", nullable=false)
-	@NotNull
-	private Usuario usuarioMens;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_usuario", nullable = false)
+    @NotNull
+    private Usuario usuarioMens;
 
-	@JsonBackReference
-	@ManyToOne
-	@JoinColumn(name = "fk_mensagem", nullable=false)
-	@NotNull
-	private Mensagem mensagem;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_mensagem", nullable = false)
+    @NotNull
+    private Mensagem mensagem;
 
-	public UsuarioMensagem(Usuario usuario, Mensagem mensagem) {
-		this.usuarioMens = usuario;
-		this.mensagem = mensagem;
-	}
+    public UsuarioMensagem(Usuario usuario, Mensagem mensagem) {
+        this.usuarioMens = usuario;
+        this.mensagem = mensagem;
+    }
 }
 
 

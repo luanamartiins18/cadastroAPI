@@ -19,7 +19,8 @@ public interface UsuarioMensagemMapper extends EntityMapper<UsuarioMensagemDTO, 
     @Mapping(target = "mensagem.responsavel.nome", source = "responsavel")
     @Mapping(target = "mensagem.status", source = "status")
     @Mapping(target = "mensagem.tipoMensagem", source = "tpMsg")
-    @Mapping(target = "mensagem.responsavel.id", source = "idUsuMsg")
+    @Mapping(target = "id", source = "idUsuMsg")
+    @Mapping(target = "mensagem.responsavel.id", source = "idU")
     @Mapping(target = "usuarioMens.nome", source = "nomeUsu")
     UsuarioMensagem toEntity(UsuarioMensagemDTO dto);
 
@@ -33,7 +34,8 @@ public interface UsuarioMensagemMapper extends EntityMapper<UsuarioMensagemDTO, 
     @Mapping(target = "responsavel", source = "mensagem.responsavel.nome")
     @Mapping(target = "status", source = "mensagem.status")
     @Mapping(target = "tpMsg", source = "mensagem.tipoMensagem")
-    @Mapping(target = "idUsuMsg", source = "usuarioMens.id") // ANTIGO ERA idU
+    @Mapping(target = "idUsuMsg", source = "id")
+    @Mapping(target = "idU", source = "mensagem.responsavel.id")
     @Mapping(target = "nomeUsu", source = "usuarioMens.nome")
     UsuarioMensagemDTO toDto(UsuarioMensagem entity);
 }

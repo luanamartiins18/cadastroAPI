@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -21,13 +22,13 @@ public class OrdemFornecimentoDetalhadoDTO {
     private String responsavelTecnico;
     private String gerenteTecnico;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dtAbertura;
+    private Timestamp dtAbertura;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dtPrevisao;
+    private Timestamp dtPrevisao;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dtEntrega;
+    private Timestamp dtEntrega;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dtAceite;
+    private Timestamp dtAceite;
     private String sigla;
     private String situacaoGenti;
     private String situacaoAlm;
@@ -40,10 +41,10 @@ public class OrdemFornecimentoDetalhadoDTO {
         this.referencia = (String) obj[2];
         this.responsavelTecnico = (String) obj[3];
         this.gerenteTecnico = (String) obj[4];
-        this.dtAbertura = (LocalDateTime) obj[5];
-        this.dtPrevisao = (LocalDateTime) obj[6];
-        this.dtEntrega = (LocalDateTime) obj[7];
-        this.dtAceite = (LocalDateTime) obj[8];
+        this.dtAbertura = (Timestamp) obj[5];
+        this.dtPrevisao = (Timestamp) obj[6];
+        this.dtEntrega = (Timestamp) obj[7];
+        this.dtAceite = (Timestamp) obj[8];
         this.sigla = (String) obj[9];
         this.situacaoGenti = (String) obj[10];
         this.situacaoAlm = (String) obj[11];

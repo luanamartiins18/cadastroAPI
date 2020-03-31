@@ -14,11 +14,11 @@ import java.util.Date;
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UsuarioPerfil{
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
-	private int id;
+	private Integer id;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "dt_criacao")
@@ -27,8 +27,8 @@ public class UsuarioPerfil{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "dt_exclusao")
 	private Date dtExclusao;
-	
-	private int status;
+
+	private Integer status;
 
 	@JsonBackReference
 	@ManyToOne

@@ -5,6 +5,7 @@ import com.qintess.GerDemanda.model.UsuarioOrdemFornecimento;
 import com.qintess.GerDemanda.service.OrdemFornecimentoService;
 import com.qintess.GerDemanda.service.dto.OrdemFornecimentoDTO;
 import com.qintess.GerDemanda.service.dto.OrdemFornecimentoDetalhadoDTO;
+import com.qintess.GerDemanda.service.dto.OrdemFornecimentoFiltradoDTO;
 import com.qintess.GerDemanda.service.dto.OrdemFornecimentoResumidaDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,13 +26,13 @@ public class OrdemFornecimentoController {
     OrdemFornecimentoService ordemFornecimentoService;
 
     @GetMapping("/ordem-fornecimento/{id}/usuarios")
-    public ResponseEntity<List<Integer>> getUsuariosOf(@PathVariable int id) {
+    public ResponseEntity<List<Integer>> getUsuariosOf(@PathVariable Integer id) {
         List<Integer> usuariosOf = ordemFornecimentoService.getUsuariosOf(id);
         return ResponseEntity.ok().body(usuariosOf);
     }
 
     @GetMapping("/ordem-fornecimento/{id}/situacao")
-    public ResponseEntity<OrdemFornecimentoResumidaDTO> getSituacaoOf(@PathVariable int id) {
+    public ResponseEntity<OrdemFornecimentoResumidaDTO> getSituacaoOf(@PathVariable Integer id) {
         OrdemFornecimentoResumidaDTO ordemFornecimentoResumidaDTO = ordemFornecimentoService.getSituacaoOf(id);
         return ResponseEntity.ok().body(ordemFornecimentoResumidaDTO);
     }
@@ -43,7 +44,7 @@ public class OrdemFornecimentoController {
     }
 
     @GetMapping("/ordem-fornecimento/{id}")
-    ResponseEntity<List<OrdemFornecimentoDTO>> getOrdemDeFornecimento(@PathVariable Integer id) {
+    ResponseEntity<OrdemFornecimentoDTO> getOrdemDeFornecimento(@PathVariable Integer id) {
         return ResponseEntity.ok().body(ordemFornecimentoService.getOrdemDeFornecimento(id));
     }
 
@@ -63,7 +64,7 @@ public class OrdemFornecimentoController {
     }
 
     @GetMapping("ordens-fornecimento/usuario/{id}")
-    ResponseEntity<List<UsuarioOrdemFornecimento>> getOrdensFornUsuario(@PathVariable Integer id) {
+    ResponseEntity<List<OrdemFornecimentoFiltradoDTO>> getOrdensFornUsuario(@PathVariable Integer id) {
         return ResponseEntity.ok().body(ordemFornecimentoService.getOrdensFornUsuario(id));
     }
 }

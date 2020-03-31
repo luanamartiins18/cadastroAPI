@@ -21,7 +21,7 @@ public class OrdemFornecimento {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
-	private int id;
+	private Integer id;
 
 	@Column(name = "numero_OF")
 	private String numeroOF;

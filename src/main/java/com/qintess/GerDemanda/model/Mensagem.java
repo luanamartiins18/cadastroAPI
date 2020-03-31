@@ -16,39 +16,39 @@ import java.util.List;
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Mensagem {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@EqualsAndHashCode.Include
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    private Integer id;
 
-	private String corpo;
+    private String corpo;
 
-	private int status;
+    private Integer status;
 
-	private String titulo;
+    private String titulo;
 
-	@Column(name="tp_mensagem")
-	private String tipoMensagem;
+    @Column(name = "tp_mensagem")
+    private String tipoMensagem;
 
-	@JsonBackReference
-	@ManyToOne
-	@JoinColumn(name="fk_responsavel")
-	private Usuario responsavel;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_responsavel")
+    private Usuario responsavel;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="dt_criacao")
-	private Date dtCriacao;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_criacao")
+    private Date dtCriacao;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="dt_expiracao")
-	private Date dtExpiracao;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_expiracao")
+    private Date dtExpiracao;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "mensagem", cascade = CascadeType.PERSIST, orphanRemoval = true)
-	private List<UsuarioMensagem> listaUsuarios;
+    @JsonIgnore
+    @OneToMany(mappedBy = "mensagem", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<UsuarioMensagem> listaUsuarios;
 
-	@JsonBackReference
-	@ManyToOne
-	@JoinColumn(name="fk_sigla")
-	private Sigla sigla;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_sigla")
+    private Sigla sigla;
 }

@@ -46,7 +46,7 @@ public interface OrdemFornecimentoRepository extends JpaRepository<OrdemFornecim
             + " order by st.descricao, s.descricao", nativeQuery = true)
     List<Object[]> getOrdemDeFornecimento();
 
-    List<OrdemFornecimento> findByIdAndSituacaoGentiId(int id, int i);
+    OrdemFornecimento findFirstByIdAndSituacaoGentiId(Integer id, Integer i);
 
 
 }

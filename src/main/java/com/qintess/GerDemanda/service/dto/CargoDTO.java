@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class CargoDTO {
-    private int id;
+    private Integer id;
     private String descricao;
 }

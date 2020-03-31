@@ -21,7 +21,7 @@ public class Usuario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
-	private int id;
+	private Integer id;
 
 	@Column
 	private String nome;
@@ -46,7 +46,7 @@ public class Usuario {
 	private String empresa;
 
 	@Column
-	private int demanda;
+	private Integer demanda;
 
 	@Column
 	private String Celular;

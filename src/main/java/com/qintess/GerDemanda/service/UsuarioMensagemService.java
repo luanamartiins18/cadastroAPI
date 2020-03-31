@@ -8,7 +8,9 @@ import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -25,21 +27,27 @@ public class UsuarioMensagemService {
         return usuarioMensagemMapper.toDto(this.usuarioMensagemRepository.findByMensagemStatusAndUsuarioMensId(1, idUsuario));
     }
 
-    public UsuarioMensagem getMensagemId(Integer id) {
+    public UsuarioMensagem findMensagemUsuarioById(Integer id) {
         return usuarioMensagemRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("id", UsuarioMensagem.class.getName()));
     }
 
     public void marcaLida(Integer idMsgUsu) {
-        UsuarioMensagem usuarioMensagem = this.getMensagemId(idMsgUsu);
+        UsuarioMensagem usuarioMensagem = this.findMensagemUsuarioById(idMsgUsu);
         usuarioMensagem.setDtLeitura(new Date());
+
+        System.out.println(new Date());
+        System.out.println(new Date());
+        System.out.println(new Date());
+        System.out.println(new Date());
+        System.out.println(new Date());
         this.usuarioMensagemRepository.save(usuarioMensagem);
     }
 
     public List<UsuarioMensagemDTO> getMensagensColaborador(int usuarioMensId) {
-       return usuarioMensagemMapper.toDto(this.usuarioMensagemRepository
-               .findByDtLeituraIsNullAndMensagemDtExpiracaoGreaterThanEqualAndMensagemStatusAndUsuarioMensId(
-                       new Date(), MENSAGEM_STATUS_ATIVO, usuarioMensId));
+        return usuarioMensagemMapper.toDto(this.usuarioMensagemRepository
+                .findByDtLeituraIsNullAndMensagemDtExpiracaoGreaterThanEqualAndMensagemStatusAndUsuarioMensId(
+                        new Date(), MENSAGEM_STATUS_ATIVO, usuarioMensId));
     }
 
     public List<UsuarioMensagemDTO> detalhaMensagem(Integer idMensagem) {
