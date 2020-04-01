@@ -57,7 +57,7 @@ public class MensagemService {
                 .orElseThrow(() -> new ObjectNotFoundException("id", Mensagem.class.getName()));
     }
 
-    public void alteraStatusMsg(int idMsg, String acao) {
+    public void alteraStatusMsg(Integer idMsg, String acao) {
         Mensagem mensagem = this.findById(idMsg);
         mensagem.setStatus(1);
         if (acao.equals("desativar")) {

@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface UsuarioOrdemFornecimentoRepository extends JpaRepository<UsuarioOrdemFornecimento, Integer> {
 
-    List<UsuarioOrdemFornecimento> findByStatusAndOrdemFornecimentoId(int usuarioStatusAtivo, int idOf);
+    List<UsuarioOrdemFornecimento> findByStatusAndOrdemFornecimentoId(Integer usuarioStatusAtivo, Integer idOf);
 
-    List<UsuarioOrdemFornecimento> findByOrdemFornecimentoSituacaoUsuIdAndUsuarioIdAndDtExclusaoIsNullAndStatusOrderByOrdemFornecimentoSiglaDescricaoAsc(int situcaoEmExecucao, int id, int statusAtivo);
+    List<UsuarioOrdemFornecimento> findByOrdemFornecimentoSituacaoUsuIdAndUsuarioIdAndDtExclusaoIsNullAndStatusOrderByOrdemFornecimentoSiglaDescricaoAsc(Integer situcaoEmExecucao, Integer id, Integer statusAtivo);
 }

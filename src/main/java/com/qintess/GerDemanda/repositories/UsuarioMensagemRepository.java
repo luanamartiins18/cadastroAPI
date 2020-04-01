@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface UsuarioMensagemRepository extends JpaRepository<UsuarioMensagem, Integer> {
-    List<UsuarioMensagem> findByMensagemStatusAndUsuarioMensId(int status, int idUsuario);
+    List<UsuarioMensagem> findByMensagemStatusAndUsuarioMensId(Integer status, Integer idUsuario);
 
     List<UsuarioMensagem> findByMensagemId(Integer idMensagem);
 

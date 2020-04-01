@@ -21,7 +21,7 @@ public class UsuarioMensagemService {
     @Autowired
     UsuarioMensagemMapper usuarioMensagemMapper;
 
-    public List<UsuarioMensagemDTO> getAllMensagensByUsuarios(int idUsuario) {
+    public List<UsuarioMensagemDTO> getAllMensagensByUsuarios(Integer idUsuario) {
         return usuarioMensagemMapper.toDto(this.usuarioMensagemRepository.findByMensagemStatusAndUsuarioMensId(1, idUsuario));
     }
 
@@ -36,7 +36,7 @@ public class UsuarioMensagemService {
         this.usuarioMensagemRepository.save(usuarioMensagem);
     }
 
-    public List<UsuarioMensagemDTO> getMensagensColaborador(int usuarioMensId) {
+    public List<UsuarioMensagemDTO> getMensagensColaborador(Integer usuarioMensId) {
         return usuarioMensagemMapper.toDto(this.usuarioMensagemRepository
                 .findByDtLeituraIsNullAndMensagemDtExpiracaoGreaterThanEqualAndMensagemStatusAndUsuarioMensId(
                         DateUtil.getCurrentDateTimeZero(), MENSAGEM_STATUS_ATIVO, usuarioMensId));

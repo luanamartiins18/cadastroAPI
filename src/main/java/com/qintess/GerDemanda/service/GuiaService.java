@@ -26,7 +26,7 @@ public class GuiaService {
 
             String descTarefa = converteAtributoSQLStr(tarefa, "descricao_tarefa");
             String plataforma = converteAtributoSQLStr(tarefa, "plataforma");
-            int id = tarefa.getInt("id_tarefa");
+            Integer id = tarefa.getInt("id_tarefa");
 
             String sqlTarefa = "UPDATE tarefa_guia set plataforma = :plataforma, descricao = :descricao where id = :id";
             Query queryTarefa = em.createNativeQuery(sqlTarefa);

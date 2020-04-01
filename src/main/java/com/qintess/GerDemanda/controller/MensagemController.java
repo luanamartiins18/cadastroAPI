@@ -41,7 +41,7 @@ public class MensagemController {
     @RequestMapping(method = RequestMethod.POST, value = "/mensagem-lida")
     public ResponseEntity<String> marcaLida(@RequestBody String param) {
         JSONObject json = new JSONObject(param);
-        int idMsgUsu = json.getInt("idMsgUsu");
+        Integer idMsgUsu = json.getInt("idMsgUsu");
         usuarioMensagemService.marcaLida(idMsgUsu);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
@@ -67,7 +67,7 @@ public class MensagemController {
     @RequestMapping(method = RequestMethod.POST, value = "/mensagem-status")
     public ResponseEntity<String> alteraStatusMsg(@RequestBody String param) {
         JSONObject json = new JSONObject(param);
-        int idMsg = json.getInt("idMsg");
+        Integer idMsg = json.getInt("idMsg");
         String acao = json.getString("acao");
         mensagemService.alteraStatusMsg(idMsg, acao);
         return new ResponseEntity<String>(HttpStatus.OK);

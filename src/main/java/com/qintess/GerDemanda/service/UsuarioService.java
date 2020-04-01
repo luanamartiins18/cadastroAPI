@@ -30,11 +30,11 @@ public class UsuarioService {
         return usuarioMapper.toDto(usuarioRepository.findFirstByCodigoRe(re));
     }
 
-    public List<Usuario> getUsuariosBySigla(int id) {
+    public List<Usuario> getUsuariosBySigla(Integer id) {
         return (usuarioRepository.findByStatusAndCargoIdAndListaSiglasSiglaIdOrderByNomeAsc(STATUS_ATIVO_DESCRICAO, CARGO_COLABORADOR, id));
     }
 
-    public List<UsuarioDTO> getUsuariosBySiglaDTO(int id) {
+    public List<UsuarioDTO> getUsuariosBySiglaDTO(Integer id) {
         return usuarioMapper.toDto(this.getUsuariosBySigla(id));
     }
 
@@ -66,9 +66,8 @@ public class UsuarioService {
     @Transactional
     public void insereUsuario(UsuarioDTO dto) {
         Usuario obj = usuarioMapper.toEntity(dto);
-        obj.setStatus(STATUS_ATIVO_DESCRICAO);
         obj.setContrato(Contrato.builder().id(1).build());
-        obj.setCargo(Cargo.builder().id(3).build());
+        obj.setStatus(STATUS_ATIVO_DESCRICAO);
         obj.setSenha("123");
         usuarioRepository.save(obj);
     }

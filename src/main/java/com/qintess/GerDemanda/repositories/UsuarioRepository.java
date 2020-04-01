@@ -14,9 +14,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Usuario findFirstByCodigoRe(String re);
 
-    List<Usuario> findByStatusAndCargoIdOrderByNomeAsc(String ativo, int i);
+    List<Usuario> findByStatusAndCargoIdOrderByNomeAsc(String ativo, Integer i);
 
-    List<Usuario> findByStatusAndCargoIdAndListaSiglasSiglaIdOrderByNomeAsc(String statusAtivo, int cargoColaborador, Integer Sigla);
+    List<Usuario> findByStatusAndCargoIdAndListaSiglasSiglaIdOrderByNomeAsc(String statusAtivo, Integer cargoColaborador, Integer Sigla);
 
     List<Usuario> findByOrderByIdAsc();
 }

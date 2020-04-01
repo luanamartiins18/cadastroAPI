@@ -31,11 +31,23 @@ public class UsuarioDTO {
     @Length(min=6,max=80,message = "O campo email precisa ter no mínimo 6 caracteres e no máximo 80.")
     private String email;
 
-    private String senha;
-
     @CPF(message = "Informe um cpf válido!")
     @NotNull
     private String cpf;
+
+    @NotNull(message = "O campo telefone é obrigatório!")
+    @Length(min=14,max=15,message = "O campo telefone precisa ter no mínimo 14 caracteres e no máximo 15.")
+    private String celular;
+
+    @NotNull(message = "O campo cargo é obrigatório!")
+    private CargoDTO cargo;
+
+    @NotEmpty
+    private List<UsuarioPerfilDTO> listaPerfil;
+
+    @NotNull(message = "O campo data de nascimento é obrigatório!")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate nascimento;
 
     @NotNull(message = "O campo codigoRe é obrigatório!")
     @Length(max=12, message = "O campo codigoRe precisa ter no mínimo 12 caracteres.")
@@ -52,19 +64,10 @@ public class UsuarioDTO {
     @NotNull(message = "O campo demanda é obrigatório!")
     private Integer demanda;
 
-    @NotNull(message = "O campo data de nascimento é obrigatório!")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate nascimento;
-
-    private String status;
-    private ContratoDTO contrato;
-    private CargoDTO cargo;
-
     @NotEmpty
     private List<UsuarioSiglaDTO> listaSiglas;
-    private List<UsuarioPerfilDTO> listaPerfil;
 
-    @NotNull(message = "O campo telefone é obrigatório!")
-    @Length(min=14,max=15,message = "O campo telefone precisa ter no mínimo 14 caracteres e no máximo 15.")
-    private String celular;
+    private ContratoDTO contrato;
+    private String status;
+    private String senha;
 }
