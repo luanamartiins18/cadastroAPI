@@ -279,7 +279,7 @@ public class MensagemService {
 		String sql = "select m.id as idM, m.corpo, m.dt_criacao, m.dt_expiracao, m.tp_mensagem, m.status, m.titulo," + 
 						"um.id as idUM, um.dt_leitura, u.id as idU, u.nome " + 
 						"from mensagem m " + 
-						"inner join usuario_X_mensagem um on m.id = um.fk_mensagem " + 
+						"inner join usuario_x_mensagem um on m.id = um.fk_mensagem " +
 						"inner join usuario u on um.fk_usuario = u.id " + 
 						"where m.id = " + Integer.toString(id); 
 						

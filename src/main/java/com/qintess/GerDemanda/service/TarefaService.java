@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import com.qintess.GerDemanda.PersistenceHelper;
+import javassist.bytecode.stackmap.BasicBlock;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -58,7 +59,10 @@ public class TarefaService {
 					"		on um.id = ig.fk_uni_medida " + 
 					"	inner join complex_guia cg " + 
 					"		on cg.id = ig.fk_complex_guia "
-					+ "	order by tg.id ";
+					+ "	order by " +
+						"tg.fk_disciplina, " +
+						"cast(substring_index( substring_index(tg.atividade, ' ', 1), '.', -1 ) as unsigned)," +
+						"cast(substring_index(tg.tarefa, '.', -1) as unsigned) ";
 				
 			
 		Query query = em.createNativeQuery(sql);		
@@ -223,8 +227,15 @@ public class TarefaService {
 		String historia = json.getString("historia");
 		String sprint = json.getString("sprint");
 		String observacao = json.getString("observacao");
-		String artefato = json.getString("artefato");		
-		String quantidade = json.getString("quantidade");
+		String artefato = json.getString("artefato");
+
+		Integer quantidade;
+		try{
+			quantidade = json.getInt("quantidade");
+		} catch(Exception excp){
+			quantidade = -1;
+		}
+
 		int idUsu = json.getInt("usu");
 		int idOf = json.getInt("of");	
 		int numTarefa = json.getInt("numTarefa");	
@@ -241,7 +252,7 @@ public class TarefaService {
 		
 		query.setParameter("historia", historia);
 		query.setParameter("sprint", sprint);
-		query.setParameter("quantidade", quantidade.equals("") ? null : quantidade);
+		query.setParameter("quantidade", quantidade == -1 ? null : quantidade);
 		query.setParameter("artefato", artefato);
 		query.setParameter("observacao", observacao);
 		query.setParameter("idItem", idItem);
@@ -410,7 +421,7 @@ public class TarefaService {
 		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
 		
-		String sql = "select t.* , s.descricao, ig.valor, cg.descricao as complexidade, tg.fk_disciplina, tg.id as idTrf, ig.componente from tarefa_of t " +
+		String sql = "select t.* , s.descricao, ig.valor, cg.descricao as complexidade, tg.fk_disciplina, tg.id as idTrf, ig.componente, tg.tarefa as tarefa from tarefa_of t " +
 				"	inner join usuario_x_of u " + 
 				"		on t.fk_of_usuario = u.id " + 
 				"	inner join situacao s " + 
@@ -453,6 +464,7 @@ public class TarefaService {
 			atual.put("disciplina", json.getInt(16));
 			atual.put("idTrfGuia", json.getInt(17));
 			atual.put("componente", json.get(18));
+			atual.put("tarefa", json.get(19));
 			
 			
 			tarefasUsu.add(atual);			

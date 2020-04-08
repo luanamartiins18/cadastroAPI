@@ -51,7 +51,7 @@ public class GuiaService {
 				int quantidade     = converteAtributoSQLInt(item, "quantidade");
 				
 				query.setParameter("valor", item.getFloat("valor"));
-				query.setParameter("quantidade", quantidade == 0 ? null : quantidade);				
+				query.setParameter("quantidade", quantidade == -1 ? null : quantidade);
 				query.setParameter("componente", componente == "null" ? null : componente);
 				query.setParameter("descricao", descComplex == "null" ? null : descComplex);				
 				
@@ -96,11 +96,11 @@ public class GuiaService {
 	}		
 	
 	public int converteAtributoSQLInt(JSONObject tarefa, String key) {
-		int res = 0;
+		int res = -1;
 		
 		try {
 			
-			if(tarefa.getJSONObject(key).length() == 0) res =  0;
+			if(tarefa.getJSONObject(key).length() == 0) res =  -1;
 			
 		}catch(JSONException excp){		
 			
@@ -249,7 +249,7 @@ public class GuiaService {
 									"VALUES ( :componente , :quantidade , :valor , :descComplex , :uniMedida , (select max(id) from tarefa_guia), :complexGuia ) ; ";
 				Query queryItem = em.createNativeQuery(sqlItem);
 
-				queryItem.setParameter("componente", componente == "" ? null : componente);
+				queryItem.setParameter("componente", componente.equals("") ? null : componente);
 				queryItem.setParameter("quantidade", quantidade == -1 ? null : quantidade);
 				queryItem.setParameter("valor", valor);
 				queryItem.setParameter("descComplex", descComplex);
@@ -260,6 +260,7 @@ public class GuiaService {
 			}
 		}catch(Exception excp){
 			em.getTransaction().rollback();
+			em.close();
 			throw excp;
 		}
 
@@ -317,6 +318,37 @@ public class GuiaService {
 
         return res;
     }
+
+    public boolean atualizaVersaoGuia(String paramRequest){
+		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
+		EntityManager em = entityManagerFactory.createEntityManager();
+
+		JSONObject json = new JSONObject(paramRequest);
+		String versao = json.getString("versao");
+
+		try{
+			em.getTransaction().begin();
+
+			String sql = "DELETE FROM versao_guia where id > 0";
+			Query query = em.createNativeQuery(sql);
+			query.executeUpdate();
+
+			sql = "INSERT INTO versao_guia(descricao) values(:descricao) ; ";
+			query = em.createNativeQuery(sql);
+			query.setParameter("descricao", versao);
+			query.executeUpdate();
+
+		}catch(Exception excp){
+			em.getTransaction().rollback();
+			em.close();
+			throw excp;
+		}
+
+		em.getTransaction().commit();
+		em.close();
+		return true;
+	}
+
 }
 	
 

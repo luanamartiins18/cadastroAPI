@@ -114,8 +114,21 @@ public class GuiaController {
 
 
 	}
-	
-	
+
+	@RequestMapping(method = RequestMethod.PUT, value = "/versao-guia")
+	public ResponseEntity<String> atualizaVersaoGuia(@RequestBody String requestParam){
+
+		GuiaService gs = new GuiaService();
+
+		try {
+			gs.atualizaVersaoGuia(requestParam);
+			return new ResponseEntity<String>(HttpStatus.OK);
+
+		}catch(Exception excp) {
+			System.out.println(excp.getMessage());
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }
 
 

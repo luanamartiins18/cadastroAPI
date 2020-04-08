@@ -9,6 +9,7 @@ public class OrdensConcluidasDTO {
     Double ustibb;
     Double valor;
     String status;
+    Integer idOf;
 
     public OrdensConcluidasDTO(Object[] obj) {
         this.referencia = (String) obj[0];
@@ -19,9 +20,18 @@ public class OrdensConcluidasDTO {
         this.ustibb = (Double) obj[5];
         this.valor = (Double) obj[6];
         this.status = (String) obj[7];
+        this.idOf = (Integer)obj[8];
     }
 
     public OrdensConcluidasDTO() {
+    }
+
+    public Integer getIdOf() {
+        return this.idOf;
+    }
+
+    public void setIdOf(Integer idOf){
+        this.idOf = idOf;
     }
 
     public String getReferencia() {
