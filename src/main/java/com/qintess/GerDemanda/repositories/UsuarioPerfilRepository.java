@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UsuarioPerfilRepository extends JpaRepository<UsuarioPerfil, Integer> {
     UsuarioPerfil findByUsuarioPerfilIdAndStatus(Integer idUsu, Integer statusAtivoCodigo);
+
+    void deleteByUsuarioPerfilId(Integer id);
 }

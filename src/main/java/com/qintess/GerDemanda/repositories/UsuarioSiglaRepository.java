@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UsuarioSiglaRepository extends JpaRepository<UsuarioSigla, Integer> {
-
+    void deleteByUsuarioSiglaId(Integer id);
 }

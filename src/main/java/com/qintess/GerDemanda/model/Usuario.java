@@ -2,12 +2,11 @@ package com.qintess.GerDemanda.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Data
@@ -57,6 +56,9 @@ public class Usuario {
     @Column
     private String status;
 
+    @Column(name = "primeiro_acesso")
+    private Boolean primeiroAcesso;
+
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "fk_contrato")
@@ -68,12 +70,12 @@ public class Usuario {
     private Cargo cargo;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "usuarioSigla", fetch = FetchType.LAZY)
-    Set<UsuarioSigla> listaSiglas = new HashSet<UsuarioSigla>();
+    @OneToMany(mappedBy = "usuarioSigla", cascade = CascadeType.PERSIST)
+    List<UsuarioSigla> listaSiglas;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "usuarioPerfil", fetch = FetchType.LAZY)
-    Set<UsuarioPerfil> listaPerfil = new HashSet<UsuarioPerfil>();
+    @OneToMany(mappedBy = "usuarioPerfil", cascade = CascadeType.PERSIST)
+    List<UsuarioPerfil> listaPerfil;
 }
 
 

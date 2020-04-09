@@ -1,5 +1,6 @@
 package com.qintess.GerDemanda.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,5 +15,8 @@ public class UsuarioResumidoDTO {
     private String nome;
     private String email;
     private String codigoRe;
+    private String codigoBB;
     private CargoDTO cargo;
+    private Boolean primeiroAcesso;
+    private String senha;
 }

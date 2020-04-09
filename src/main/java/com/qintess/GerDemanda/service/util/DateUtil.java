@@ -1,8 +1,5 @@
 package com.qintess.GerDemanda.service.util;
 
-import com.qintess.GerDemanda.model.Mensagem;
-import com.qintess.GerDemanda.service.dto.MensagemInDTO;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;

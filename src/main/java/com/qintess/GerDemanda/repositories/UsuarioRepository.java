@@ -10,13 +10,19 @@ import java.util.List;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
-    boolean existsByCodigoReAndSenha(String re, String senha);
+    Usuario findFirstByCodigoReAndSenha(String re, String senha);
 
     Usuario findFirstByCodigoRe(String re);
+
+    Usuario findFirstByCodigoBB(String bb);
+
+    Usuario findFirstByEmail(String email);
+
+    Usuario findFirstByCpf(String cpf);
 
     List<Usuario> findByStatusAndCargoIdOrderByNomeAsc(String ativo, Integer i);
 
     List<Usuario> findByStatusAndCargoIdAndListaSiglasSiglaIdOrderByNomeAsc(String statusAtivo, Integer cargoColaborador, Integer Sigla);
 
-    List<Usuario> findByOrderByIdAsc();
+    List<Usuario> findByOrderByNomeAsc();
 }

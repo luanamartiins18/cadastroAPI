@@ -6,7 +6,10 @@ import com.qintess.GerDemanda.service.UsuarioService;
 import com.qintess.GerDemanda.service.dto.CargoDTO;
 import com.qintess.GerDemanda.service.dto.PerfilDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
+import com.qintess.GerDemanda.service.dto.UsuarioResumidoDTO;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +33,24 @@ public class UsuarioController {
     @GetMapping("/usuario/{re}")
     ResponseEntity<UsuarioDTO> getUsuario(@PathVariable String re) {
         UsuarioDTO usuario = usuarioService.getUsuarioByRe(re);
+        return (usuario == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(usuario);
+    }
+
+    @GetMapping("/usuario/bb/{bb}")
+    ResponseEntity<UsuarioDTO> getUsuarioBB(@PathVariable String bb) {
+        UsuarioDTO usuario = usuarioService.getUsuarioByBB(bb);
+        return (usuario == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(usuario);
+    }
+
+    @GetMapping("/usuario/email/{email}")
+    ResponseEntity<UsuarioDTO> getUsuarioEmail(@PathVariable String email) {
+        UsuarioDTO usuario = usuarioService.getUsuarioByEmail(email);
+        return (usuario == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(usuario);
+    }
+
+    @GetMapping("/usuario/cpf/{cpf}")
+    ResponseEntity<UsuarioDTO> getUsuarioCpf(@PathVariable String cpf) {
+        UsuarioDTO usuario = usuarioService.getUsuarioByCpf(cpf);
         return (usuario == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(usuario);
     }
 
@@ -79,4 +100,20 @@ public class UsuarioController {
         usuarioService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/usuario-status")
+    public ResponseEntity<String> alteraStatus(@RequestBody String param) {
+        JSONObject json = new JSONObject(param);
+        Integer id = json.getInt("id");
+        String acao = json.getString("acao");
+        usuarioService.alteraStatus(id, acao);
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/altera-senha/{id}")
+    public ResponseEntity<String> alteraSenha (@PathVariable Integer id, @Valid @RequestBody UsuarioResumidoDTO dto) {
+        usuarioService.alteraSenha(id, dto);
+        return ResponseEntity.ok().build();
+    }
+
 }
