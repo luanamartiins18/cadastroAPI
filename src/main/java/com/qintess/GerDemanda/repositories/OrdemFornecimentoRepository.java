@@ -55,12 +55,13 @@ public interface OrdemFornecimentoRepository extends JpaRepository<OrdemFornecim
             "    orf.gerente_t, " +
             "    SUM(ig.valor) as utsibb, " +
             "    ((select valor from valor_ustibb where ativo = 1) * SUM(ig.valor)) as valor, " +
-            "    st.descricao as status " +
-            "FROM ordem_forn orf " +
-            "INNER JOIN usuario_x_of uof " +
-            "on uof.fk_ordem_forn = orf.id " +
-            "INNER JOIN tarefa_of tof " +
-            "on tof.fk_of_usuario = uof.id " +
+            "    st.descricao as status,         " +
+            "    orf.id as idOrf   "  +
+            "	FROM ordem_forn orf " +
+            "		INNER JOIN usuario_x_of uof " +
+            "			on uof.fk_ordem_forn = orf.id  " +
+            "		INNER JOIN tarefa_of tof " +
+            "			on tof.fk_of_usuario = uof.id " +
             "        INNER JOIN item_guia ig " +
             "on tof.fk_item_guia = ig.id " +
             "INNER JOIN sigla s " +

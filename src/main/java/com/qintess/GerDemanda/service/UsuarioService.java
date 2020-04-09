@@ -46,16 +46,20 @@ public class UsuarioService {
         return usuarioMapper.toDto(usuarioRepository.findFirstByCodigoRe(re));
     }
 
-    public UsuarioDTO getUsuarioByBB(String bb) {
-        return usuarioMapper.toDto(usuarioRepository.findFirstByCodigoBB(bb));
+    public UsuarioDTO getUsuarioByRE(String re, Integer id) {
+        return usuarioMapper.toDto(usuarioRepository.findFirstByCodigoReAndIdNot(re, id));
     }
 
-    public UsuarioDTO getUsuarioByEmail(String email) {
-        return usuarioMapper.toDto(usuarioRepository.findFirstByEmail(email));
+    public UsuarioDTO getUsuarioByBB(String bb, Integer id) {
+        return usuarioMapper.toDto(usuarioRepository.findFirstByCodigoBBAndIdNot(bb, id));
     }
 
-    public UsuarioDTO getUsuarioByCpf(String cpf) {
-        return usuarioMapper.toDto(usuarioRepository.findFirstByCpf(cpf));
+    public UsuarioDTO getUsuarioByEmail(String email, Integer id) {
+        return usuarioMapper.toDto(usuarioRepository.findFirstByEmailAndIdNot(email, id));
+    }
+
+    public UsuarioDTO getUsuarioByCpf(String cpf, Integer id) {
+        return usuarioMapper.toDto(usuarioRepository.findFirstByCpfAndIdNot(cpf, id));
     }
 
     public List<Usuario> getUsuariosBySigla(Integer id) {
@@ -93,6 +97,7 @@ public class UsuarioService {
 
     @Transactional
     public void insereUsuario(UsuarioDTO dto) {
+        validacao(dto);
         Usuario obj = usuarioMapper.toEntity(dto);
         obj.setNome(obj.getNome().toUpperCase());
         obj.setContrato(Contrato.builder().id(1).build());
@@ -100,28 +105,29 @@ public class UsuarioService {
         obj.setSenha(DigestUtils.sha256Hex(dto.getCpf()));
         obj.setPrimeiroAcesso(true);
         setPerfilAndSigla(dto.getListaSiglas(), dto.getListaPerfil(), obj);
-        validacao(dto);
-        usuarioRepository.saveAndFlush(obj);
+        usuarioRepository.save(obj);
     }
 
     private void validacao(UsuarioDTO dto) {
-
-        if (Objects.nonNull(getUsuarioByCpf(dto.getCpf()))) {
+        Integer id = Objects.isNull(dto.getId()) ? 0 : dto.getId();
+        if (Objects.nonNull(getUsuarioByCpf(dto.getCpf(), id))) {
             throw new ValidationException("O CPF já está em uso");
         }
-        if (Objects.nonNull(getUsuarioByEmail(dto.getEmail()))) {
+        if (Objects.nonNull(getUsuarioByEmail(dto.getEmail(), id))) {
             throw new ValidationException("O e-mail já está em uso");
         }
-        if (Objects.nonNull(getUsuarioByRe(dto.getCodigoRe()))) {
+        if (Objects.nonNull(getUsuarioByRE(dto.getCodigoRe(), id))) {
             throw new ValidationException("O códigoRe já está em uso");
         }
-        if (Objects.nonNull(getUsuarioByBB(dto.getCodigoBB()))) {
+        if (Objects.nonNull(getUsuarioByBB(dto.getCodigoBB(), id))) {
             throw new ValidationException("O códigoBB já está em uso");
         }
     }
 
     @Transactional
     public void updateUsuario(Integer id, UsuarioDTO dto) {
+        dto.setId(id);
+        validacao(dto);
         Usuario objOld = findById(id);
         usuarioMapperUpdate(dto, objOld);
         usuarioSiglaRepository.deleteByUsuarioSiglaId(id);
@@ -164,7 +170,7 @@ public class UsuarioService {
                 listaSigla
                         .stream().map(sigla ->
                         UsuarioSigla.builder()
-                                .usuarioSigla(Usuario.builder().id(obj.getId()).build())
+                                .usuarioSigla(obj)
                                 .sigla(Sigla.builder().id(sigla.getId()).build())
                                 .build()
                 ).collect(Collectors.toList()));
@@ -173,7 +179,7 @@ public class UsuarioService {
                 listaPerfil
                         .stream().map(perfil ->
                         UsuarioPerfil.builder()
-                                .usuarioPerfil(Usuario.builder().id(obj.getId()).build())
+                                .usuarioPerfil(obj)
                                 .perfil(Perfil.builder().id(perfil.getId()).build())
                                 .build()).collect(Collectors.toList()));
     }

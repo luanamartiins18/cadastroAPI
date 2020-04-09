@@ -36,24 +36,6 @@ public class UsuarioController {
         return (usuario == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(usuario);
     }
 
-    @GetMapping("/usuario/bb/{bb}")
-    ResponseEntity<UsuarioDTO> getUsuarioBB(@PathVariable String bb) {
-        UsuarioDTO usuario = usuarioService.getUsuarioByBB(bb);
-        return (usuario == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(usuario);
-    }
-
-    @GetMapping("/usuario/email/{email}")
-    ResponseEntity<UsuarioDTO> getUsuarioEmail(@PathVariable String email) {
-        UsuarioDTO usuario = usuarioService.getUsuarioByEmail(email);
-        return (usuario == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(usuario);
-    }
-
-    @GetMapping("/usuario/cpf/{cpf}")
-    ResponseEntity<UsuarioDTO> getUsuarioCpf(@PathVariable String cpf) {
-        UsuarioDTO usuario = usuarioService.getUsuarioByCpf(cpf);
-        return (usuario == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(usuario);
-    }
-
     @GetMapping("/sigla/{idSigla}/usuarios")
     ResponseEntity<List<UsuarioDTO>> getUsuariosBySigla(@PathVariable Integer idSigla) {
         List<UsuarioDTO> usuarios = usuarioService.getUsuariosBySiglaDTO(idSigla);

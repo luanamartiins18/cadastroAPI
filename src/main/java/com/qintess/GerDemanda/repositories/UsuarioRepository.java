@@ -12,17 +12,19 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Usuario findFirstByCodigoReAndSenha(String re, String senha);
 
-    Usuario findFirstByCodigoRe(String re);
+    Usuario findFirstByCodigoBBAndIdNot(String bb, Integer id);
 
-    Usuario findFirstByCodigoBB(String bb);
+    Usuario findFirstByEmailAndIdNot(String email, Integer id);
 
-    Usuario findFirstByEmail(String email);
-
-    Usuario findFirstByCpf(String cpf);
+    Usuario findFirstByCpfAndIdNot(String cpf, Integer id);
 
     List<Usuario> findByStatusAndCargoIdOrderByNomeAsc(String ativo, Integer i);
 
     List<Usuario> findByStatusAndCargoIdAndListaSiglasSiglaIdOrderByNomeAsc(String statusAtivo, Integer cargoColaborador, Integer Sigla);
 
     List<Usuario> findByOrderByNomeAsc();
+
+    Usuario findFirstByCodigoReAndIdNot(String re, Integer id);
+
+    Usuario findFirstByCodigoRe(String re);
 }
