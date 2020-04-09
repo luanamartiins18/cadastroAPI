@@ -55,12 +55,6 @@ public class UsuarioDTO {
     @Length(min=6,max=12, message = "O campo codigoBB precisa ter no máximo 12 caracteres.")
     private String codigoBB;
 
-    @NotNull(message = "O campo empresa é obrigatório!")
-    @Length(min=2,max=25, message = "O campo empresa precisa ter no mínimo 2 caracteres e no máximo 25.")
-    private String empresa;
-
-    private Integer demanda;
-
     @NotEmpty(message = "O campo sigla é obrigatório!")
     private List<SiglaDTO> listaSiglas;
 
@@ -72,5 +66,7 @@ public class UsuarioDTO {
     private String primeiroAcesso;
     private ContratoDTO contrato;
     private String status;
+    private String empresa;
+    private Integer demanda;
 
 }

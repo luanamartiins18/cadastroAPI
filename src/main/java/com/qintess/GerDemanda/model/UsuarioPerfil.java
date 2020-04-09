@@ -2,6 +2,7 @@ package com.qintess.GerDemanda.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -20,6 +21,7 @@ public class UsuarioPerfil {
     @EqualsAndHashCode.Include
     private Integer id;
 
+    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "dt_criacao")
     private Date dtCriacao;
