@@ -1,11 +1,15 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.PersistenceHelper;
+import com.qintess.GerDemanda.repositories.RelatorioRepository;
+import com.qintess.GerDemanda.service.dto.OrdensConcluidasDTO;
+import com.qintess.GerDemanda.service.dto.RelatorioDTO;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 import javax.persistence.EntityManager;
@@ -15,9 +19,19 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RelatoriosService {
-    //TODO Setar o ID da OF na QUERY
+
+    @Autowired
+    RelatorioRepository relatorioRepository;
+
+    public List<RelatorioDTO> getRelatorioNovo() {
+        return this.relatorioRepository.getRelatorioNovo()
+                .stream().map(obj -> new RelatorioDTO(obj)).collect(Collectors.toList());
+    }
+
+    // Setar o ID da OF na QUERY
 
     private List<Object> queryRelatorioOrcamento(int idOf){
         EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();

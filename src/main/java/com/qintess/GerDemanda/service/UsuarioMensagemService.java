@@ -32,7 +32,7 @@ public class UsuarioMensagemService {
 
     public void marcaLida(Integer idMsgUsu) {
         UsuarioMensagem usuarioMensagem = this.findMensagemUsuarioById(idMsgUsu);
-        usuarioMensagem.setDtLeitura(new Date());
+        usuarioMensagem.setDtLeitura(DateUtil.getCurrentDateTime());
         this.usuarioMensagemRepository.save(usuarioMensagem);
     }
 

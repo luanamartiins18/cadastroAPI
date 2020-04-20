@@ -50,7 +50,7 @@ public class Usuario {
     @Column
     private String Celular;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date nascimento;
 
     @Column

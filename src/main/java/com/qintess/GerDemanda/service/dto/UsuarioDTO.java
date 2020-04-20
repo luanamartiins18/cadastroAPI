@@ -45,7 +45,7 @@ public class UsuarioDTO {
 
     @NotNull(message = "O campo data de nascimento é obrigatório!")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate nascimento;
+    private Date nascimento;
 
     @NotNull(message = "O campo codigoRe é obrigatório!")
     @Length(min=6,max=12, message = "O campo codigoRe precisa ter no máximo 12 caracteres.")

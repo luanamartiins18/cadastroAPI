@@ -1,9 +1,8 @@
 package com.qintess.GerDemanda.controller;
 
 import com.qintess.GerDemanda.service.RelatoriosService;
-import jdk.jfr.ContentType;
-import org.apache.coyote.Response;
-import org.json.JSONObject;
+import com.qintess.GerDemanda.repositories.RelatorioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,10 +10,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 
 @CrossOrigin
 @RestController
 public class RelatoriosController {
+
+    @Autowired
+    RelatorioRepository relatorioRepository;
+
+    @GetMapping("relatorio-novo")
+    ResponseEntity<List<Object[]>> getRelatorioNovo() {
+        List<Object[]> relatorionovo = relatorioRepository.getRelatorioNovo();
+        return (relatorionovo == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(relatorionovo);
+    }
 
     @GetMapping("/relatorio-orcamento/{idOf}")
     public ResponseEntity<HashMap<String, Object>> getRelatorioOrcamento (@PathVariable int idOf){

@@ -1,5 +1,14 @@
 package com.qintess.GerDemanda.service.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class OrdensConcluidasDTO {
     String referencia;
     Integer num_of;
@@ -20,81 +29,6 @@ public class OrdensConcluidasDTO {
         this.ustibb = (Double) obj[5];
         this.valor = (Double) obj[6];
         this.status = (String) obj[7];
-        this.idOf = (Integer)obj[8];
-    }
-
-    public OrdensConcluidasDTO() {
-    }
-
-    public Integer getIdOf() {
-        return this.idOf;
-    }
-
-    public void setIdOf(Integer idOf){
-        this.idOf = idOf;
-    }
-
-    public String getReferencia() {
-        return referencia;
-    }
-
-    public void setReferencia(String referencia) {
-        this.referencia = referencia;
-    }
-
-    public Integer getNum_of() {
-        return num_of;
-    }
-
-    public void setNum_of(Integer num_of) {
-        this.num_of = num_of;
-    }
-
-    public String getSigla() {
-        return sigla;
-    }
-
-    public void setSigla(String sigla) {
-        this.sigla = sigla;
-    }
-
-    public String getResponsavel_t() {
-        return responsavel_t;
-    }
-
-    public void setResponsavel_t(String responsavel_t) {
-        this.responsavel_t = responsavel_t;
-    }
-
-    public String getGerente_t() {
-        return gerente_t;
-    }
-
-    public void setGerente_t(String gerente_t) {
-        this.gerente_t = gerente_t;
-    }
-
-    public Double getUstibb() {
-        return ustibb;
-    }
-
-    public void setUstibb(Double ustibb) {
-        this.ustibb = ustibb;
-    }
-
-    public Double getValor() {
-        return valor;
-    }
-
-    public void setValor(Double valor) {
-        this.valor = valor;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+        this.idOf = (Integer) obj[8];
     }
 }
