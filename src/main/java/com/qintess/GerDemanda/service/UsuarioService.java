@@ -1,9 +1,9 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.model.*;
+import com.qintess.GerDemanda.repositories.UsuarioPerfilRepository;
 import com.qintess.GerDemanda.repositories.UsuarioRepository;
 import com.qintess.GerDemanda.repositories.UsuarioSiglaRepository;
-import com.qintess.GerDemanda.repositories.UsuarioPerfilRepository;
 import com.qintess.GerDemanda.service.dto.PerfilDTO;
 import com.qintess.GerDemanda.service.dto.SiglaDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
@@ -70,8 +70,11 @@ public class UsuarioService {
         return usuarioMapper.toDto(this.getUsuariosBySigla(id));
     }
 
-    public UsuarioResumidoDTO checkUsuario(String re, String senha) {
-        return usuarioResumidoMapper.toDto(this.usuarioRepository.findFirstByCodigoReAndSenha(re, senha));
+    public UsuarioResumidoDTO checkUsuario(UsuarioResumidoDTO dto) {
+        UsuarioResumidoDTO usuarioResumidoDTO = usuarioResumidoMapper.toDto(
+                this.usuarioRepository.findFirstByCodigoReAndSenha(dto.getCodigoRe(), dto.getSenha()));
+        validaStatus(usuarioResumidoDTO);
+        return usuarioResumidoDTO;
     }
 
     public List<Usuario> getUsuariosAtivos() {
@@ -102,6 +105,7 @@ public class UsuarioService {
         obj.setNome(obj.getNome().toUpperCase());
         obj.setContrato(Contrato.builder().id(1).build());
         obj.setStatus(STATUS_ATIVO_DESCRICAO);
+        obj.setEmpresa("Qintess");
         obj.setSenha(DigestUtils.sha256Hex(dto.getCpf()));
         obj.setPrimeiroAcesso(true);
         setPerfilAndSigla(dto.getListaSiglas(), dto.getListaPerfil(), obj);
@@ -121,6 +125,15 @@ public class UsuarioService {
         }
         if (Objects.nonNull(getUsuarioByBB(dto.getCodigoBB(), id))) {
             throw new ValidationException("O códigoBB já está em uso");
+        }
+    }
+
+    private void validaStatus(UsuarioResumidoDTO dto) {
+        if(Objects.isNull(dto)){
+            throw new RuntimeException("Usuário ou senha inválida");
+        }
+        if (!dto.getStatus().equals(STATUS_ATIVO_DESCRICAO)) {
+            throw new RuntimeException("Sua conta está desativada!");
         }
     }
 
@@ -172,6 +185,7 @@ public class UsuarioService {
                         UsuarioSigla.builder()
                                 .usuarioSigla(obj)
                                 .sigla(Sigla.builder().id(sigla.getId()).build())
+                                .status(1)
                                 .build()
                 ).collect(Collectors.toList()));
 
@@ -181,6 +195,7 @@ public class UsuarioService {
                         UsuarioPerfil.builder()
                                 .usuarioPerfil(obj)
                                 .perfil(Perfil.builder().id(perfil.getId()).build())
+                                .status(1)
                                 .build()).collect(Collectors.toList()));
     }
 
