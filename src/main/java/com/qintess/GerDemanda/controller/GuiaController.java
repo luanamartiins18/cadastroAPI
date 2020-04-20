@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.coyote.Request;
+import org.apache.coyote.Response;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.qintess.GerDemanda.service.GuiaService;
 
@@ -41,6 +38,19 @@ public class GuiaController {
 			return new ResponseEntity<String>(HttpStatus.OK);
 		}
 
+	}
+
+	@RequestMapping(method = RequestMethod.DELETE, value = "/item-guia/{idItemTrf}")
+	public ResponseEntity<String> deleteItemGuia(@PathVariable int idItemTrf){
+		GuiaService gs = new GuiaService();
+
+		try{
+			gs.deletaItemTarefa(idItemTrf);
+		}catch(Exception excp){
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/tarefa-guia")
