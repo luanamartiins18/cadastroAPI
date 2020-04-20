@@ -11,7 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
@@ -725,4 +724,80 @@ public class RelatoriosService {
         Base64.encodeBase64String(bytes);
         return bytes;
     }
+
+    public byte[] getRelatorioXlsx(ArrayList<ArrayList<String>> relatorio, String nomeRelatorio){
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet(nomeRelatorio);
+
+        for(int i=0; i<relatorio.size(); i++){
+            Row row = sheet.createRow(i);
+
+            for(int j=0; j<relatorio.get(i).size(); j++){
+                row.createCell(j).setCellValue(relatorio.get(i).get(j));
+            }
+        }
+
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        try {
+            workbook.write(b);
+        }catch(FileNotFoundException e){
+            e.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+
+        byte[] bytes = b.toByteArray();
+        Base64.encodeBase64String(bytes);
+        return bytes;
+    }
+
+    public byte[] getRelatorioTxt(ArrayList<ArrayList<String>> relatorio){
+
+        String[] arrRelatorio = new String[relatorio.size()];
+        for(int i=0; i<relatorio.size(); i++){
+            arrRelatorio[i] = "";
+        }
+
+        for(int i=0; i<relatorio.get(0).size(); i++){
+            int maior = 0;
+            for(int j=0; j<relatorio.size(); j++){
+                maior = Math.max(maior, relatorio.get(j).get(i).length());
+            }
+
+            for(int j=0; j<relatorio.size(); j++){
+                String espacoExtra = "";
+
+                if(relatorio.get(j).get(i).length() < maior){
+                    for(int k=0; k < (maior - relatorio.get(j).get(i).length()); k++){
+                        espacoExtra += " ";
+                    }
+                }
+                if(i == relatorio.get(0).size() - 1 && relatorio.get(j).get(0).equals("")){
+                    arrRelatorio[j] += "\n" + relatorio.get(j).get(i) + "\n";
+
+                }else{
+                    arrRelatorio[j] += relatorio.get(j).get(i) + espacoExtra + "\t";
+                }
+            }
+        }
+
+        String resRelatorio = "";
+        for(int i=0; i<arrRelatorio.length; i++){
+            resRelatorio += arrRelatorio[i] + "\n";
+        }
+
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+
+        try {
+            b.write(resRelatorio.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        byte[] bytes = b.toByteArray();
+        Base64.encodeBase64String(bytes);
+        return bytes;
+    }
+
 }

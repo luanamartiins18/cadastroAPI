@@ -349,4 +349,19 @@ public class GuiaService {
         return true;
     }
 
+    public void deletaItemTarefa(int idItemTrf) {
+        EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
+        EntityManager em = entityManagerFactory.createEntityManager();
+
+        String sql = "DELETE FROM item_guia where id = :idItemTrf";
+        Query query = em.createNativeQuery(sql);
+        query.setParameter("idItemTrf", idItemTrf);
+
+        em.getTransaction().begin();
+        query.executeUpdate();
+        em.getTransaction().commit();
+
+        em.close();
+    }
+
 }

@@ -215,9 +215,7 @@ public class TarefaService {
 
 		return json.getString(0);
 	}
-	
-	
-	
+
 	public boolean insereTarefa(String param) {
 		EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
 		EntityManager em = entityManagerFactory.createEntityManager();	
