@@ -1,38 +1,41 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.PersistenceHelper;
-import com.qintess.GerDemanda.repositories.RelatorioRepository;
-import com.qintess.GerDemanda.service.dto.OrdensConcluidasDTO;
+import com.qintess.GerDemanda.model.ValorUstibb;
+import com.qintess.GerDemanda.repositories.TarefaOfRepository;
+import com.qintess.GerDemanda.repositories.ValorUstibbRepository;
 import com.qintess.GerDemanda.service.dto.RelatorioDTO;
+import com.qintess.GerDemanda.service.util.DocumentsUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class RelatoriosService {
 
     @Autowired
-    RelatorioRepository relatorioRepository;
+    TarefaOfRepository tarefaOfRepository;
 
-    public List<RelatorioDTO> getRelatorioNovo() {
-        return this.relatorioRepository.getRelatorioNovo()
-                .stream().map(obj -> new RelatorioDTO(obj)).collect(Collectors.toList());
-    }
-
+    @Autowired
+    ValorUstibbRepository valorUstibbRepository;
     // Setar o ID da OF na QUERY
 
-    private List<Object> queryRelatorioOrcamento(int idOf){
+    private List<Object> queryRelatorioOrcamento(int idOf) {
         EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
         EntityManager em = entityManagerFactory.createEntityManager();
 
@@ -86,7 +89,7 @@ public class RelatoriosService {
         return res;
     }
 
-    private List<Object> queryRelatorioEntrega(int idOf){
+    private List<Object> queryRelatorioEntrega(int idOf) {
         EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
         EntityManager em = entityManagerFactory.createEntityManager();
 
@@ -131,7 +134,6 @@ public class RelatoriosService {
                 "   cg.id;";
 
 
-
         Query query = em.createNativeQuery(sql);
         query.setParameter("idOf", idOf);
         List<Object> res = query.getResultList();
@@ -139,7 +141,7 @@ public class RelatoriosService {
         return res;
     }
 
-    public HashMap<String, Object> getRelatorioOrcamento(int idOf){
+    public HashMap<String, Object> getRelatorioOrcamento(int idOf) {
 
         List<Object> res = queryRelatorioOrcamento(idOf);
 
@@ -150,18 +152,18 @@ public class RelatoriosService {
         String ultimoUsuInserido = "";
         Integer indexTarefa = 0;
 
-        for(Object i: res){
+        for (Object i : res) {
             JSONArray atual = new JSONArray(i);
 
-            String nome          = atual.getString(0);
-            String tarefa        = atual.getString(1);
-            String complexidade  = atual.getString(2);
-            String descricaoTrf  = atual.getString(3);
+            String nome = atual.getString(0);
+            String tarefa = atual.getString(1);
+            String complexidade = atual.getString(2);
+            String descricaoTrf = atual.getString(3);
             Integer qtdArtefatos = atual.getInt(4);
-            Double valorUstiBB  = atual.getDouble(5);
+            Double valorUstiBB = atual.getDouble(5);
             ArrayList<Object> listaUsuOf = (ArrayList<Object>) relatorioOrcamento.get("listaUsuOf");
 
-            if(!ultimoUsuInserido.equals(nome)) {
+            if (!ultimoUsuInserido.equals(nome)) {
                 HashMap<String, Object> novoUsuario = new HashMap<String, Object>();
                 novoUsuario.put("nome", nome);
                 novoUsuario.put("listaTarefas", new ArrayList<Object>());
@@ -172,7 +174,7 @@ public class RelatoriosService {
                 indexTarefa = 0;
             }
 
-            if(tarefasInseridas.containsKey(tarefa)){
+            if (tarefasInseridas.containsKey(tarefa)) {
                 HashMap<String, Object> item = new HashMap<String, Object>();
 
                 item.put("complexidade", complexidade);
@@ -180,13 +182,13 @@ public class RelatoriosService {
                 item.put("qtdArtefatos", qtdArtefatos);
                 item.put("vlrUstiBB", valorUstiBB);
 
-                HashMap<String, Object> usuario = (HashMap<String, Object>) listaUsuOf.get(listaUsuOf.size()-1);
-                ArrayList<Object> listaTarefas = (ArrayList<Object>)usuario.get("listaTarefas");
-                HashMap<String, Object> tarefaObj = (HashMap<String, Object>)listaTarefas.get(tarefasInseridas.get(tarefa));
+                HashMap<String, Object> usuario = (HashMap<String, Object>) listaUsuOf.get(listaUsuOf.size() - 1);
+                ArrayList<Object> listaTarefas = (ArrayList<Object>) usuario.get("listaTarefas");
+                HashMap<String, Object> tarefaObj = (HashMap<String, Object>) listaTarefas.get(tarefasInseridas.get(tarefa));
                 ArrayList<Object> listaItens = (ArrayList<Object>) tarefaObj.get("listaItens");
                 listaItens.add(item);
 
-            }else{
+            } else {
                 tarefasInseridas.put(tarefa, indexTarefa);
                 indexTarefa++;
 
@@ -201,11 +203,11 @@ public class RelatoriosService {
                 item.put("qtdArtefatos", qtdArtefatos);
                 item.put("vlrUstiBB", valorUstiBB);
 
-                ArrayList<Object> listaItens = (ArrayList<Object>)tarefaObj.get("listaItens");
+                ArrayList<Object> listaItens = (ArrayList<Object>) tarefaObj.get("listaItens");
                 listaItens.add(item);
 
-                HashMap<String, Object> usuario = (HashMap<String, Object>) listaUsuOf.get(listaUsuOf.size()-1);
-                ArrayList<Object> listaTarefas = (ArrayList<Object>)usuario.get("listaTarefas");
+                HashMap<String, Object> usuario = (HashMap<String, Object>) listaUsuOf.get(listaUsuOf.size() - 1);
+                ArrayList<Object> listaTarefas = (ArrayList<Object>) usuario.get("listaTarefas");
 
                 listaTarefas.add(tarefaObj);
             }
@@ -213,7 +215,7 @@ public class RelatoriosService {
         return relatorioOrcamento;
     }
 
-    public HashMap<String, Object> getRelatorioEntrega(int idOf){
+    public HashMap<String, Object> getRelatorioEntrega(int idOf) {
 
         List<Object> res = queryRelatorioEntrega(idOf);
         HashMap<String, Object> relatorioEntrega = new HashMap<String, Object>();
@@ -223,23 +225,23 @@ public class RelatoriosService {
         String ultimoUsuInserido = "";
         Integer indexTarefa = 0;
 
-        for(Object i: res){
+        for (Object i : res) {
             JSONArray atual = new JSONArray(i);
 
-            String nome          = atual.getString(0);
-            String tarefa        = atual.getString(1);
-            String descricaoTrf  = atual.getString(2);
-            String complexidade  = atual.getString(3);
-            String numTarefa     = atual.getString(4);
-            String historia      = atual.getString(5);
-            String sprint        = atual.getString(6);
-            Double valorUstiBB   = atual.getDouble(7);
-            String alm           = atual.getString(8);
-            String artefato      = atual.getString(9);
+            String nome = atual.getString(0);
+            String tarefa = atual.getString(1);
+            String descricaoTrf = atual.getString(2);
+            String complexidade = atual.getString(3);
+            String numTarefa = atual.getString(4);
+            String historia = atual.getString(5);
+            String sprint = atual.getString(6);
+            Double valorUstiBB = atual.getDouble(7);
+            String alm = atual.getString(8);
+            String artefato = atual.getString(9);
 
             ArrayList<Object> listaUsuOf = (ArrayList<Object>) relatorioEntrega.get("listaUsuOf");
 
-            if(!ultimoUsuInserido.equals(nome)) {
+            if (!ultimoUsuInserido.equals(nome)) {
                 HashMap<String, Object> novoUsuario = new HashMap<String, Object>();
                 novoUsuario.put("nome", nome);
                 novoUsuario.put("listaTarefas", new ArrayList<Object>());
@@ -250,7 +252,7 @@ public class RelatoriosService {
                 indexTarefa = 0;
             }
 
-            if(tarefasInseridas.containsKey(tarefa)){
+            if (tarefasInseridas.containsKey(tarefa)) {
                 HashMap<String, Object> item = new HashMap<String, Object>();
 
                 item.put("complexidade", complexidade);
@@ -262,13 +264,13 @@ public class RelatoriosService {
                 item.put("descricaoTarefa", descricaoTrf);
                 item.put("vlrUstiBB", valorUstiBB);
 
-                HashMap<String, Object> usuario = (HashMap<String, Object>) listaUsuOf.get(listaUsuOf.size()-1);
-                ArrayList<Object> listaTarefas = (ArrayList<Object>)usuario.get("listaTarefas");
-                HashMap<String, Object> tarefaObj = (HashMap<String, Object>)listaTarefas.get(tarefasInseridas.get(tarefa));
+                HashMap<String, Object> usuario = (HashMap<String, Object>) listaUsuOf.get(listaUsuOf.size() - 1);
+                ArrayList<Object> listaTarefas = (ArrayList<Object>) usuario.get("listaTarefas");
+                HashMap<String, Object> tarefaObj = (HashMap<String, Object>) listaTarefas.get(tarefasInseridas.get(tarefa));
                 ArrayList<Object> listaItens = (ArrayList<Object>) tarefaObj.get("listaItens");
                 listaItens.add(item);
 
-            }else{
+            } else {
                 tarefasInseridas.put(tarefa, indexTarefa);
                 indexTarefa++;
 
@@ -287,11 +289,11 @@ public class RelatoriosService {
                 item.put("descricaoTarefa", descricaoTrf);
                 item.put("vlrUstiBB", valorUstiBB);
 
-                ArrayList<Object> listaItens = (ArrayList<Object>)tarefaObj.get("listaItens");
+                ArrayList<Object> listaItens = (ArrayList<Object>) tarefaObj.get("listaItens");
                 listaItens.add(item);
 
-                HashMap<String, Object> usuario = (HashMap<String, Object>) listaUsuOf.get(listaUsuOf.size()-1);
-                ArrayList<Object> listaTarefas = (ArrayList<Object>)usuario.get("listaTarefas");
+                HashMap<String, Object> usuario = (HashMap<String, Object>) listaUsuOf.get(listaUsuOf.size() - 1);
+                ArrayList<Object> listaTarefas = (ArrayList<Object>) usuario.get("listaTarefas");
 
                 listaTarefas.add(tarefaObj);
             }
@@ -299,7 +301,7 @@ public class RelatoriosService {
         return relatorioEntrega;
     }
 
-    public byte[] getRelatorioOrcamentoXlsx(int idOf){
+    public byte[] getRelatorioOrcamentoXlsx(int idOf) {
 
         List<Object> relatorioOrcamento = queryRelatorioOrcamento(idOf);
 
@@ -313,13 +315,13 @@ public class RelatoriosService {
         header.createCell(3).setCellValue("Descrição da Tarefa");
         header.createCell(4).setCellValue("Quantidade de Artefatos");
         header.createCell(5).setCellValue("Valor USTI BB");
-        header.setHeight((short)500);
+        header.setHeight((short) 500);
 
         CellStyle headerStyle = workbook.createCellStyle();
         headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
         headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
-        for(int i=0; i<6; i++){
+        for (int i = 0; i < 6; i++) {
             sheet.getRow(0).getCell(i).setCellStyle(headerStyle);
         }
 
@@ -327,25 +329,24 @@ public class RelatoriosService {
         String ultimoInserido = "";
         Double valorTotal = 0.0;
 
-        for(Object obj: relatorioOrcamento){
+        for (Object obj : relatorioOrcamento) {
 
             JSONArray atual = new JSONArray(obj);
-            String nome          = atual.getString(0);
+            String nome = atual.getString(0);
 
-            if(!ultimoInserido.equals(nome) && numRow != 1){
+            if (!ultimoInserido.equals(nome) && numRow != 1) {
                 Row totalRow = sheet.createRow(numRow++);
                 totalRow.createCell(5).setCellValue("Total: " + Double.toString(valorTotal));
                 valorTotal = 0.0;
             }
             ultimoInserido = nome;
 
-            String tarefa        = atual.getString(1);
-            String complexidade  = atual.getString(2);
-            String descricaoTrf  = atual.getString(3);
+            String tarefa = atual.getString(1);
+            String complexidade = atual.getString(2);
+            String descricaoTrf = atual.getString(3);
             Integer qtdArtefatos = atual.getInt(4);
-            Double valorUstiBB  = atual.getDouble(5);
+            Double valorUstiBB = atual.getDouble(5);
             valorTotal += valorUstiBB;
-
 
 
             Row row = sheet.createRow(numRow++);
@@ -356,22 +357,22 @@ public class RelatoriosService {
             row.createCell(3).setCellValue(descricaoTrf);
             row.createCell(4).setCellValue(qtdArtefatos);
             row.createCell(5).setCellValue(valorUstiBB);
-            row.setHeight((short)400);
+            row.setHeight((short) 400);
         }
 
         Row totalRow = sheet.createRow(numRow);
         totalRow.createCell(5).setCellValue("Total: " + Double.toString(valorTotal));
 
-        for(int i=0; i<6; i++) {
+        for (int i = 0; i < 6; i++) {
             sheet.autoSizeColumn(i);
             sheet.setColumnWidth(3, 8000);  //Descrição da tarefa pode ser muito grande
         }
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         try {
             workbook.write(b);
-        }catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -381,7 +382,7 @@ public class RelatoriosService {
         return bytes;
     }
 
-    public byte[] getRelatorioEntregaXlsx(int idOf){
+    public byte[] getRelatorioEntregaXlsx(int idOf) {
 
         List<Object> relatorioEntrega = queryRelatorioEntrega(idOf);
 
@@ -399,13 +400,13 @@ public class RelatoriosService {
         header.createCell(7).setCellValue("Valor USTI BB");
         header.createCell(8).setCellValue("ALM");
         header.createCell(9).setCellValue("Artefato");
-        header.setHeight((short)500);
+        header.setHeight((short) 500);
 
         CellStyle headerStyle = workbook.createCellStyle();
         headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
         headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
-        for(int i=0; i<10; i++){
+        for (int i = 0; i < 10; i++) {
             sheet.getRow(0).getCell(i).setCellStyle(headerStyle);
         }
 
@@ -413,23 +414,22 @@ public class RelatoriosService {
         Double valorTotal = 0.0;
         String ultimoNome = "";
 
-        for(Object obj: relatorioEntrega){
+        for (Object obj : relatorioEntrega) {
 
             JSONArray atual = new JSONArray(obj);
-            String nome          = atual.getString(0);
-            String tarefa        = atual.getString(1);
-            String descricaoTrf  = atual.getString(2);
-            String complexidade  = atual.getString(3);
-            String numTarefa     = atual.getString(4);
-            String historia      = atual.getString(5);
-            String sprint        = atual.getString(6);
-            Double valor         = atual.getDouble(7);
-            String alm           = atual.getString(8);
-            String artefato      = atual.getString(9);
+            String nome = atual.getString(0);
+            String tarefa = atual.getString(1);
+            String descricaoTrf = atual.getString(2);
+            String complexidade = atual.getString(3);
+            String numTarefa = atual.getString(4);
+            String historia = atual.getString(5);
+            String sprint = atual.getString(6);
+            Double valor = atual.getDouble(7);
+            String alm = atual.getString(8);
+            String artefato = atual.getString(9);
 
 
-
-            if(!ultimoNome.equals(nome) && numRow != 1){
+            if (!ultimoNome.equals(nome) && numRow != 1) {
                 Row totalRow = sheet.createRow(numRow++);
                 totalRow.createCell(9).setCellValue("Total: " + Double.toString(valorTotal));
                 valorTotal = 0.0;
@@ -451,14 +451,14 @@ public class RelatoriosService {
             row.createCell(8).setCellValue(alm);
             row.createCell(9).setCellValue(valor);
 
-            row.setHeight((short)400);
+            row.setHeight((short) 400);
         }
 
         Row totalRow = sheet.createRow(numRow++);
         totalRow.createCell(9).setCellValue("Total: " + Double.toString(valorTotal));
 
 
-        for(int i=0; i<10; i++){
+        for (int i = 0; i < 10; i++) {
             sheet.autoSizeColumn(i);
         }
         sheet.setColumnWidth(2, 8000);  //Descrição da tarefa pode ser muito grande
@@ -466,9 +466,9 @@ public class RelatoriosService {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         try {
             workbook.write(b);
-        }catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -477,11 +477,11 @@ public class RelatoriosService {
         return bytes;
     }
 
-    public byte[] getRelatorioOrcamentoTxt(int idOf){
+    public byte[] getRelatorioOrcamentoTxt(int idOf) {
 
         List<Object> relatorioOrcamento = queryRelatorioOrcamento(idOf);
 
-        ArrayList<ArrayList<String>>listaColaboradores = new ArrayList<ArrayList<String>>();
+        ArrayList<ArrayList<String>> listaColaboradores = new ArrayList<ArrayList<String>>();
         listaColaboradores.add(new ArrayList<String>());
 
         listaColaboradores.get(0).add("Colaborador");
@@ -495,11 +495,11 @@ public class RelatoriosService {
         String ultimoUsuario = "";
         Double total = 0.0, totalGeral = 0.0;
 
-        for(Object obj: relatorioOrcamento) {
+        for (Object obj : relatorioOrcamento) {
 
             JSONArray atual = new JSONArray(obj);
 
-            if(index != 1 && !ultimoUsuario.equals(atual.getString(0))){
+            if (index != 1 && !ultimoUsuario.equals(atual.getString(0))) {
                 listaColaboradores.add(new ArrayList<String>());
                 listaColaboradores.get(index).add("");
                 listaColaboradores.get(index).add("");
@@ -544,28 +544,28 @@ public class RelatoriosService {
         listaColaboradores.get(index).add("\nTotal Geral: " + Double.toString(totalGeral));
 
         String[] arrColaboradores = new String[listaColaboradores.size()];
-        for(int i=0; i<listaColaboradores.size(); i++){
+        for (int i = 0; i < listaColaboradores.size(); i++) {
             arrColaboradores[i] = "";
         }
 
-        for(int i=0; i<listaColaboradores.get(0).size(); i++){
+        for (int i = 0; i < listaColaboradores.get(0).size(); i++) {
             int maior = 0;
-            for(int j=0; j<listaColaboradores.size(); j++){
+            for (int j = 0; j < listaColaboradores.size(); j++) {
                 maior = Math.max(maior, listaColaboradores.get(j).get(i).length());
             }
 
-            for(int j=0; j<listaColaboradores.size(); j++){
+            for (int j = 0; j < listaColaboradores.size(); j++) {
                 String espacoExtra = "";
 
-                if(listaColaboradores.get(j).get(i).length() < maior){
-                    for(int k=0; k < (maior - listaColaboradores.get(j).get(i).length()); k++){
+                if (listaColaboradores.get(j).get(i).length() < maior) {
+                    for (int k = 0; k < (maior - listaColaboradores.get(j).get(i).length()); k++) {
                         espacoExtra += " ";
                     }
                 }
-                if(i == listaColaboradores.get(0).size() - 1 && listaColaboradores.get(j).get(0).equals("")){
+                if (i == listaColaboradores.get(0).size() - 1 && listaColaboradores.get(j).get(0).equals("")) {
                     arrColaboradores[j] += "\n" + listaColaboradores.get(j).get(i) + "\n";
 
-                }else{
+                } else {
                     arrColaboradores[j] += listaColaboradores.get(j).get(i) + espacoExtra + "\t";
                 }
 
@@ -574,7 +574,7 @@ public class RelatoriosService {
         }
 
         String resColaboradores = "";
-        for(int i=0; i<arrColaboradores.length; i++){
+        for (int i = 0; i < arrColaboradores.length; i++) {
             resColaboradores += arrColaboradores[i] + "\n";
         }
 
@@ -591,11 +591,11 @@ public class RelatoriosService {
         return bytes;
     }
 
-    public byte[] getRelatorioEntregaTxt(int idOf){
+    public byte[] getRelatorioEntregaTxt(int idOf) {
 
         List<Object> relatorioEntrega = queryRelatorioEntrega(idOf);
 
-        ArrayList<ArrayList<String>>listaColaboradores = new ArrayList<ArrayList<String>>();
+        ArrayList<ArrayList<String>> listaColaboradores = new ArrayList<ArrayList<String>>();
         listaColaboradores.add(new ArrayList<String>());
 
         listaColaboradores.get(0).add("Colaborador");
@@ -613,11 +613,11 @@ public class RelatoriosService {
         String ultimoUsuario = "";
         Double total = 0.0, totalGeral = 0.0;
 
-        for(Object obj: relatorioEntrega) {
+        for (Object obj : relatorioEntrega) {
 
             JSONArray atual = new JSONArray(obj);
 
-            if(index != 1 && !ultimoUsuario.equals(atual.getString(0))){
+            if (index != 1 && !ultimoUsuario.equals(atual.getString(0))) {
                 listaColaboradores.add(new ArrayList<String>());
                 listaColaboradores.get(index).add("");
                 listaColaboradores.get(index).add("");
@@ -678,28 +678,28 @@ public class RelatoriosService {
         listaColaboradores.get(index).add("\nTotal Geral: " + Double.toString(totalGeral));
 
         String[] arrColaboradores = new String[listaColaboradores.size()];
-        for(int i=0; i<listaColaboradores.size(); i++){
+        for (int i = 0; i < listaColaboradores.size(); i++) {
             arrColaboradores[i] = "";
         }
 
-        for(int i=0; i<listaColaboradores.get(0).size(); i++){
+        for (int i = 0; i < listaColaboradores.get(0).size(); i++) {
             int maior = 0;
-            for(int j=0; j<listaColaboradores.size(); j++){
+            for (int j = 0; j < listaColaboradores.size(); j++) {
                 maior = Math.max(maior, listaColaboradores.get(j).get(i).length());
             }
 
-            for(int j=0; j<listaColaboradores.size(); j++){
+            for (int j = 0; j < listaColaboradores.size(); j++) {
                 String espacoExtra = "";
 
-                if(listaColaboradores.get(j).get(i).length() < maior){
-                    for(int k=0; k < (maior - listaColaboradores.get(j).get(i).length()); k++){
+                if (listaColaboradores.get(j).get(i).length() < maior) {
+                    for (int k = 0; k < (maior - listaColaboradores.get(j).get(i).length()); k++) {
                         espacoExtra += " ";
                     }
                 }
-                if(i == listaColaboradores.get(0).size() - 1 && listaColaboradores.get(j).get(0).equals("")){
+                if (i == listaColaboradores.get(0).size() - 1 && listaColaboradores.get(j).get(0).equals("")) {
                     arrColaboradores[j] += "\n" + listaColaboradores.get(j).get(i) + "\n";
 
-                }else{
+                } else {
                     arrColaboradores[j] += listaColaboradores.get(j).get(i) + espacoExtra + "\t";
                 }
 
@@ -708,7 +708,7 @@ public class RelatoriosService {
         }
 
         String resColaboradores = "";
-        for(int i=0; i<arrColaboradores.length; i++){
+        for (int i = 0; i < arrColaboradores.length; i++) {
             resColaboradores += arrColaboradores[i] + "\n";
         }
 
@@ -725,79 +725,16 @@ public class RelatoriosService {
         return bytes;
     }
 
-    public byte[] getRelatorioXlsx(ArrayList<ArrayList<String>> relatorio, String nomeRelatorio){
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet(nomeRelatorio);
-
-        for(int i=0; i<relatorio.size(); i++){
-            Row row = sheet.createRow(i);
-
-            for(int j=0; j<relatorio.get(i).size(); j++){
-                row.createCell(j).setCellValue(relatorio.get(i).get(j));
-            }
-        }
-
-        ByteArrayOutputStream b = new ByteArrayOutputStream();
-        try {
-            workbook.write(b);
-        }catch(FileNotFoundException e){
-            e.printStackTrace();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
-
-        byte[] bytes = b.toByteArray();
-        Base64.encodeBase64String(bytes);
-        return bytes;
+    public List<RelatorioDTO> getRelatorioNovo() {
+        ValorUstibb valorUstibb = this.valorUstibbRepository.findByAtivo(1);
+        return this.tarefaOfRepository.getRelatorioNovo().stream()
+                .peek(obj -> obj.setValor((valorUstibb.getValor()) * obj.getValor_ustibb()))
+                .collect(Collectors.toList());
     }
 
-    public byte[] getRelatorioTxt(ArrayList<ArrayList<String>> relatorio){
-
-        String[] arrRelatorio = new String[relatorio.size()];
-        for(int i=0; i<relatorio.size(); i++){
-            arrRelatorio[i] = "";
-        }
-
-        for(int i=0; i<relatorio.get(0).size(); i++){
-            int maior = 0;
-            for(int j=0; j<relatorio.size(); j++){
-                maior = Math.max(maior, relatorio.get(j).get(i).length());
-            }
-
-            for(int j=0; j<relatorio.size(); j++){
-                String espacoExtra = "";
-
-                if(relatorio.get(j).get(i).length() < maior){
-                    for(int k=0; k < (maior - relatorio.get(j).get(i).length()); k++){
-                        espacoExtra += " ";
-                    }
-                }
-                if(i == relatorio.get(0).size() - 1 && relatorio.get(j).get(0).equals("")){
-                    arrRelatorio[j] += "\n" + relatorio.get(j).get(i) + "\n";
-
-                }else{
-                    arrRelatorio[j] += relatorio.get(j).get(i) + espacoExtra + "\t";
-                }
-            }
-        }
-
-        String resRelatorio = "";
-        for(int i=0; i<arrRelatorio.length; i++){
-            resRelatorio += arrRelatorio[i] + "\n";
-        }
-
-        ByteArrayOutputStream b = new ByteArrayOutputStream();
-
-        try {
-            b.write(resRelatorio.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        byte[] bytes = b.toByteArray();
-        Base64.encodeBase64String(bytes);
-        return bytes;
+    public byte[] getRelatoriosXlsx() {
+        List<String> headers = Arrays.asList("OF", "Colaborador", "Status", "Valor USTIBB", "Valor", "Referencia", "Sigla");
+        List<RelatorioDTO> relatorioDTOS = getRelatorioNovo();
+        return DocumentsUtils.exportToExcell(relatorioDTOS, "Relatório com Filtro", headers);
     }
-
 }

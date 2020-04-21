@@ -1,7 +1,7 @@
 package com.qintess.GerDemanda.controller;
 
 import com.qintess.GerDemanda.service.RelatoriosService;
-import com.qintess.GerDemanda.repositories.RelatorioRepository;
+import com.qintess.GerDemanda.service.dto.RelatorioDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,13 +17,7 @@ import java.util.List;
 public class RelatoriosController {
 
     @Autowired
-    RelatorioRepository relatorioRepository;
-
-    @GetMapping("relatorio-novo")
-    ResponseEntity<List<Object[]>> getRelatorioNovo() {
-        List<Object[]> relatorionovo = relatorioRepository.getRelatorioNovo();
-        return (relatorionovo == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(relatorionovo);
-    }
+    RelatoriosService relatoriosService;
 
     @GetMapping("/relatorio-orcamento/{idOf}")
     public ResponseEntity<HashMap<String, Object>> getRelatorioOrcamento (@PathVariable int idOf){
@@ -32,7 +26,7 @@ public class RelatoriosController {
 
         return response.isEmpty() ?
                 new ResponseEntity<HashMap<String, Object>>(HttpStatus.NOT_FOUND) :
-                new ResponseEntity<HashMap<String, Object>>(HttpStatus.OK).ok().body(response);
+                ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/relatorio-entrega/{idOf}")
@@ -42,7 +36,7 @@ public class RelatoriosController {
 
         return response.isEmpty() ?
                 new ResponseEntity<HashMap<String, Object>>(HttpStatus.NOT_FOUND) :
-                new ResponseEntity<HashMap<String, Object>>(HttpStatus.OK).ok().body(response);
+                ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/relatorio-orcamento/xlsx/{idOf}")
@@ -58,7 +52,7 @@ public class RelatoriosController {
 
         return response.length == 0 ?
                 new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND) :
-                new ResponseEntity<byte[]>(HttpStatus.OK).ok()
+                ResponseEntity.ok()
                         .headers(header)
                         .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
                         .body(response);
@@ -77,7 +71,7 @@ public class RelatoriosController {
 
         return response.length == 0 ?
                 new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND) :
-                new ResponseEntity<byte[]>(HttpStatus.OK).ok()
+                ResponseEntity.ok()
                         .headers(header)
                         .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
                         .body(response);
@@ -96,7 +90,7 @@ public class RelatoriosController {
 
         return response.length == 0 ?
                 new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND) :
-                new ResponseEntity<byte[]>(HttpStatus.OK).ok()
+                ResponseEntity.ok()
                         .headers(header)
                         .contentType(MediaType.TEXT_PLAIN)
                         .body(response);
@@ -115,9 +109,34 @@ public class RelatoriosController {
 
         return response.length == 0 ?
                 new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND) :
-                new ResponseEntity<byte[]>(HttpStatus.OK).ok()
+                ResponseEntity.ok()
                         .headers(header)
                         .contentType(MediaType.TEXT_PLAIN)
                         .body(response);
     }
+
+    @GetMapping("relatorio-novo")
+    ResponseEntity<List<RelatorioDTO>> getRelatorioNovo() {
+        List<RelatorioDTO> relatorionovo = relatoriosService.getRelatorioNovo();
+        return (relatorionovo == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(relatorionovo);
+    }
+
+    @GetMapping("/relatorio-novo/xlsx")
+    public ResponseEntity<byte[]> getRelatorioNovoXlsx (){
+        byte[] response = relatoriosService.getRelatoriosXlsx();
+
+        String fileName = "relatorio-novo.xlsx";
+        HttpHeaders header = new HttpHeaders();
+
+        ContentDisposition contentDisposition = ContentDisposition.builder("attachment").filename(fileName).build();
+        header.setContentDisposition(contentDisposition);
+
+        return response.length == 0 ?
+                new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND) :
+                ResponseEntity.ok()
+                        .headers(header)
+                        .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+                        .body(response);
+    }
+
 }
