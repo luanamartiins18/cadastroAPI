@@ -23,8 +23,8 @@ public interface TarefaOfRepository extends JpaRepository<TarefaOf, Integer> {
             " INNER JOIN u.ordemFornecimento orf " +
             " INNER JOIN t.itemGuia ig " +
             " INNER JOIN orf.sigla s " +
-            " INNER JOIN t.situacao st " +
-            " WHERE  orf.situacaoUsu in (6,8) " +
+            " INNER JOIN orf.situacaoUsu st " +
+            " WHERE  st.id in (6,8) " +
             " GROUP BY  " +
             "   orf.numeroOFGenti, " +
             "   usu.nome, " +
@@ -32,8 +32,7 @@ public interface TarefaOfRepository extends JpaRepository<TarefaOf, Integer> {
             "   orf.referencia, " +
             "   orf.sigla.descricao " +
             " ORDER BY " +
-            " orf.referencia ")
+            " s.descricao ")
     List<RelatorioDTO> getRelatorioNovo();
-
-
+    
 }

@@ -56,8 +56,8 @@ public abstract class DocumentsUtils {
             ReflectionUtils.doWithFields(obj.getClass(), field -> {
                 field.setAccessible(true);
                 row.createCell(cellKey.incrementAndGet()).setCellValue(field.get(obj).toString());
+                sheet.autoSizeColumn(cellKey.get());
             });
         });
     }
-
 }

@@ -737,4 +737,5 @@ public class RelatoriosService {
         List<RelatorioDTO> relatorioDTOS = getRelatorioNovo();
         return DocumentsUtils.exportToExcell(relatorioDTOS, "Relatório com Filtro", headers);
     }
+
 }
