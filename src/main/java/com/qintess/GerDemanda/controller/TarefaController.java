@@ -1,6 +1,9 @@
 package com.qintess.GerDemanda.controller;
 
+import com.qintess.GerDemanda.model.ComplexGuia;
+import com.qintess.GerDemanda.model.UniMedida;
 import com.qintess.GerDemanda.service.TarefaService;
+import com.qintess.GerDemanda.service.dto.DisciplinaDTO;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,18 +21,26 @@ public class TarefaController {
     TarefaService tarefaService;
 
     @GetMapping("/unidades-medidas")
-    public List<HashMap<String, Object>> getUniMedidas() {
-        return tarefaService.getUniMedidas();
+    ResponseEntity<List<UniMedida>> getUniMedidas() {
+        List<UniMedida> lista = tarefaService.getUniMedidas();
+        return (lista.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(lista);
     }
 
     @GetMapping("/disciplinas")
-    public List<HashMap<String, Object>> getDisciplinasUsu() {
-        return tarefaService.getDisciplinas();
+    ResponseEntity<List<DisciplinaDTO>> getDisciplinas() {
+        List<DisciplinaDTO> lista = tarefaService.getDisciplinas();
+        return (lista.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(lista);
     }
 
     @GetMapping("/complexidades")
-    public List<HashMap<String, Object>> getComplexidades() {
-        return tarefaService.getComplexidades();
+    ResponseEntity<List<ComplexGuia>> getComplexidades() {
+        List<ComplexGuia> lista = tarefaService.getComplexidades();
+        return (lista.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(lista);
+    }
+
+    @GetMapping("/ordem-forn/{id}/numero")
+    public String getNumO(@PathVariable Integer id) {
+        return tarefaService.getNumOf(id);
     }
 
     @GetMapping("/itens-guia")
@@ -84,8 +95,4 @@ public class TarefaController {
         }
     }
 
-    @GetMapping("/ordem-forn/{id}/numero")
-    public String getNumOf(@PathVariable Integer id) {
-        return tarefaService.getNumOf(id);
-    }
 }
