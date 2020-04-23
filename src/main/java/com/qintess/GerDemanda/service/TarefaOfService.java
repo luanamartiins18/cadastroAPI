@@ -1,15 +1,10 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.PersistenceHelper;
-import com.qintess.GerDemanda.model.ComplexGuia;
-import com.qintess.GerDemanda.model.OrdemFornecimento;
-import com.qintess.GerDemanda.model.UniMedida;
-import com.qintess.GerDemanda.repositories.ComplexGuiaRepository;
-import com.qintess.GerDemanda.repositories.DisciplinaRepository;
-import com.qintess.GerDemanda.repositories.OrdemFornecimentoRepository;
-import com.qintess.GerDemanda.repositories.UniMedidaRepository;
-import com.qintess.GerDemanda.service.dto.DisciplinaDTO;
-import com.qintess.GerDemanda.service.mapper.DisciplinaMapper;
+import com.qintess.GerDemanda.model.TarefaOf;
+import com.qintess.GerDemanda.model.UsuarioOrdemFornecimento;
+import com.qintess.GerDemanda.repositories.TarefaOfRepository;
+import com.qintess.GerDemanda.repositories.UsuarioOrdemFornecimentoRepository;
 import org.hibernate.ObjectNotFoundException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,95 +20,23 @@ import java.util.List;
 
 @Service
 
-public class TarefaService {
+public class TarefaOfService {
 
     @Autowired
-    DisciplinaRepository disciplinaRepository;
+    TarefaOfRepository tarefaOfRepository;
 
     @Autowired
-    ComplexGuiaRepository complexGuiaRepository;
+    OrdemFornecimentoService ordemFornecimentoService;
 
-    @Autowired
-    DisciplinaMapper disciplinaMapper;
-
-    @Autowired
-    UniMedidaRepository uniMedidaRepository;
-
-    @Autowired
-    OrdemFornecimentoRepository ordemFornecimentoRepository;
-
-
-    public List<DisciplinaDTO> getDisciplinas() {
-        return disciplinaMapper.toDto(this.disciplinaRepository.findAll());
+    public TarefaOf findById(Integer id) {
+        return tarefaOfRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("id", TarefaOf.class.getName()));
     }
 
-    public List<ComplexGuia> getComplexidades() {
-        return complexGuiaRepository.findAll();
+    public void deletaTarefa(Integer id) {
+        TarefaOf tarefaOf = this.findById(id);
+        tarefaOfRepository.delete(tarefaOf);
     }
-
-    public List<UniMedida> getUniMedidas() {
-        return uniMedidaRepository.findAll();
-    }
-
-    public String getNumOf(Integer id) {
-        return ordemFornecimentoRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("id", OrdemFornecimento.class.getName())).getNumeroOFGenti();
-    }
-
-    public List<HashMap<String, Object>> getItensGuia() {
-        EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
-        EntityManager em = entityManagerFactory.createEntityManager();
-        String sql = "SELECT tg.*, um.descricao as desc_uni_med, ig.id as id_item, ig.limite_itens, ig.componente, cg.descricao as desc_complex, cg.id as id_complex, ig.descricao_complex, ig.valor  from tarefa_guia tg\r\n" +
-                "	inner join item_guia ig " +
-                "		on ig.fk_tarefa_guia = tg.id " +
-                "	inner join uni_medida um " +
-                "		on um.id = ig.fk_uni_medida " +
-                "	inner join complex_guia cg " +
-                "		on cg.id = ig.fk_complex_guia "
-                + "	order by " +
-                "tg.fk_disciplina, " +
-                "cast(substring_index( substring_index(tg.atividade, ' ', 1), '.', -1 ) as unsigned)," +
-                "cast(substring_index(tg.tarefa, '.', -1) as unsigned) ";
-        Query query = em.createNativeQuery(sql);
-        List<Object> res = query.getResultList();
-        String tarefaAnterior = "";
-        List<HashMap<String, Object>> guia = new ArrayList<HashMap<String, Object>>();
-        for (Object obj : res) {
-            /*
-             * Cada iteração insere um item novo na ultima tarefa adicionada
-             * Uma tarefa é adicionada quando o número da tarefa muda entre as linhas
-             * */
-            JSONArray json = new JSONArray(obj);
-            //Se a tarefa atual for diferente da tarefa anterior
-            if (!json.getString(3).equals(tarefaAnterior)) {
-                HashMap<String, Object> atual = new HashMap<String, Object>();
-                atual.put("id_tarefa", json.get(0));
-                atual.put("plataforma", json.get(1));
-                atual.put("atividade", json.get(2));
-                atual.put("tarefa", json.get(3));
-                atual.put("descricao_tarefa", json.get(4));
-                atual.put("disciplina", json.get(5));
-                atual.put("uni_medida", json.get(6));
-                atual.put("itens", new ArrayList<HashMap<String, Object>>());
-                guia.add(atual);
-            }
-            HashMap<String, Object> ultimoInserido = guia.get(guia.size() - 1);
-            List<HashMap<String, Object>> itens = (ArrayList<HashMap<String, Object>>) ultimoInserido.get("itens");
-            HashMap<String, Object> itemGuia = new HashMap<String, Object>();
-            itemGuia.put("id_item", json.get(7));
-            itemGuia.put("quantidade", json.get(8));
-            itemGuia.put("componente", json.get(9));
-            itemGuia.put("complexidade", json.get(10));
-            itemGuia.put("id_complex", json.get(11));
-            itemGuia.put("descricao_complex", json.get(12));
-            itemGuia.put("valor", json.get(13));
-            itens.add(itemGuia);
-            tarefaAnterior = json.getString(3);
-        }
-        em.close();
-        return guia;
-    }
-
 
     public boolean insereTarefa(String param) {
         EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
@@ -136,7 +59,7 @@ public class TarefaService {
         int idItem = json.getInt("numItemGuia");
         int auxPerfil = json.getInt("perfil");
         String perfil = (auxPerfil == 1) ? "Baixa" : "Alta";
-        int usuOf = getIdUsuOf(idUsu, idOf);
+        UsuarioOrdemFornecimento usuOf = ordemFornecimentoService.getIdUsuOf(idUsu, idOf);
         String sql = "insert into tarefa_of(historia, sprint, dt_inclusao, dt_alteracao, num_tarefa, perfil, quantidade, artefato, observacao, fk_situacao, fk_item_guia, fk_of_usuario) " +
                 "values (:historia , :sprint , current_timestamp(), null, :numTarefa, :perfil, :quantidade , :artefato , :observacao , 6, :idItem, :usuOf );";
         Query query = em.createNativeQuery(sql);
@@ -146,7 +69,7 @@ public class TarefaService {
         query.setParameter("artefato", artefato);
         query.setParameter("observacao", observacao);
         query.setParameter("idItem", idItem);
-        query.setParameter("usuOf", usuOf);
+        query.setParameter("usuOf", usuOf.getId());
         query.setParameter("numTarefa", numTarefa);
         query.setParameter("perfil", perfil);
         em.getTransaction().begin();
@@ -248,19 +171,6 @@ public class TarefaService {
         return resultado;
     }
 
-    private int getIdUsuOf(int usu, int of) {
-        EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
-        EntityManager em = entityManagerFactory.createEntityManager();
-        String sql = "select id from usuario_x_of where fk_usuario = :usu and fK_ordem_forn = :of and status = 1";
-        Query query = em.createNativeQuery(sql);
-        query.setParameter("usu", usu);
-        query.setParameter("of", of);
-        List<Object> usuOf = query.getResultList();
-        JSONArray json = new JSONArray(usuOf);
-        em.close();
-        return json.getInt(0);
-    }
-
     public List<HashMap<String, Object>> getTarefasUsuario(int idUsu, int idOf) {
         EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
         EntityManager em = entityManagerFactory.createEntityManager();
@@ -310,18 +220,6 @@ public class TarefaService {
         return tarefasUsu;
     }
 
-    public void deletaTarefa(int idTrf) {
-        EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
-        EntityManager em = entityManagerFactory.createEntityManager();
-        String sql = "DELETE FROM tarefa_of where id = :idTrf";
-        Query query = em.createNativeQuery(sql);
-        query.setParameter("idTrf", idTrf);
-        em.getTransaction().begin();
-        query.executeUpdate();
-        em.getTransaction().commit();
-        em.close();
-    }
-
     public void alteraSituacaoTarefa(int idTrf, int idSit) {
         EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
         EntityManager em = entityManagerFactory.createEntityManager();
@@ -335,29 +233,3 @@ public class TarefaService {
         em.close();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

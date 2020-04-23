@@ -1,12 +1,9 @@
 package com.qintess.GerDemanda.service;
 
-import com.qintess.GerDemanda.model.Cargo;
-import com.qintess.GerDemanda.model.Perfil;
 import com.qintess.GerDemanda.repositories.CargoRepository;
 import com.qintess.GerDemanda.service.dto.CargoDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
 import com.qintess.GerDemanda.service.mapper.CargoMapper;
-import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

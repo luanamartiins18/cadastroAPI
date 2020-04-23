@@ -42,17 +42,3 @@ public class UsuarioPerfil {
     @JoinColumn(name = "fk_perfil")
     private Perfil perfil;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

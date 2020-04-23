@@ -1,13 +1,15 @@
 package com.qintess.GerDemanda.service.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class ContratoDTO {
+public class VersaoGuiaDTO {
     private Integer id;
     private String descricao;
 }

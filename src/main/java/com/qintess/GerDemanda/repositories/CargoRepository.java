@@ -1,7 +1,6 @@
 package com.qintess.GerDemanda.repositories;
 
 import com.qintess.GerDemanda.model.Cargo;
-import com.qintess.GerDemanda.service.dto.CargoDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

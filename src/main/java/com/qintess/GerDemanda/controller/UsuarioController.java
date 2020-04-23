@@ -97,5 +97,4 @@ public class UsuarioController {
         usuarioService.alteraSenha(id, dto);
         return ResponseEntity.ok().build();
     }
-
 }

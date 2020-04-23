@@ -5,20 +5,17 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "versao_guia")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "situacao")
-public class Situacao {
+public class VersaoGuia {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Integer id;
-
-    @Column
     private String descricao;
-
 }

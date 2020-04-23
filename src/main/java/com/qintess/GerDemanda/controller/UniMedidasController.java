@@ -1,7 +1,7 @@
 package com.qintess.GerDemanda.controller;
 
-import com.qintess.GerDemanda.service.CargoService;
-import com.qintess.GerDemanda.service.dto.CargoDTO;
+import com.qintess.GerDemanda.model.UniMedida;
+import com.qintess.GerDemanda.service.UniMedidasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,15 +13,15 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/cargo")
-public class CargoController {
+@RequestMapping(value = "/unidades-medidas")
+public class UniMedidasController {
 
     @Autowired
-    CargoService cargoService;
+    UniMedidasService uniMedidasService;
 
     @GetMapping()
-    ResponseEntity<List<CargoDTO>> getCargo() {
-        List<CargoDTO> listaCargo = cargoService.getCargo();
-        return (listaCargo.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listaCargo);
+    ResponseEntity<List<UniMedida>> getUniMedidas() {
+        List<UniMedida> lista = uniMedidasService.getUniMedidas();
+        return (lista.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(lista);
     }
 }

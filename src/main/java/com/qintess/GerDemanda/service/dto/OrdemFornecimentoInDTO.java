@@ -17,31 +17,3 @@ public class OrdemFornecimentoInDTO {
     private Integer of;
     private String ref;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

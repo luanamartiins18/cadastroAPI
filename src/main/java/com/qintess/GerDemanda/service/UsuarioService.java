@@ -129,7 +129,7 @@ public class UsuarioService {
     }
 
     private void validaStatus(UsuarioResumidoDTO dto) {
-        if(Objects.isNull(dto)){
+        if (Objects.isNull(dto)) {
             throw new RuntimeException("Usuário ou senha inválida");
         }
         if (!dto.getStatus().equals(STATUS_ATIVO_DESCRICAO)) {
@@ -228,4 +228,3 @@ public class UsuarioService {
     }
 
 }
-

@@ -2,11 +2,11 @@ package com.qintess.GerDemanda.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -77,29 +77,3 @@ public class Usuario {
     @OneToMany(mappedBy = "usuarioPerfil", cascade = CascadeType.PERSIST)
     List<UsuarioPerfil> listaPerfil;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

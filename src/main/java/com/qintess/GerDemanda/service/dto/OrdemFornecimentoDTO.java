@@ -47,31 +47,3 @@ public class OrdemFornecimentoDTO {
     private String referencia;
     private List<UsuarioOrdemFornecimentoDTO> listaUsuarios;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

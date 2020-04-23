@@ -42,17 +42,3 @@ public class UsuarioSigla {
     @JoinColumn(name = "fk_sigla")
     private Sigla sigla;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

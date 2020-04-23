@@ -54,23 +54,10 @@ public class OrdemFornecimentoController {
         List<OrdensConcluidasDTO> ordensconcluidas = ordemFornecimentoService.findOrdensConcluidas();
         return (ordensconcluidas == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(ordensconcluidas);
     }
+
+    @GetMapping("/ordem-forn/{id}/numero")
+    public String getNumOf(@PathVariable Integer id) {
+        return ordemFornecimentoService.getNumOf(id);
+    }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

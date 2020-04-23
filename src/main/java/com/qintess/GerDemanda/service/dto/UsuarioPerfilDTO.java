@@ -19,17 +19,3 @@ public class UsuarioPerfilDTO {
     private Integer status;
     private PerfilDTO perfil;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

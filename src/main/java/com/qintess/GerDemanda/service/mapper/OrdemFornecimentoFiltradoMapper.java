@@ -37,5 +37,4 @@ public interface OrdemFornecimentoFiltradoMapper extends EntityMapper<OrdemForne
     @Mapping(target = "gerenteT", source = "ordemFornecimento.gerenteTecnico")
     OrdemFornecimentoFiltradoDTO toDto(UsuarioOrdemFornecimento entity);
 
-
 }

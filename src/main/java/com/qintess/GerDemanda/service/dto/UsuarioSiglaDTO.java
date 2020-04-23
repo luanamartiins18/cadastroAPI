@@ -19,17 +19,3 @@ public class UsuarioSiglaDTO {
     private Integer status;
     private SiglaDTO sigla;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

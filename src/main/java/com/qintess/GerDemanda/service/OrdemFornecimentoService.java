@@ -109,4 +109,14 @@ public class OrdemFornecimentoService {
         return ordemFornecimentoFiltradoMapper.toDto(usuarioOrdemFornecimentoRepository
                 .findByOrdemFornecimentoSituacaoUsuIdAndUsuarioIdAndDtExclusaoIsNullAndStatusOrderByOrdemFornecimentoSiglaDescricaoAsc(SITUCAO_EM_EXECUCAO, id, STATUS_ATIVO));
     }
+
+    public String getNumOf(Integer id) {
+        return ordemFornecimentoRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("id", OrdemFornecimento.class.getName())).getNumeroOFGenti();
+    }
+
+    public UsuarioOrdemFornecimento getIdUsuOf(Integer usu, Integer of) {
+        return usuarioOrdemFornecimentoRepository.
+                findFirstByStatusAndUsuarioIdAndOrdemFornecimentoId(STATUS_ATIVO,usu,of);
+    }
 }

@@ -31,31 +31,3 @@ public class OrdemFornecimentoFiltradoDTO {
     private String gerenteT;
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
