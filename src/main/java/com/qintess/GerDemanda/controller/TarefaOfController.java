@@ -1,7 +1,8 @@
 package com.qintess.GerDemanda.controller;
 
-import com.qintess.GerDemanda.model.UsuarioOrdemFornecimento;
 import com.qintess.GerDemanda.service.TarefaOfService;
+import com.qintess.GerDemanda.service.dto.TarefaOfDTO;
+import com.qintess.GerDemanda.service.dto.TarefaOfDetalhadoDTO;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,22 +18,23 @@ public class TarefaOfController {
     @Autowired
     TarefaOfService tarefaOfService;
 
-
-    @RequestMapping(method = RequestMethod.POST, value = "/tarefa")
-    public ResponseEntity<String> insereTarefa(@RequestBody String param) {
-        tarefaOfService.insereTarefa(param);
-        return new ResponseEntity<String>(HttpStatus.OK);
+    @PostMapping(value = "/tarefa")
+    public ResponseEntity<String> insereTarefa(@RequestBody TarefaOfDTO dto) {
+        tarefaOfService.insereTarefa(dto);
+        return ResponseEntity.ok().build();
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/tarefa/atualiza")
-    public ResponseEntity<String> atualizaTarefa(@RequestBody String param) {
-        tarefaOfService.atualizaTarefa(param);
+    public ResponseEntity<String> atualizaTarefa(@RequestBody TarefaOfDTO dto) {
+        JSONObject json = new JSONObject(dto);
+        Integer idTrfOf = json.getInt("idTrfOf");
+        tarefaOfService.atualizaTarefa(idTrfOf, dto);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
     @GetMapping("/usuario/{idUsu}/ordem-forn/{idOf}/tarefas")
-    public List<HashMap<String, Object>> tarefasUsu(@PathVariable Integer idUsu, @PathVariable Integer idOf) {
-        return tarefaOfService.getTarefasUsuario(idUsu, idOf);
+    ResponseEntity<List<TarefaOfDetalhadoDTO>> getTarefasUsuario(@PathVariable Integer idUsu, @PathVariable Integer idOf) {
+        return ResponseEntity.ok().body(tarefaOfService.getTarefasUsuario(idUsu, idOf));
     }
 
     @DeleteMapping("/tarefa/{id}")
@@ -40,7 +42,6 @@ public class TarefaOfController {
         tarefaOfService.deletaTarefa(id);
         return ResponseEntity.noContent().build();
     }
-
 
     @RequestMapping(method = RequestMethod.POST, value = "tarefa/situacao")
     public ResponseEntity<String> alteraSituacaoTarefa(@RequestBody String param) {

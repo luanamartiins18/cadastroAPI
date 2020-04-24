@@ -1,6 +1,8 @@
 package com.qintess.GerDemanda.model;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -26,10 +28,12 @@ public class TarefaOf {
     private String num_tarefa;
     private String perfil;
 
+    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "dt_inclusao")
     private Date dtInclusao;
 
+    @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "dt_alteracao")
     private Date dtAlteracao;

@@ -34,5 +34,6 @@ public interface TarefaOfRepository extends JpaRepository<TarefaOf, Integer> {
             " ORDER BY " +
             " s.descricao ")
     List<RelatorioDTO> getRelatorioNovo();
-    
+
+    List<TarefaOf> findByUsuarioOrdemFornecimentoUsuarioIdAndUsuarioOrdemFornecimentoOrdemFornecimentoId(Integer idUsu, Integer idOf);
 }

@@ -15,4 +15,6 @@ public interface UsuarioOrdemFornecimentoRepository extends JpaRepository<Usuari
     List<UsuarioOrdemFornecimento> findByOrdemFornecimentoSituacaoUsuIdAndUsuarioIdAndDtExclusaoIsNullAndStatusOrderByOrdemFornecimentoSiglaDescricaoAsc(Integer situcaoEmExecucao, Integer id, Integer statusAtivo);
 
     UsuarioOrdemFornecimento findFirstByStatusAndUsuarioIdAndOrdemFornecimentoId(Integer statusAtivo, Integer usu, Integer of);
+
+    void deleteByOrdemFornecimentoId(Integer id);
 }

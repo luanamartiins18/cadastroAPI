@@ -1,5 +1,6 @@
 package com.qintess.GerDemanda.controller;
 
+import com.qintess.GerDemanda.model.UsuarioOrdemFornecimento;
 import com.qintess.GerDemanda.service.OrdemFornecimentoService;
 import com.qintess.GerDemanda.service.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,11 @@ public class OrdemFornecimentoController {
     @GetMapping("/ordem-forn/{id}/numero")
     public String getNumOf(@PathVariable Integer id) {
         return ordemFornecimentoService.getNumOf(id);
+    }
+
+    @GetMapping("/usuario/{usu}/ordem-forn/{of}/")
+    ResponseEntity<UsuarioOrdemFornecimento> getIdUsuOf(@PathVariable Integer usu, @PathVariable Integer of) {
+        return ResponseEntity.ok().body(ordemFornecimentoService.getIdUsuOf(usu, of));
     }
 
 }
