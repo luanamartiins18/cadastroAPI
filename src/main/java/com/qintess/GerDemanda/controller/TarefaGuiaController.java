@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -53,30 +52,55 @@ public class TarefaGuiaController {
 
     @GetMapping("/atividades")
     public ResponseEntity<List<HashMap<String, Object>>> getAtividades() {
-        TarefaGuiaService gs = new TarefaGuiaService();
-        boolean ok = true;
-        List<HashMap<String, Object>> res = new ArrayList<HashMap<String, Object>>();
         try {
-            res = gs.getAtividades();
+            return ResponseEntity.ok().body(tarefaGuiaService.getAtividades());
         } catch (Exception excp) {
-            ok = false;
-            System.out.println(excp.getMessage());
-        }
-        if (ok) {
-            return new ResponseEntity<List<HashMap<String, Object>>>(HttpStatus.OK).ok().body(res);
-        } else {
-            return new ResponseEntity<List<HashMap<String, Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/itens-guia")
     public ResponseEntity<List<HashMap<String, Object>>> getItensGuia() {
-        List<HashMap<String, Object>> res = new ArrayList<HashMap<String, Object>>();
         try {
-            res = tarefaGuiaService.getItensGuia();
-            return ResponseEntity.ok().body(res);
+            return ResponseEntity.ok().body(tarefaGuiaService.getItensGuia());
         } catch (Exception excp) {
-            return new ResponseEntity<List<HashMap<String, Object>>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/atividadeJaExiste/{atividade}")
+    public ResponseEntity<Boolean> atividadeJaExiste(@PathVariable String atividade) {
+        try {
+            return ResponseEntity.ok().body(tarefaGuiaService.atividadeJaExiste(atividade));
+        } catch (Exception excp) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/criaNumeroAtividade/{idDisciplina}")
+    public ResponseEntity<Integer> criaNumeroAtividade(@PathVariable Integer idDisciplina) {
+        try {
+            return ResponseEntity.ok().body(tarefaGuiaService.criaNumeroAtividade(idDisciplina));
+        } catch (Exception excp) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/criaNumeroTarefa/{idDisciplina}/{atividade}")
+    public ResponseEntity<Integer> criaNumeroTarefa(@PathVariable Integer idDisciplina, @PathVariable String atividade) {
+        try {
+            return ResponseEntity.ok().body(tarefaGuiaService.criaNumeroTarefa(idDisciplina, atividade));
+        } catch (Exception excp) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/criaNumeroAtividadess/{idDisciplina}")
+    public ResponseEntity<Integer> criaNumeroAtividadess(@PathVariable Integer idDisciplina) {
+        try {
+            return ResponseEntity.ok().body(tarefaGuiaService.criaNumeroAtividade(idDisciplina));
+        } catch (Exception excp) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

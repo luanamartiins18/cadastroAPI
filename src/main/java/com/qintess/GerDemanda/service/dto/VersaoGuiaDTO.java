@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class VersaoGuiaDTO {
     private Integer id;
     private String descricao;
+    private String versao;
 }

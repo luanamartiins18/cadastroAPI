@@ -3,14 +3,15 @@ package com.qintess.GerDemanda.controller;
 import com.qintess.GerDemanda.service.TarefaOfService;
 import com.qintess.GerDemanda.service.dto.TarefaOfDTO;
 import com.qintess.GerDemanda.service.dto.TarefaOfDetalhadoDTO;
+import com.qintess.GerDemanda.service.dto.TarefaOfValorDTO;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin
@@ -34,7 +35,7 @@ public class TarefaOfController {
 
     @GetMapping("/usuario/{idUsu}/ordem-forn/{idOf}/tarefas")
     ResponseEntity<List<TarefaOfDetalhadoDTO>> getTarefasUsuario(@PathVariable Integer idUsu, @PathVariable Integer idOf) {
-        return ResponseEntity.ok().body(tarefaOfService.getTarefasUsuario(idUsu, idOf));
+        return ResponseEntity.ok().body(tarefaOfService.getTarefasUsuarioDTO(idUsu, idOf));
     }
 
     @DeleteMapping("/tarefa/{id}")
@@ -53,12 +54,8 @@ public class TarefaOfController {
     }
 
     @GetMapping("/usuario/{idUsu}/ordem-forn/{idOf}/valor-tarefa")
-    public ResponseEntity<HashMap<String, Integer>> getValorTarefa(@PathVariable Integer idUsu, @PathVariable Integer idOf) {
-        HashMap<String, Integer> resultado = tarefaOfService.getValorTarefa(idUsu, idOf);
-        if (resultado == null) {
-            return new ResponseEntity<HashMap<String, Integer>>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<HashMap<String, Integer>>(HttpStatus.OK).ok().body(resultado);
-        }
+    ResponseEntity<TarefaOfValorDTO> getUsuarioId(@PathVariable Integer idUsu, @PathVariable Integer idOf) {
+        TarefaOfValorDTO tarefaOfValorDTO = tarefaOfService.getValorTarefa(idUsu, idOf);
+        return Objects.isNull(tarefaOfValorDTO) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(tarefaOfValorDTO);
     }
 }

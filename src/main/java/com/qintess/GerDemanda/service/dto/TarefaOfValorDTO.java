@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class TarefaOfValorDTO {
-    private Double valorExecutado;
-    private Double valorExecutadoTotal;
-    private Double valorPlanejadoTotal;
-    private Double valorPlanejado;
+    private Double valorExecutado = 0.0;
+    private Double valorExecutadoTotal = 0.0;
+    private Double valorPlanejadoTotal = 0.0;
+    private Double valorPlanejado = 0.0;
 }
