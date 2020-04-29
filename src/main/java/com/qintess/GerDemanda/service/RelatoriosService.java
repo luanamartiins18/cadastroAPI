@@ -575,6 +575,21 @@ public class RelatoriosService {
         return bytes;
     }
 
+    public List<RelatorioDTO> getRelatorioSiglaReferenciaReduzido() {
+        ValorUstibb valorUstibb = this.valorUstibbRepository.findByAtivo(1);
+        return this.tarefaOfRepository.getRelatorioSiglaReferenciaReduzido().stream()
+                .peek(obj -> obj.setValor((valorUstibb.getValor()) * obj.getValor_ustibb()))
+                .collect(Collectors.toList());
+    }
+
+
+    public List<RelatorioDTO> getRelatorioSiglaReferenciaExpandido() {
+        ValorUstibb valorUstibb = this.valorUstibbRepository.findByAtivo(1);
+        return this.tarefaOfRepository.getRelatorioSiglaReferenciaExpandido().stream()
+                .peek(obj -> obj.setValor((valorUstibb.getValor()) * obj.getValor_ustibb()))
+                .collect(Collectors.toList());
+    }
+
     public List<RelatorioDTO> getRelatorioSiglaReferencia() {
         ValorUstibb valorUstibb = this.valorUstibbRepository.findByAtivo(1);
         return this.tarefaOfRepository.getRelatorioSiglaReferencia().stream()

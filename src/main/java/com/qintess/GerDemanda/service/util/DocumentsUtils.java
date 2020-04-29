@@ -9,6 +9,7 @@ import org.springframework.util.ReflectionUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -76,7 +77,11 @@ public abstract class DocumentsUtils {
             AtomicInteger cellKey = new AtomicInteger(-1);
             ReflectionUtils.doWithFields(obj.getClass(), field -> {
                 field.setAccessible(true);
-                row.createCell(cellKey.incrementAndGet()).setCellValue(field.get(obj).toString());
+                String value = "";
+                if(Objects.nonNull(field.get(obj))){
+                    value = field.get(obj).toString();
+                }
+                row.createCell(cellKey.incrementAndGet()).setCellValue(value);
                 sheet.autoSizeColumn(cellKey.get());
             });
         });
@@ -95,7 +100,11 @@ public abstract class DocumentsUtils {
                     AtomicInteger cellKey = new AtomicInteger(-1);
                     ReflectionUtils.doWithFields(list.get(i).getClass(), field -> {
                         field.setAccessible(true);
-                        row.createCell(cellKey.incrementAndGet()).setCellValue(field.get(list.get(i)).toString());
+                        String value = "";
+                        if(Objects.nonNull(field.get(list.get(i)))){
+                            value = field.get(list.get(i)).toString();
+                        }
+                        row.createCell(cellKey.incrementAndGet()).setCellValue(value);
                         sheet.autoSizeColumn(cellKey.get());
                     });
                 });

@@ -65,6 +65,62 @@ public interface TarefaOfRepository extends JpaRepository<TarefaOf, Integer> {
             " cg.id ", nativeQuery = true)
     List<Object[]> queryRelatorioEntrega(Integer idOf);
 
+
+    @Query(" SELECT new com.qintess.GerDemanda.service.dto.RelatorioDTO(" +
+            "   orf.numeroOFGenti, " +
+            "   usu.nome, " +
+            "   st.descricao, " +
+            "   SUM(t.itemGuia.valor), " +
+            "   orf.referencia, " +
+            "   orf.sigla.descricao, " +
+            "   (" +
+            "       SELECT COUNT(so.id) " +
+            "       FROM OrdemFornecimento so " +
+            "       WHERE " +
+            "           so.situacaoUsu.id IN (6,8) " +
+            "           AND so.referencia = orf.referencia " +
+            "           AND so.sigla.id =  s.id " +
+            "   ) " +
+            " )" +
+            " FROM  TarefaOf t " +
+            " INNER JOIN t.usuarioOrdemFornecimento u " +
+            " INNER JOIN u.usuario usu " +
+            " INNER JOIN u.ordemFornecimento orf " +
+            " INNER JOIN t.itemGuia ig " +
+            " INNER JOIN orf.sigla s " +
+            " INNER JOIN orf.situacaoUsu st " +
+            " WHERE  st.id IN (6,8) " +
+            " GROUP BY  " +
+            "   s.descricao, " +
+            "   orf.referencia " +
+            " ORDER BY " +
+            " s.descricao, orf.referencia ")
+    List<RelatorioDTO> getRelatorioSiglaReferenciaReduzido();
+
+    @Query(" SELECT new com.qintess.GerDemanda.service.dto.RelatorioDTO(" +
+            "   orf.numeroOFGenti, " +
+            "   st.descricao, " +
+            "   SUM(t.itemGuia.valor), " +
+            "   orf.referencia, " +
+            "   orf.sigla.descricao " +
+            " )" +
+            " FROM  TarefaOf t " +
+            " INNER JOIN t.usuarioOrdemFornecimento u " +
+            " INNER JOIN u.usuario usu " +
+            " INNER JOIN u.ordemFornecimento orf " +
+            " INNER JOIN t.itemGuia ig " +
+            " INNER JOIN orf.sigla s " +
+            " INNER JOIN orf.situacaoUsu st " +
+            " WHERE  st.id IN (6,8) " +
+            " GROUP BY  " +
+            "   orf.numeroOFGenti, " +
+            "   st.descricao, " +
+            "   orf.referencia, " +
+            "   orf.sigla.descricao " +
+            " ORDER BY " +
+            " s.descricao, orf.referencia  ")
+    List<RelatorioDTO> getRelatorioSiglaReferenciaExpandido();
+
     @Query(" SELECT new com.qintess.GerDemanda.service.dto.RelatorioDTO(" +
             "   orf.numeroOFGenti, " +
             "   usu.nome, " +
@@ -88,7 +144,7 @@ public interface TarefaOfRepository extends JpaRepository<TarefaOf, Integer> {
             "   orf.referencia, " +
             "   orf.sigla.descricao " +
             " ORDER BY " +
-            " s.descricao ")
+            " s.descricao, orf.referencia  ")
     List<RelatorioDTO> getRelatorioSiglaReferencia();
 
     List<TarefaOf> findByUsuarioOrdemFornecimentoUsuarioIdAndUsuarioOrdemFornecimentoOrdemFornecimentoId(Integer idUsu, Integer idOf);

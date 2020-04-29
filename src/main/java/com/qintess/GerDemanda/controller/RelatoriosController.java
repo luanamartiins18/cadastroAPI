@@ -101,6 +101,18 @@ public class RelatoriosController {
                         .body(response);
     }
 
+    @GetMapping("relatorio-sigla-referencia/reduzido")
+    ResponseEntity<List<RelatorioDTO>> getRelatorioSiglaReferenciaReduzido() {
+        List<RelatorioDTO> relatorioDTOS = relatoriosService.getRelatorioSiglaReferenciaReduzido();
+        return (relatorioDTOS == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(relatorioDTOS);
+    }
+
+    @GetMapping("relatorio-sigla-referencia/expandido")
+    ResponseEntity<List<RelatorioDTO>> getRelatorioSiglaReferenciaExpandido() {
+        List<RelatorioDTO> relatorioDTOS = relatoriosService.getRelatorioSiglaReferencia();
+        return (relatorioDTOS == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(relatorioDTOS);
+    }
+
     @GetMapping("relatorio-sigla-referencia")
     ResponseEntity<List<RelatorioDTO>> getRelatorioSiglaReferencia() {
         List<RelatorioDTO> relatorioDTOS = relatoriosService.getRelatorioSiglaReferencia();
