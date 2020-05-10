@@ -1,9 +1,12 @@
 package com.qintess.GerDemanda.service.dto;
 
+import com.qintess.GerDemanda.model.TarefaOf;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
 
 @Data
 @AllArgsConstructor
@@ -68,5 +71,20 @@ public class RelatorioDTO {
         this.valor_ustibb = valor_ustibb;
         this.referencia = referencia;
         this.sigla = sigla;
+    }
+
+
+    public RelatorioDTO(
+            TarefaOf tarefaOf
+
+    ) {
+
+        this.numero_of = tarefaOf.getUsuarioOrdemFornecimento().getOrdemFornecimento().getNumeroOFGenti();
+        this.colaborador = tarefaOf.getUsuarioOrdemFornecimento().getUsuario().getNome();
+        this.status_of = tarefaOf.getUsuarioOrdemFornecimento().getOrdemFornecimento().getSituacaoUsu().getDescricao();
+        this.valor_ustibb = tarefaOf.getItemGuia().getValor();
+        this.referencia = tarefaOf.getUsuarioOrdemFornecimento().getOrdemFornecimento().getReferencia();
+        this.sigla =tarefaOf.getUsuarioOrdemFornecimento().getOrdemFornecimento().getSigla().getDescricao();
+        this.qtd = tarefaOf.getQuantidade();
     }
 }

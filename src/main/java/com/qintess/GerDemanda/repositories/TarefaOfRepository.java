@@ -3,13 +3,14 @@ package com.qintess.GerDemanda.repositories;
 import com.qintess.GerDemanda.model.TarefaOf;
 import com.qintess.GerDemanda.service.dto.RelatorioDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface TarefaOfRepository extends JpaRepository<TarefaOf, Integer> {
+public interface TarefaOfRepository extends JpaRepository<TarefaOf, Integer>, JpaSpecificationExecutor<TarefaOf> {
     @Query(value = " SELECT " +
             " usu.nome, " +
             " tg.tarefa, " +
@@ -94,7 +95,7 @@ public interface TarefaOfRepository extends JpaRepository<TarefaOf, Integer> {
             "   s.descricao, " +
             "   orf.referencia " +
             " ORDER BY " +
-            " s.descricao, orf.referencia ")
+            " orf.referencia ")
     List<RelatorioDTO> getRelatorioSiglaReferenciaReduzido();
 
     @Query(" SELECT new com.qintess.GerDemanda.service.dto.RelatorioDTO(" +
@@ -121,7 +122,7 @@ public interface TarefaOfRepository extends JpaRepository<TarefaOf, Integer> {
             " s.descricao, orf.referencia  ")
     List<RelatorioDTO> getRelatorioSiglaReferenciaExpandido();
 
-    @Query(" SELECT new com.qintess.GerDemanda.service.dto.RelatorioDTO(" +
+    @Query( " SELECT new com.qintess.GerDemanda.service.dto.RelatorioDTO(" +
             "   orf.numeroOFGenti, " +
             "   usu.nome, " +
             "   st.descricao, " +

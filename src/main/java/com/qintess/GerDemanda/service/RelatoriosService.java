@@ -1,9 +1,11 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.PersistenceHelper;
+import com.qintess.GerDemanda.model.TarefaOf;
 import com.qintess.GerDemanda.model.ValorUstibb;
 import com.qintess.GerDemanda.repositories.TarefaOfRepository;
 import com.qintess.GerDemanda.repositories.ValorUstibbRepository;
+import com.qintess.GerDemanda.repositories.dao.TarefaOfRepositoryCustom;
 import com.qintess.GerDemanda.service.dto.RelatorioDTO;
 import com.qintess.GerDemanda.service.util.DocumentsUtils;
 import org.apache.commons.codec.binary.Base64;
@@ -19,10 +21,7 @@ import javax.persistence.Query;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +33,9 @@ public class RelatoriosService {
     @Autowired
     ValorUstibbRepository valorUstibbRepository;
     // Setar o ID da OF na QUERY
+
+    @Autowired
+    private TarefaOfRepositoryCustom tarefaOfRepositoryCustom;
 
     private List<Object> queryRelatorioOrcamento(int idOf) {
         EntityManagerFactory entityManagerFactory = PersistenceHelper.getEntityManagerFactory();
@@ -575,31 +577,34 @@ public class RelatoriosService {
         return bytes;
     }
 
-    public List<RelatorioDTO> getRelatorioSiglaReferenciaReduzido() {
+    public List<RelatorioDTO> getRelatorioSiglaReferencia(Map<String, String> filter, String agrupamento) {
         ValorUstibb valorUstibb = this.valorUstibbRepository.findByAtivo(1);
-        return this.tarefaOfRepository.getRelatorioSiglaReferenciaReduzido().stream()
+
+        List<TarefaOf> lista;
+        switch (agrupamento) {
+            case "sigla":
+                lista = this.tarefaOfRepositoryCustom.findByFilterGroupSiglaAndReferencia(filter);
+                break;
+            case "numero_of":
+                lista = this.tarefaOfRepositoryCustom.findByFilterGroupSiglaAndReferenciaAndNumOf(filter);
+                break;
+            default:
+                lista = this.tarefaOfRepositoryCustom.findByFilter(filter);
+        }
+
+        return lista.stream()
+                .map(obj -> new RelatorioDTO(obj))
                 .peek(obj -> obj.setValor((valorUstibb.getValor()) * obj.getValor_ustibb()))
                 .collect(Collectors.toList());
     }
 
-
-    public List<RelatorioDTO> getRelatorioSiglaReferenciaExpandido() {
-        ValorUstibb valorUstibb = this.valorUstibbRepository.findByAtivo(1);
-        return this.tarefaOfRepository.getRelatorioSiglaReferenciaExpandido().stream()
-                .peek(obj -> obj.setValor((valorUstibb.getValor()) * obj.getValor_ustibb()))
-                .collect(Collectors.toList());
+    public List<RelatorioDTO> getRelatorioSiglaReferencia(Map<String, String> filter) {
+        return getRelatorioSiglaReferencia(filter, "");
     }
 
-    public List<RelatorioDTO> getRelatorioSiglaReferencia() {
-        ValorUstibb valorUstibb = this.valorUstibbRepository.findByAtivo(1);
-        return this.tarefaOfRepository.getRelatorioSiglaReferencia().stream()
-                .peek(obj -> obj.setValor((valorUstibb.getValor()) * obj.getValor_ustibb()))
-                .collect(Collectors.toList());
-    }
-
-    public byte[] getRelatoriosXlsx() {
+    public byte[] getRelatoriosXlsx(Map<String, String> filter) {
         List<String> headers = Arrays.asList("OF", "Colaborador", "Status", "Valor USTIBB", "Valor", "Referencia", "Sigla");
-        List<RelatorioDTO> relatorioDTOS = getRelatorioSiglaReferencia();
+        List<RelatorioDTO> relatorioDTOS = getRelatorioSiglaReferencia(filter);
         return DocumentsUtils.exportToExcell(relatorioDTOS, "Relatório com Filtro", headers, "SUB_TOTAL_SIGLA");
     }
 }

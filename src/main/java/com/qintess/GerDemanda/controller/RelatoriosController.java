@@ -2,15 +2,14 @@ package com.qintess.GerDemanda.controller;
 
 import com.qintess.GerDemanda.service.RelatoriosService;
 import com.qintess.GerDemanda.service.dto.RelatorioDTO;
+import com.qintess.GerDemanda.service.dto.RelatorioFilterDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -101,27 +100,21 @@ public class RelatoriosController {
                         .body(response);
     }
 
-    @GetMapping("relatorio-sigla-referencia/reduzido")
-    ResponseEntity<List<RelatorioDTO>> getRelatorioSiglaReferenciaReduzido() {
-        List<RelatorioDTO> relatorioDTOS = relatoriosService.getRelatorioSiglaReferenciaReduzido();
-        return (relatorioDTOS == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(relatorioDTOS);
-    }
-
-    @GetMapping("relatorio-sigla-referencia/expandido")
-    ResponseEntity<List<RelatorioDTO>> getRelatorioSiglaReferenciaExpandido() {
-        List<RelatorioDTO> relatorioDTOS = relatoriosService.getRelatorioSiglaReferencia();
+    @GetMapping("relatorio-sigla-referencia/{agrupamento}")
+    ResponseEntity<List<RelatorioDTO>> getRelatorioSiglaReferencia(@RequestParam Map<String, String> filter, @PathVariable String agrupamento) {
+        List<RelatorioDTO> relatorioDTOS = relatoriosService.getRelatorioSiglaReferencia(filter, agrupamento);
         return (relatorioDTOS == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(relatorioDTOS);
     }
 
     @GetMapping("relatorio-sigla-referencia")
-    ResponseEntity<List<RelatorioDTO>> getRelatorioSiglaReferencia() {
-        List<RelatorioDTO> relatorioDTOS = relatoriosService.getRelatorioSiglaReferencia();
+    ResponseEntity<List<RelatorioDTO>> getRelatorioSiglaReferencia(@RequestParam Map<String, String> filter) {
+        List<RelatorioDTO> relatorioDTOS = relatoriosService.getRelatorioSiglaReferencia(filter);
         return (relatorioDTOS == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(relatorioDTOS);
     }
 
     @GetMapping("/relatorio-sigla-referencia/xlsx")
-    public ResponseEntity<byte[]> getRelatorioSiglaReferenciaXlsx() {
-        byte[] response = relatoriosService.getRelatoriosXlsx();
+    public ResponseEntity<byte[]> getRelatorioSiglaReferenciaXlsx(@RequestParam Map<String, String> filter) {
+        byte[] response = relatoriosService.getRelatoriosXlsx(filter);
         String fileName = "relatorio-sigla-referencia.xlsx";
         HttpHeaders header = new HttpHeaders();
         ContentDisposition contentDisposition = ContentDisposition.builder("attachment").filename(fileName).build();

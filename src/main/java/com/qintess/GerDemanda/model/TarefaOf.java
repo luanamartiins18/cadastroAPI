@@ -22,7 +22,7 @@ public class TarefaOf {
     private Integer id;
     private String historia;
     private String sprint;
-    private Integer quantidade;
+    private Long quantidade;
     private String artefato;
     private String observacao;
     private String num_tarefa;
@@ -49,5 +49,76 @@ public class TarefaOf {
     @ManyToOne
     @JoinColumn(name = "fk_of_usuario")
     private UsuarioOrdemFornecimento usuarioOrdemFornecimento;
+
+    public TarefaOf(
+            String numero_of,
+            String colaborador,
+            String status_of,
+            Double valor_ustibb,
+            String referencia,
+            String sigla,
+            Long quantidade
+    ) {
+        this.quantidade = quantidade;
+        this.usuarioOrdemFornecimento = UsuarioOrdemFornecimento
+                .builder()
+                .usuario(Usuario.builder().nome(colaborador).build())
+                .ordemFornecimento(OrdemFornecimento
+                        .builder()
+                        .numeroOFGenti(numero_of)
+                        .referencia(referencia)
+                        .sigla(Sigla
+                                .builder()
+                                .descricao(sigla)
+                                .build()
+                        )
+                        .situacaoUsu(Situacao
+                                .builder()
+                                .descricao(status_of)
+                                .build()
+                        )
+                        .build())
+                .build();
+
+        this.itemGuia = ItemGuia
+                .builder()
+                .valor(valor_ustibb)
+                .build();
+    }
+
+    public TarefaOf(
+            String numero_of,
+            String colaborador,
+            String status_of,
+            Double valor_ustibb,
+            String referencia,
+            String sigla
+    ) {
+        this.quantidade = quantidade;
+        this.usuarioOrdemFornecimento = UsuarioOrdemFornecimento
+                .builder()
+                .usuario(Usuario.builder().nome(colaborador).build())
+                .ordemFornecimento(OrdemFornecimento
+                        .builder()
+                        .numeroOFGenti(numero_of)
+                        .referencia(referencia)
+                        .sigla(Sigla
+                                .builder()
+                                .descricao(sigla)
+                                .build()
+                        )
+                        .situacaoUsu(Situacao
+                                .builder()
+                                .descricao(status_of)
+                                .build()
+                        )
+                        .build())
+                .build();
+
+        this.itemGuia = ItemGuia
+                .builder()
+                .valor(valor_ustibb)
+                .build();
+    }
 
 }

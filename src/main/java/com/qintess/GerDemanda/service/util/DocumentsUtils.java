@@ -78,7 +78,7 @@ public abstract class DocumentsUtils {
             ReflectionUtils.doWithFields(obj.getClass(), field -> {
                 field.setAccessible(true);
                 String value = "";
-                if(Objects.nonNull(field.get(obj))){
+                if (Objects.nonNull(field.get(obj))) {
                     value = field.get(obj).toString();
                 }
                 row.createCell(cellKey.incrementAndGet()).setCellValue(value);
@@ -101,7 +101,7 @@ public abstract class DocumentsUtils {
                     ReflectionUtils.doWithFields(list.get(i).getClass(), field -> {
                         field.setAccessible(true);
                         String value = "";
-                        if(Objects.nonNull(field.get(list.get(i)))){
+                        if (Objects.nonNull(field.get(list.get(i)))) {
                             value = field.get(list.get(i)).toString();
                         }
                         row.createCell(cellKey.incrementAndGet()).setCellValue(value);
@@ -122,6 +122,8 @@ public abstract class DocumentsUtils {
         headerFont.setBold(true);
         CellStyle headerStyle = workbook.createCellStyle();
         headerStyle.setFont(headerFont);
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);
+
         Long qtdOf = listFiltrada.stream().count();
         Double ustibbTotal = listFiltrada.stream().mapToDouble(f -> f.getValor_ustibb()).sum();
         Double valorTotal = listFiltrada.stream().mapToDouble(f -> f.getValor()).sum();
