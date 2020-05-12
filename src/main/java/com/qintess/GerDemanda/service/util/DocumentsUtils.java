@@ -99,13 +99,15 @@ public abstract class DocumentsUtils {
                     Row row = sheet.createRow(rowKey.incrementAndGet());
                     AtomicInteger cellKey = new AtomicInteger(-1);
                     ReflectionUtils.doWithFields(list.get(i).getClass(), field -> {
-                        field.setAccessible(true);
-                        String value = "";
-                        if (Objects.nonNull(field.get(list.get(i)))) {
-                            value = field.get(list.get(i)).toString();
+                        if (!field.getName().equals("qtd")) {
+                            field.setAccessible(true);
+                            String value = "";
+                            if (Objects.nonNull(field.get(list.get(i)))) {
+                                value = field.get(list.get(i)).toString();
+                            }
+                            row.createCell(cellKey.incrementAndGet()).setCellValue(value);
+                            sheet.autoSizeColumn(cellKey.get());
                         }
-                        row.createCell(cellKey.incrementAndGet()).setCellValue(value);
-                        sheet.autoSizeColumn(cellKey.get());
                     });
                 });
         if (!list.isEmpty()) {
@@ -117,20 +119,22 @@ public abstract class DocumentsUtils {
     }
 
     private static void subTotalSigla(Sheet sheet, AtomicInteger rowKey, List<RelatorioDTO> listFiltrada, Workbook workbook) {
-        // groupBy listFiltrada
         Font headerFont = workbook.createFont();
         headerFont.setBold(true);
         CellStyle headerStyle = workbook.createCellStyle();
         headerStyle.setFont(headerFont);
         headerStyle.setAlignment(HorizontalAlignment.CENTER);
 
-        Long qtdOf = listFiltrada.stream().count();
+        int qtdOf = listFiltrada.stream().collect(Collectors.groupingBy(RelatorioDTO::getNumero_of, Collectors.counting())).size();
+
         Double ustibbTotal = listFiltrada.stream().mapToDouble(f -> f.getValor_ustibb()).sum();
         Double valorTotal = listFiltrada.stream().mapToDouble(f -> f.getValor()).sum();
         Row row = sheet.createRow(rowKey.incrementAndGet());
         row.createCell(0).setCellValue("SUBTOTAL QTD OF: " + qtdOf);
         row.createCell(3).setCellValue("Ustibb: " + ustibbTotal);
         row.createCell(4).setCellValue("Valor: " + valorTotal);
+        sheet.autoSizeColumn(0);
+        sheet.autoSizeColumn(4);
         row.getCell(0).setCellStyle(headerStyle);
         row.getCell(3).setCellStyle(headerStyle);
         row.getCell(4).setCellStyle(headerStyle);
