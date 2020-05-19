@@ -36,4 +36,3 @@ build/
 /bin
 /target
 /**/application.properties
-/**/persistence.xml
