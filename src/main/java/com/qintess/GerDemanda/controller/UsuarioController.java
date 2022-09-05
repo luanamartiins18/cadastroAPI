@@ -1,12 +1,7 @@
 package com.qintess.GerDemanda.controller;
 
-import com.qintess.GerDemanda.service.CargoService;
-import com.qintess.GerDemanda.service.PerfilService;
-import com.qintess.GerDemanda.service.UsuarioService;
-import com.qintess.GerDemanda.service.dto.CargoDTO;
-import com.qintess.GerDemanda.service.dto.PerfilDTO;
-import com.qintess.GerDemanda.service.dto.UsuarioDTO;
-import com.qintess.GerDemanda.service.dto.UsuarioResumidoDTO;
+import com.qintess.GerDemanda.service.*;
+import com.qintess.GerDemanda.service.dto.*;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,10 +20,14 @@ public class UsuarioController {
     UsuarioService usuarioService;
 
     @Autowired
-    PerfilService perfilService;
+    CargoService cargoService;
 
     @Autowired
-    CargoService cargoService;
+    TipoService tipoService;
+
+    @Autowired
+    Buservice buService;
+
 
     @GetMapping("/usuario/{re}")
     ResponseEntity<UsuarioDTO> getUsuario(@PathVariable String re) {
@@ -36,21 +35,23 @@ public class UsuarioController {
         return (usuario == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(usuario);
     }
 
-    @GetMapping("/sigla/{idSigla}/usuarios")
-    ResponseEntity<List<UsuarioDTO>> getUsuariosBySigla(@PathVariable Integer idSigla) {
-        List<UsuarioDTO> usuarios = usuarioService.getUsuariosBySiglaDTO(idSigla);
-        return ResponseEntity.ok().body(usuarios);
-    }
-
-    @GetMapping("/usuario/{idUsuario}/perfil")
-    public PerfilDTO getPerfilUsuario(@PathVariable Integer idUsuario) {
-        return perfilService.getPerfilUsuario(idUsuario);
-    }
 
     @GetMapping("/usuario/{re}/cargo")
     ResponseEntity<CargoDTO> getCargoUsuarioByRe(@PathVariable String re) {
         CargoDTO cargo = cargoService.getCargoUsuarioByRe(re);
         return (cargo == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(cargo);
+    }
+
+    @GetMapping("/usuario/{re}/tipo")
+    ResponseEntity<TipoDTO> getTipoUsuarioByRe(@PathVariable String re) {
+        TipoDTO tipo = tipoService.getTipoUsuarioByRe(re);
+        return (tipo == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(tipo);
+    }
+
+    @GetMapping("/usuario/{re}/bu")
+    ResponseEntity<BuDTO> getBuUsuarioByRe(@PathVariable String re) {
+        BuDTO bu = buService.getBuUsuarioByRe(re);
+        return (bu == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(bu);
     }
 
     @GetMapping("/usuarios")
@@ -77,8 +78,8 @@ public class UsuarioController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/usuarios/{id}")
-    public ResponseEntity<?> deleteUsuario (@PathVariable Integer id) {
+    @DeleteMapping(value = "/usuarios/{id}")
+    public ResponseEntity<String> deleteUsuario (@PathVariable Integer id) {
         usuarioService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

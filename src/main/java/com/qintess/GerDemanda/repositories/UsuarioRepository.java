@@ -11,15 +11,11 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Usuario findFirstByCodigoReAndSenha(String re, String senha);
 
-    Usuario findFirstByCodigoBBAndIdNot(String bb, Integer id);
-
     Usuario findFirstByEmailAndIdNot(String email, Integer id);
 
     Usuario findFirstByCpfAndIdNot(String cpf, Integer id);
 
     List<Usuario> findByStatusAndCargoIdOrderByNomeAsc(String ativo, Integer i);
-
-    List<Usuario> findByStatusAndCargoIdAndListaSiglasSiglaIdOrderByNomeAsc(String statusAtivo, Integer cargoColaborador, Integer Sigla);
 
     List<Usuario> findByOrderByNomeAsc();
 

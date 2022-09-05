@@ -6,7 +6,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
@@ -26,10 +25,43 @@ public class Usuario {
     private String nome;
 
     @Column
+    private String cpf;
+
+    @Column
+    private String rg;
+
+    @Column
+    private String org_emissor;
+
+    @Temporal(TemporalType.DATE)
+    private Date data_nascimento;
+
+    @Temporal(TemporalType.DATE)
+    private Date data_emissao;
+
+    @Column
+    private String endereco;
+
+    @Column
+    private String numero;
+
+    @Column
+    private String complemento;
+
+    @Column
+    private String cep;
+
+    @Column
+    private String celular;
+
+    @Column
     private String email;
 
     @Column
-    private String cpf;
+    private String cidade;
+
+    @Column
+    private String uf;
 
     @JsonIgnore
     @Column
@@ -38,42 +70,26 @@ public class Usuario {
     @Column(name = "codigo_re")
     private String codigoRe;
 
-    @Column(name = "codigo_bb")
-    private String codigoBB;
-
-    @Column
-    private String empresa;
-
-    @Column
-    private Integer demanda;
-
-    @Column
-    private String Celular;
-
-    @Temporal(TemporalType.DATE)
-    private Date nascimento;
-
     @Column
     private String status;
 
     @Column(name = "primeiro_acesso")
     private Boolean primeiroAcesso;
-
-    @JsonBackReference
-    @ManyToOne
-    @JoinColumn(name = "fk_contrato")
-    private Contrato contrato;
-
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "fk_cargo")
     private Cargo cargo;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "usuarioSigla", cascade = CascadeType.PERSIST)
-    List<UsuarioSigla> listaSiglas;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "usuarioPerfil", cascade = CascadeType.PERSIST)
-    List<UsuarioPerfil> listaPerfil;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_tipo")
+    private Tipo tipo;
+
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_bu")
+    private Bu bu;
+
 }

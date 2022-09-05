@@ -1,11 +1,7 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.model.*;
-import com.qintess.GerDemanda.repositories.UsuarioPerfilRepository;
 import com.qintess.GerDemanda.repositories.UsuarioRepository;
-import com.qintess.GerDemanda.repositories.UsuarioSiglaRepository;
-import com.qintess.GerDemanda.service.dto.PerfilDTO;
-import com.qintess.GerDemanda.service.dto.SiglaDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioResumidoDTO;
 import com.qintess.GerDemanda.service.mapper.UsuarioMapper;
@@ -31,12 +27,6 @@ public class UsuarioService {
     UsuarioRepository usuarioRepository;
 
     @Autowired
-    UsuarioSiglaRepository usuarioSiglaRepository;
-
-    @Autowired
-    UsuarioPerfilRepository usuarioPerfilRepository;
-
-    @Autowired
     private UsuarioMapper usuarioMapper;
 
     @Autowired
@@ -50,9 +40,6 @@ public class UsuarioService {
         return usuarioMapper.toDto(usuarioRepository.findFirstByCodigoReAndIdNot(re, id));
     }
 
-    public UsuarioDTO getUsuarioByBB(String bb, Integer id) {
-        return usuarioMapper.toDto(usuarioRepository.findFirstByCodigoBBAndIdNot(bb, id));
-    }
 
     public UsuarioDTO getUsuarioByEmail(String email, Integer id) {
         return usuarioMapper.toDto(usuarioRepository.findFirstByEmailAndIdNot(email, id));
@@ -62,13 +49,6 @@ public class UsuarioService {
         return usuarioMapper.toDto(usuarioRepository.findFirstByCpfAndIdNot(cpf, id));
     }
 
-    public List<Usuario> getUsuariosBySigla(Integer id) {
-        return (usuarioRepository.findByStatusAndCargoIdAndListaSiglasSiglaIdOrderByNomeAsc(STATUS_ATIVO_DESCRICAO, CARGO_COLABORADOR, id));
-    }
-
-    public List<UsuarioDTO> getUsuariosBySiglaDTO(Integer id) {
-        return usuarioMapper.toDto(this.getUsuariosBySigla(id));
-    }
 
     public UsuarioResumidoDTO checkUsuario(UsuarioResumidoDTO dto) {
         UsuarioResumidoDTO usuarioResumidoDTO = usuarioResumidoMapper.toDto(
@@ -103,12 +83,9 @@ public class UsuarioService {
         validacao(dto);
         Usuario obj = usuarioMapper.toEntity(dto);
         obj.setNome(obj.getNome().toUpperCase());
-        obj.setContrato(Contrato.builder().id(1).build());
         obj.setStatus(STATUS_ATIVO_DESCRICAO);
-        obj.setEmpresa("Qintess");
         obj.setSenha(DigestUtils.sha256Hex(dto.getCpf()));
         obj.setPrimeiroAcesso(true);
-        setPerfilAndSigla(dto.getListaSiglas(), dto.getListaPerfil(), obj);
         usuarioRepository.save(obj);
     }
 
@@ -122,9 +99,6 @@ public class UsuarioService {
         }
         if (Objects.nonNull(getUsuarioByRE(dto.getCodigoRe(), id))) {
             throw new ValidationException("O códigoRe já está em uso");
-        }
-        if (Objects.nonNull(getUsuarioByBB(dto.getCodigoBB(), id))) {
-            throw new ValidationException("O códigoBB já está em uso");
         }
     }
 
@@ -143,24 +117,30 @@ public class UsuarioService {
         validacao(dto);
         Usuario objOld = findById(id);
         usuarioMapperUpdate(dto, objOld);
-        usuarioSiglaRepository.deleteByUsuarioSiglaId(id);
-        usuarioPerfilRepository.deleteByUsuarioPerfilId(id);
         usuarioRepository.save(objOld);
     }
 
     private void usuarioMapperUpdate(UsuarioDTO dto, Usuario objOld) {
         Usuario objNew = usuarioMapper.toEntity(dto);
-        objOld.setCargo(objNew.getCargo());
         objOld.setNome(objNew.getNome().toUpperCase());
-        objOld.setNascimento(objNew.getNascimento());
-        objOld.setCodigoBB(objNew.getCodigoBB());
-        objOld.setCelular(objNew.getCelular());
-        objOld.setCodigoRe(objNew.getCodigoRe());
         objOld.setCpf(objNew.getCpf());
+        objOld.setRg(objNew.getRg());
+        objOld.setOrg_emissor(objNew.getOrg_emissor());
+        objOld.setData_emissao(objNew.getData_emissao());
+        objOld.setData_nascimento(objNew.getData_nascimento());
+        objOld.setEndereco(objNew.getEndereco());
+        objOld.setNumero(objNew.getNumero());
+        objOld.setComplemento(objNew.getComplemento());
+        objOld.setCep(objNew.getCep());
+        objOld.setCelular(objNew.getCelular());
         objOld.setEmail(objNew.getEmail());
-        objOld.setEmpresa(objNew.getEmpresa());
-        objOld.setDemanda(objNew.getDemanda());
-        setPerfilAndSigla(dto.getListaSiglas(), dto.getListaPerfil(), objOld);
+        objOld.setCodigoRe(objNew.getCodigoRe());
+        objOld.setCargo(objNew.getCargo());
+        objOld.setCidade(objNew.getCidade());
+        objOld.setUf(objNew.getUf());
+        objOld.setTipo(objNew.getTipo());
+        objOld.setBu(objNew.getBu());
+
     }
 
     public void deleteById(Integer id) {
@@ -178,44 +158,8 @@ public class UsuarioService {
     }
 
 
-    private void setPerfilAndSigla(List<SiglaDTO> listaSigla, List<PerfilDTO> listaPerfil, Usuario obj) {
-        obj.setListaSiglas(
-                listaSigla
-                        .stream().map(sigla ->
-                        UsuarioSigla.builder()
-                                .usuarioSigla(obj)
-                                .sigla(Sigla.builder().id(sigla.getId()).build())
-                                .status(1)
-                                .build()
-                ).collect(Collectors.toList()));
-
-        obj.setListaPerfil(
-                listaPerfil
-                        .stream().map(perfil ->
-                        UsuarioPerfil.builder()
-                                .usuarioPerfil(obj)
-                                .perfil(Perfil.builder().id(perfil.getId()).build())
-                                .status(1)
-                                .build()).collect(Collectors.toList()));
-    }
-
     private UsuarioDTO usuarioToDTO(Usuario obj) {
         UsuarioDTO dto = usuarioMapper.toDto(obj);
-        dto.setListaSiglas(
-                obj.getListaSiglas().stream().map(item ->
-                        SiglaDTO.builder()
-                                .id(item.getSigla().getId())
-                                .descricao(item.getSigla().getDescricao())
-                                .build())
-                        .collect(Collectors.toList()));
-
-        dto.setListaPerfil(
-                obj.getListaPerfil().stream().map(item ->
-                        PerfilDTO.builder()
-                                .id(item.getPerfil().getId())
-                                .descricao(item.getPerfil().getDescricao())
-                                .build())
-                        .collect(Collectors.toList()));
         return dto;
     }
 

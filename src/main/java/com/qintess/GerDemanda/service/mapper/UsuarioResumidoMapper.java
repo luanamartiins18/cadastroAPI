@@ -11,5 +11,4 @@ public interface UsuarioResumidoMapper extends EntityMapper<UsuarioResumidoDTO, 
     @Override
     @Mapping(target = "senha", ignore = true)
     UsuarioResumidoDTO toDto(Usuario entity);
-
 }
