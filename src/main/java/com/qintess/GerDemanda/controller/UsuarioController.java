@@ -1,14 +1,21 @@
 package com.qintess.GerDemanda.controller;
 
+import com.qintess.GerDemanda.repositories.*;
+import com.qintess.GerDemanda.model.*;
 import com.qintess.GerDemanda.service.*;
 import com.qintess.GerDemanda.service.dto.*;
+import com.qintess.GerDemanda.service.mapper.CargoMapper;
+import com.qintess.GerDemanda.service.mapper.UsuarioMapper;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,13 +27,34 @@ public class UsuarioController {
     UsuarioService usuarioService;
 
     @Autowired
+    HistoricoUsuarioService historicoUsuarioService;
+
+    @Autowired
+    HistoricoUsuarioDTO historicoUsuarioDTO;
+
+    @Autowired
     CargoService cargoService;
+
+    @Autowired
+    CargoMapper cargoMapper;
+
+    @Autowired
+    UsuarioMapper usuarioMapper;
+
+    @Autowired
+    UsuarioRepository usuarioRepository;
+
 
     @Autowired
     TipoService tipoService;
 
     @Autowired
     Buservice buService;
+
+    @Autowired
+    HistoricoUsuario historicoUsuario;
+
+
 
 
     @GetMapping("/usuario/{re}")
@@ -66,15 +94,34 @@ public class UsuarioController {
         return Objects.isNull(usuario) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(usuario);
     }
 
+
     @PostMapping(value = "/usuarios")
     public ResponseEntity<String> insereUsuario(@Valid @RequestBody UsuarioDTO dto) {
         usuarioService.insereUsuario(dto);
+        Usuario usuario = usuarioRepository.findFirstByCodigoRe(dto.getCodigoRe());
+        Cargo cargo = cargoMapper.toEntity(dto.getCargo());
+        Date dt = new Date();
+        historicoUsuario.setData_inicio(dt);
+        historicoUsuario.setCargo(cargo);
+        historicoUsuario.setUsuario(usuario);
+        historicoUsuarioService.insereHistoricoUsuario(historicoUsuario);
         return ResponseEntity.ok().build();
     }
+
+
 
     @PutMapping(value = "/usuarios/{id}")
     public ResponseEntity<String> atualizaUsuario (@PathVariable Integer id, @Valid @RequestBody UsuarioDTO dto) {
         usuarioService.updateUsuario(id, dto);
+        Date dt = new Date();
+        Usuario usuario = usuarioService.findById(id);
+        Cargo cargo = cargoMapper.toEntity(dto.getCargo());
+        //historicoUsuarioService.alteraDataFinal(id, dt);
+        historicoUsuario.setData_inicio(dt);
+        historicoUsuario.setData_final(dt);
+        historicoUsuario.setCargo(cargo);
+        historicoUsuario.setUsuario(usuario);
+        historicoUsuarioService.insereHistoricoUsuario(historicoUsuario);
         return ResponseEntity.ok().build();
     }
 

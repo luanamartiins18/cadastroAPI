@@ -140,7 +140,6 @@ public class UsuarioService {
         objOld.setUf(objNew.getUf());
         objOld.setTipo(objNew.getTipo());
         objOld.setBu(objNew.getBu());
-
     }
 
     public void deleteById(Integer id) {
