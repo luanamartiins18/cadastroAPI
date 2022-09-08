@@ -22,8 +22,4 @@ public class Cargo {
     private Integer id;
     private String descricao;
 
-    @JsonIgnore
-    @JsonManagedReference
-    @OneToMany(mappedBy = "cargo", fetch = FetchType.LAZY)
-    private List<Usuario> usuarios;
 }

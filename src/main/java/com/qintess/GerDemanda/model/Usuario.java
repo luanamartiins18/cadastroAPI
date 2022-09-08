@@ -1,7 +1,6 @@
 package com.qintess.GerDemanda.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -63,9 +62,6 @@ public class Usuario {
     @Column
     private String uf;
 
-    @JsonIgnore
-    @Column
-    private String senha;
 
     @Column(name = "codigo_re")
     private String codigoRe;
@@ -73,8 +69,6 @@ public class Usuario {
     @Column
     private String status;
 
-    @Column(name = "primeiro_acesso")
-    private Boolean primeiroAcesso;
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "fk_cargo")

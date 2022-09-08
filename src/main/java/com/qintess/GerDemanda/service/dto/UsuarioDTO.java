@@ -2,7 +2,6 @@ package com.qintess.GerDemanda.service.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -54,6 +53,8 @@ public class UsuarioDTO {
     @NotNull(message = "O campo cep é obrigatório!")
     private String cep;
 
+    private String complemento;
+
     @NotNull(message = "O campo Celular é obrigatório!")
     @Length(min=11,max=15,message = "O campo celular precisa ter no mínimo 11 caracteres.")
     private String celular;
@@ -73,21 +74,12 @@ public class UsuarioDTO {
     @NotNull(message = "O campo uf é obrigatório!")
     private String uf;
 
-    @NotNull(message = "O campo tipo é obrigatório!")
-    private TipoDTO tipo;
-
-    @NotNull(message = "O campo bu é obrigatório!")
-    private BuDTO bu;
-
-    @NotNull(message = "O campo cargo é obrigatório!")
-    private CargoDTO cargo;
-
-
-    @JsonIgnore
-    private String senha;
-    private String complemento;
-    private String primeiroAcesso;
     private String status;
 
+    private TipoDTO tipo;
+
+    private BuDTO bu;
+
+    private CargoDTO cargo;
 
 }

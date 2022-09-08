@@ -64,6 +64,13 @@ public class UsuarioController {
     }
 
 
+    @GetMapping("/usuarios")
+    ResponseEntity<List<UsuarioDTO>> getListaUsuarios() {
+        List<UsuarioDTO> listausuario = usuarioService.getListaUsuarios();
+        return (listausuario.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listausuario);
+    }
+
+
     @GetMapping("/usuario/{re}/cargo")
     ResponseEntity<CargoDTO> getCargoUsuarioByRe(@PathVariable String re) {
         CargoDTO cargo = cargoService.getCargoUsuarioByRe(re);
@@ -82,12 +89,6 @@ public class UsuarioController {
         return (bu == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(bu);
     }
 
-    @GetMapping("/usuarios")
-    ResponseEntity<List<UsuarioDTO>> getListaUsuarios() {
-        List<UsuarioDTO> listausuario = usuarioService.getListaUsuarios();
-        return (listausuario.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listausuario);
-    }
-
     @GetMapping("/usuarios/{id}")
     ResponseEntity<UsuarioDTO> getUsuarioId(@PathVariable Integer id) {
         UsuarioDTO usuario = usuarioService.findByIdDTO(id);
@@ -99,6 +100,19 @@ public class UsuarioController {
     public ResponseEntity<String> insereUsuario(@Valid @RequestBody UsuarioDTO dto) {
         usuarioService.insereUsuario(dto);
         Usuario usuario = usuarioRepository.findFirstByCodigoRe(dto.getCodigoRe());
+        //Cargo cargo = cargoMapper.toEntity(dto.getCargo());
+        Date dt = new Date();
+        historicoUsuario.setData_inicio(dt);
+        //historicoUsuario.setCargo(cargo);
+        historicoUsuario.setUsuario(usuario);
+        //historicoUsuarioService.insereHistoricoUsuario(historicoUsuario);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/funcao")
+    public ResponseEntity<String> insereFuncao(@Valid @RequestBody FuncaoDTO dto) {
+        Usuario usuario = usuarioRepository.findFirstByCodigoRe(dto.getCodigoRe());
+        usuarioService.atualizaFuncao(usuario.getId(), dto);
         Cargo cargo = cargoMapper.toEntity(dto.getCargo());
         Date dt = new Date();
         historicoUsuario.setData_inicio(dt);
@@ -109,19 +123,18 @@ public class UsuarioController {
     }
 
 
-
     @PutMapping(value = "/usuarios/{id}")
     public ResponseEntity<String> atualizaUsuario (@PathVariable Integer id, @Valid @RequestBody UsuarioDTO dto) {
         usuarioService.updateUsuario(id, dto);
         Date dt = new Date();
         Usuario usuario = usuarioService.findById(id);
-        Cargo cargo = cargoMapper.toEntity(dto.getCargo());
+        //Cargo cargo = cargoMapper.toEntity(dto.getCargo());
         //historicoUsuarioService.alteraDataFinal(id, dt);
         historicoUsuario.setData_inicio(dt);
         historicoUsuario.setData_final(dt);
-        historicoUsuario.setCargo(cargo);
+       // historicoUsuario.setCargo(cargo);
         historicoUsuario.setUsuario(usuario);
-        historicoUsuarioService.insereHistoricoUsuario(historicoUsuario);
+        //historicoUsuarioService.insereHistoricoUsuario(historicoUsuario);
         return ResponseEntity.ok().build();
     }
 
@@ -140,9 +153,4 @@ public class UsuarioController {
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
-    @PutMapping(value = "/altera-senha/{id}")
-    public ResponseEntity<String> alteraSenha (@PathVariable Integer id, @Valid @RequestBody UsuarioResumidoDTO dto) {
-        usuarioService.alteraSenha(id, dto);
-        return ResponseEntity.ok().build();
-    }
 }

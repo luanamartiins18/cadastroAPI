@@ -2,10 +2,9 @@ package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.model.*;
 import com.qintess.GerDemanda.repositories.UsuarioRepository;
+import com.qintess.GerDemanda.service.dto.FuncaoDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
-import com.qintess.GerDemanda.service.dto.UsuarioResumidoDTO;
 import com.qintess.GerDemanda.service.mapper.UsuarioMapper;
-import com.qintess.GerDemanda.service.mapper.UsuarioResumidoMapper;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +28,6 @@ public class UsuarioService {
     @Autowired
     private UsuarioMapper usuarioMapper;
 
-    @Autowired
-    private UsuarioResumidoMapper usuarioResumidoMapper;
 
     public UsuarioDTO getUsuarioByRe(String re) {
         return usuarioMapper.toDto(usuarioRepository.findFirstByCodigoRe(re));
@@ -49,13 +46,6 @@ public class UsuarioService {
         return usuarioMapper.toDto(usuarioRepository.findFirstByCpfAndIdNot(cpf, id));
     }
 
-
-    public UsuarioResumidoDTO checkUsuario(UsuarioResumidoDTO dto) {
-        UsuarioResumidoDTO usuarioResumidoDTO = usuarioResumidoMapper.toDto(
-                this.usuarioRepository.findFirstByCodigoReAndSenha(dto.getCodigoRe(), dto.getSenha()));
-        validaStatus(usuarioResumidoDTO);
-        return usuarioResumidoDTO;
-    }
 
     public List<Usuario> getUsuariosAtivos() {
         return usuarioRepository.findByStatusAndCargoIdOrderByNomeAsc(STATUS_ATIVO_DESCRICAO, CARGO_COLABORADOR);
@@ -84,8 +74,6 @@ public class UsuarioService {
         Usuario obj = usuarioMapper.toEntity(dto);
         obj.setNome(obj.getNome().toUpperCase());
         obj.setStatus(STATUS_ATIVO_DESCRICAO);
-        obj.setSenha(DigestUtils.sha256Hex(dto.getCpf()));
-        obj.setPrimeiroAcesso(true);
         usuarioRepository.save(obj);
     }
 
@@ -102,14 +90,7 @@ public class UsuarioService {
         }
     }
 
-    private void validaStatus(UsuarioResumidoDTO dto) {
-        if (Objects.isNull(dto)) {
-            throw new RuntimeException("Usuário ou senha inválida");
-        }
-        if (!dto.getStatus().equals(STATUS_ATIVO_DESCRICAO)) {
-            throw new RuntimeException("Sua conta está desativada!");
-        }
-    }
+
 
     @Transactional
     public void updateUsuario(Integer id, UsuarioDTO dto) {
@@ -118,6 +99,11 @@ public class UsuarioService {
         Usuario objOld = findById(id);
         usuarioMapperUpdate(dto, objOld);
         usuarioRepository.save(objOld);
+    }
+
+    @Transactional
+    public void atualizaFuncao(Integer idUsuario, FuncaoDTO dto) {
+        usuarioRepository.updateFuncao(dto.getCargo(), dto.getBu(),dto.getTipo(),idUsuario);
     }
 
     private void usuarioMapperUpdate(UsuarioDTO dto, Usuario objOld) {
@@ -156,18 +142,9 @@ public class UsuarioService {
         this.usuarioRepository.saveAndFlush(usuario);
     }
 
-
     private UsuarioDTO usuarioToDTO(Usuario obj) {
         UsuarioDTO dto = usuarioMapper.toDto(obj);
         return dto;
-    }
-
-    @Transactional
-    public void alteraSenha(Integer id, UsuarioResumidoDTO dto) {
-        Usuario obj = findById(id);
-        obj.setSenha(dto.getSenha());
-        obj.setPrimeiroAcesso(false);
-        usuarioRepository.save(obj);
     }
 
 }
