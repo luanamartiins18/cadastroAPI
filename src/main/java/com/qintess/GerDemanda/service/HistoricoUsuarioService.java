@@ -26,8 +26,6 @@ public class HistoricoUsuarioService {
     @Autowired
     private HistoricoRepository historicoRepository;
 
-
-
     @Transactional
     public void insereHistoricoUsuario(HistoricoUsuario obj) {
         //HistoricoUsuario obj = historicoMapper.toEntity(dto);
@@ -50,5 +48,4 @@ public class HistoricoUsuarioService {
         historicoRepository.save(historicoUsuario);
 
     }
-
 }

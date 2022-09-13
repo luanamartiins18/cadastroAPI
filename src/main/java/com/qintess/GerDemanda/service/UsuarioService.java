@@ -1,11 +1,13 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.model.*;
+import com.qintess.GerDemanda.repositories.HistoricoRepository;
 import com.qintess.GerDemanda.repositories.UsuarioRepository;
 import com.qintess.GerDemanda.service.dto.FuncaoDTO;
+import com.qintess.GerDemanda.service.dto.HistoricoUsuarioDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
+import com.qintess.GerDemanda.service.mapper.HistoricoUsuarioMapper;
 import com.qintess.GerDemanda.service.mapper.UsuarioMapper;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,13 @@ public class UsuarioService {
     UsuarioRepository usuarioRepository;
 
     @Autowired
+    HistoricoRepository historicoRepository;
+
+    @Autowired
     private UsuarioMapper usuarioMapper;
+
+    @Autowired
+    private HistoricoUsuarioMapper historicoMapper;
 
 
     public UsuarioDTO getUsuarioByRe(String re) {
@@ -68,6 +76,11 @@ public class UsuarioService {
         return usuarioRepository.findByOrderByNomeAsc().stream().map(obj -> usuarioToDTO(obj)).collect(Collectors.toList());
     }
 
+    public List<HistoricoUsuarioDTO> getListaHistorico() {
+        return historicoRepository.findAll().stream().map(obj -> historicoToDTO(obj)).collect(Collectors.toList());
+    }
+
+
     @Transactional
     public void insereUsuario(UsuarioDTO dto) {
         validacao(dto);
@@ -90,8 +103,6 @@ public class UsuarioService {
         }
     }
 
-
-
     @Transactional
     public void updateUsuario(Integer id, UsuarioDTO dto) {
         dto.setId(id);
@@ -103,7 +114,8 @@ public class UsuarioService {
 
     @Transactional
     public void atualizaFuncao(Integer idUsuario, FuncaoDTO dto) {
-        usuarioRepository.updateFuncao(dto.getCargo(), dto.getBu(),dto.getTipo(),idUsuario);
+        usuarioRepository.updateFuncao(dto.getCargo().getId(), dto.getBu().getId(),dto.getTipo().getId(),idUsuario);
+
     }
 
     private void usuarioMapperUpdate(UsuarioDTO dto, Usuario objOld) {
@@ -144,6 +156,11 @@ public class UsuarioService {
 
     private UsuarioDTO usuarioToDTO(Usuario obj) {
         UsuarioDTO dto = usuarioMapper.toDto(obj);
+        return dto;
+    }
+
+    private HistoricoUsuarioDTO historicoToDTO(HistoricoUsuario obj) {
+        HistoricoUsuarioDTO dto = historicoMapper.toDto(obj);
         return dto;
     }
 

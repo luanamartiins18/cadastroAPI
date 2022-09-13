@@ -20,7 +20,6 @@ import java.util.Date;
 public class HistoricoUsuarioDTO {
     private Integer id;
 
-    @NotNull(message = "O campo data inicio é obrigatório!")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date data_inicio;
 

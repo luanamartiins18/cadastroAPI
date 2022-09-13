@@ -5,7 +5,6 @@ import com.qintess.GerDemanda.model.*;
 import com.qintess.GerDemanda.service.*;
 import com.qintess.GerDemanda.service.dto.*;
 import com.qintess.GerDemanda.service.mapper.CargoMapper;
-import com.qintess.GerDemanda.service.mapper.UsuarioMapper;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,8 +28,7 @@ public class UsuarioController {
     @Autowired
     HistoricoUsuarioService historicoUsuarioService;
 
-    @Autowired
-    HistoricoUsuarioDTO historicoUsuarioDTO;
+
 
     @Autowired
     CargoService cargoService;
@@ -38,8 +36,7 @@ public class UsuarioController {
     @Autowired
     CargoMapper cargoMapper;
 
-    @Autowired
-    UsuarioMapper usuarioMapper;
+
 
     @Autowired
     UsuarioRepository usuarioRepository;
@@ -68,6 +65,12 @@ public class UsuarioController {
     ResponseEntity<List<UsuarioDTO>> getListaUsuarios() {
         List<UsuarioDTO> listausuario = usuarioService.getListaUsuarios();
         return (listausuario.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listausuario);
+    }
+
+    @GetMapping("/historico")
+    ResponseEntity<List<HistoricoUsuarioDTO>> getListaHistorico() {
+        List<HistoricoUsuarioDTO> listahistorico = usuarioService.getListaHistorico();
+        return (listahistorico.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listahistorico);
     }
 
 
@@ -131,7 +134,6 @@ public class UsuarioController {
         //Cargo cargo = cargoMapper.toEntity(dto.getCargo());
         //historicoUsuarioService.alteraDataFinal(id, dt);
         historicoUsuario.setData_inicio(dt);
-        historicoUsuario.setData_final(dt);
        // historicoUsuario.setCargo(cargo);
         historicoUsuario.setUsuario(usuario);
         //historicoUsuarioService.insereHistoricoUsuario(historicoUsuario);

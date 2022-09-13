@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Builder
 public class FuncaoDTO {
+    private Integer id;
 
     private TipoDTO tipo;
 
@@ -22,6 +23,6 @@ public class FuncaoDTO {
     private CargoDTO cargo;
 
     @NotNull(message = "O campo codigoRe é obrigatório!")
-    @Length(min=6,max=12, message = "O campo Matrciula precisa ter no máximo 8 caracteres.")
+    @Length(min=6,max=12, message = "O campo Matricula precisa ter no máximo 8 caracteres.")
     private String codigoRe;
 }
