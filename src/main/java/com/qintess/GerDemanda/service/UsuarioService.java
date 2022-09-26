@@ -30,6 +30,7 @@ public class UsuarioService {
     @Autowired
     HistoricoRepository historicoRepository;
 
+
     @Autowired
     private UsuarioMapper usuarioMapper;
 
@@ -77,8 +78,9 @@ public class UsuarioService {
     }
 
     public List<HistoricoUsuarioDTO> getListaHistorico() {
-        return historicoRepository.findAll().stream().map(obj -> historicoToDTO(obj)).collect(Collectors.toList());
+        return  historicoRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoToDTO(obj)).collect(Collectors.toList());
     }
+
 
 
     @Transactional
@@ -161,7 +163,7 @@ public class UsuarioService {
 
     private HistoricoUsuarioDTO historicoToDTO(HistoricoUsuario obj) {
         HistoricoUsuarioDTO dto = historicoMapper.toDto(obj);
+        dto.setVigente(obj.getVigente());
         return dto;
     }
-
 }

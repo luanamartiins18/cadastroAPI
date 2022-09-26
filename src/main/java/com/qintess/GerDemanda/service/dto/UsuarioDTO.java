@@ -53,6 +53,7 @@ public class UsuarioDTO {
     @NotNull(message = "O campo cep é obrigatório!")
     private String cep;
 
+    @NotNull(message = "O campo complemento é obrigatório!")
     private String complemento;
 
     @NotNull(message = "O campo Celular é obrigatório!")

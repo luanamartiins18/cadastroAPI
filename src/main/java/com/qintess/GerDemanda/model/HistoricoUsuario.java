@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.time.DateTimeException;
 import java.util.Date;
 
 @Entity
@@ -22,12 +23,14 @@ public class HistoricoUsuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Integer id;
-
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date data_inicio;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date data_final;
+
+    @Column
+    private String vigente;
 
     @JsonBackReference
     @ManyToOne
@@ -39,4 +42,12 @@ public class HistoricoUsuario {
     @JoinColumn(name = "fk_usuario")
     private Usuario usuario;
 
+
+    public String getVigente() {
+        return vigente;
+    }
+
+    public void setVigente(String vigente) {
+        this.vigente = vigente;
+    }
 }

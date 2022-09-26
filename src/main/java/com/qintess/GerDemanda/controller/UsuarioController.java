@@ -5,6 +5,7 @@ import com.qintess.GerDemanda.model.*;
 import com.qintess.GerDemanda.service.*;
 import com.qintess.GerDemanda.service.dto.*;
 import com.qintess.GerDemanda.service.mapper.CargoMapper;
+import  com.qintess.GerDemanda.service.mapper.UsuarioMapper;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,15 +29,14 @@ public class UsuarioController {
     @Autowired
     HistoricoUsuarioService historicoUsuarioService;
 
-
+    @Autowired
+    UsuarioMapper usuarioMapper;
 
     @Autowired
     CargoService cargoService;
 
     @Autowired
     CargoMapper cargoMapper;
-
-
 
     @Autowired
     UsuarioRepository usuarioRepository;
@@ -73,6 +73,19 @@ public class UsuarioController {
         return (listahistorico.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listahistorico);
     }
 
+    @GetMapping("/historico/{re}")
+    ResponseEntity<List<HistoricoUsuarioDTO>> getListaHistoricoComRe(@PathVariable String re) {
+        Usuario usuario = usuarioMapper.toEntity(usuarioService.getUsuarioByRe(re));
+        List<HistoricoUsuarioDTO> listahistorico = historicoUsuarioService.findByUsuarioOrderByDataInicioDesc(usuario.getId());
+        return (listahistorico.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listahistorico);
+    }
+
+
+    @DeleteMapping("/historico/id}")
+    public ResponseEntity<?> deleteHistorico(@PathVariable Integer id) {
+        historicoUsuarioService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 
     @GetMapping("/usuario/{re}/cargo")
     ResponseEntity<CargoDTO> getCargoUsuarioByRe(@PathVariable String re) {
@@ -102,13 +115,7 @@ public class UsuarioController {
     @PostMapping(value = "/usuarios")
     public ResponseEntity<String> insereUsuario(@Valid @RequestBody UsuarioDTO dto) {
         usuarioService.insereUsuario(dto);
-        Usuario usuario = usuarioRepository.findFirstByCodigoRe(dto.getCodigoRe());
-        //Cargo cargo = cargoMapper.toEntity(dto.getCargo());
-        Date dt = new Date();
-        historicoUsuario.setData_inicio(dt);
-        //historicoUsuario.setCargo(cargo);
-        historicoUsuario.setUsuario(usuario);
-        //historicoUsuarioService.insereHistoricoUsuario(historicoUsuario);
+        historicoUsuario.setVigente("Sim");
         return ResponseEntity.ok().build();
     }
 
@@ -118,8 +125,15 @@ public class UsuarioController {
         usuarioService.atualizaFuncao(usuario.getId(), dto);
         Cargo cargo = cargoMapper.toEntity(dto.getCargo());
         Date dt = new Date();
+        //Atualizar historico anterior
+        HistoricoUsuario historico = historicoUsuarioService.findUltimoHistoricoByUsuario(usuario.getId());
+        if(historico != null) {
+            historicoUsuarioService.updateUltimoHistorico(dt, "Não", historico.getId());
+        }
+        //Insere novo historico
         historicoUsuario.setData_inicio(dt);
         historicoUsuario.setCargo(cargo);
+        historicoUsuario.setVigente("Sim");
         historicoUsuario.setUsuario(usuario);
         historicoUsuarioService.insereHistoricoUsuario(historicoUsuario);
         return ResponseEntity.ok().build();
@@ -131,12 +145,9 @@ public class UsuarioController {
         usuarioService.updateUsuario(id, dto);
         Date dt = new Date();
         Usuario usuario = usuarioService.findById(id);
-        //Cargo cargo = cargoMapper.toEntity(dto.getCargo());
-        //historicoUsuarioService.alteraDataFinal(id, dt);
         historicoUsuario.setData_inicio(dt);
-       // historicoUsuario.setCargo(cargo);
+        historicoUsuario.setVigente("Sim");
         historicoUsuario.setUsuario(usuario);
-        //historicoUsuarioService.insereHistoricoUsuario(historicoUsuario);
         return ResponseEntity.ok().build();
     }
 
