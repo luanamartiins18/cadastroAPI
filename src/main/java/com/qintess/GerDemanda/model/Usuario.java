@@ -86,4 +86,24 @@ public class Usuario {
     @JoinColumn(name = "fk_bu")
     private Bu bu;
 
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_demanda")
+    private Demanda demanda;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_operacao")
+    private Operacao operacao;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_cliente")
+    private Cliente cliente;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_centro")
+    private CentroCusto centro;
+
 }

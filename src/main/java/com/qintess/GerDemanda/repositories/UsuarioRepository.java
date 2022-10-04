@@ -22,6 +22,20 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     )
      void updateFuncao(Integer idCargo, Integer idBu, Integer idTipo, Integer idUsuario);
 
+    @Modifying
+    @Query(
+            value = "UPDATE usuario SET fk_operacao = ?1, fk_cliente = ?2, fk_demanda = ?3, fk_centro = ?4 WHERE id = ?5",
+            nativeQuery = true
+    )
+    void updateContrato(Integer idOperacao, Integer idCliente, Integer idDemanda, Integer idCentro, Integer idUsuario);
+
+
+    @Query(
+            value = "SELECT * FROM usuario WHERE fk_operacao = ?1",
+            nativeQuery = true
+    )
+    List<Usuario> listarUsuarioPorOperacao(Integer idOperacao);
+
     Usuario findFirstByEmailAndIdNot(String email, Integer id);
 
     Usuario findFirstByCpfAndIdNot(String cpf, Integer id);

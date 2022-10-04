@@ -3,6 +3,7 @@ package com.qintess.GerDemanda.service;
 import com.qintess.GerDemanda.model.*;
 import com.qintess.GerDemanda.repositories.HistoricoRepository;
 import com.qintess.GerDemanda.repositories.UsuarioRepository;
+import com.qintess.GerDemanda.service.dto.ContratoDTO;
 import com.qintess.GerDemanda.service.dto.FuncaoDTO;
 import com.qintess.GerDemanda.service.dto.HistoricoUsuarioDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
@@ -77,6 +78,10 @@ public class UsuarioService {
         return usuarioRepository.findByOrderByNomeAsc().stream().map(obj -> usuarioToDTO(obj)).collect(Collectors.toList());
     }
 
+    public List<UsuarioDTO> getListaUsuariosPorOperacao(Integer idOperacao) {
+        return usuarioRepository.listarUsuarioPorOperacao(idOperacao).stream().map(obj -> usuarioToDTO(obj)).collect(Collectors.toList());
+    }
+
     public List<HistoricoUsuarioDTO> getListaHistorico() {
         return  historicoRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoToDTO(obj)).collect(Collectors.toList());
     }
@@ -120,6 +125,14 @@ public class UsuarioService {
 
     }
 
+    @Transactional
+    public void atualizaContrato(Integer idUsuario, ContratoDTO dto) {
+        System.out.println(idUsuario);
+        System.out.println(dto);
+        usuarioRepository.updateContrato(dto.getOperacao().getId(), dto.getCliente().getId(),dto.getDemanda().getId(),dto.getCentro().getId(),idUsuario);
+
+    }
+
     private void usuarioMapperUpdate(UsuarioDTO dto, Usuario objOld) {
         Usuario objNew = usuarioMapper.toEntity(dto);
         objOld.setNome(objNew.getNome().toUpperCase());
@@ -140,6 +153,10 @@ public class UsuarioService {
         objOld.setUf(objNew.getUf());
         objOld.setTipo(objNew.getTipo());
         objOld.setBu(objNew.getBu());
+        objOld.setDemanda(objNew.getDemanda());
+        objOld.setCliente(objNew.getCliente());
+        objOld.setOperacao(objNew.getOperacao());
+        objOld.setCentro(objNew.getCentro());
     }
 
     public void deleteById(Integer id) {

@@ -1,0 +1,15 @@
+package com.qintess.GerDemanda.repositories;
+
+
+import com.qintess.GerDemanda.model.Operacao;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+
+@Repository
+public interface OperacaoRepository extends JpaRepository<Operacao, Integer> {
+
+    List<Operacao> findByOrderByDescricaoAsc();
+}
