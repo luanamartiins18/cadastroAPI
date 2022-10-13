@@ -1,6 +1,7 @@
 package com.qintess.GerDemanda.repositories;
 
 import com.qintess.GerDemanda.model.HistoricoOperacao;
+import com.qintess.GerDemanda.model.HistoricoUsuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -33,6 +34,12 @@ public interface HistoricoOperacaoRepository extends JpaRepository<HistoricoOper
       )
       void updateUltimoHistoricoOperacao(Date data_final,String vigente,Integer id);
 
+
+      @Query(
+              value = "SELECT * FROM historico_operacao ORDER BY data_inicio DESC",
+              nativeQuery = true
+      )
+      List<HistoricoOperacao> findAllByOrderByDataInicioDesc();
 
       List<HistoricoOperacao> findAll();
 

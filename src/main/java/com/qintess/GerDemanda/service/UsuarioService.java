@@ -1,12 +1,11 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.model.*;
+import com.qintess.GerDemanda.repositories.HistoricoOperacaoRepository;
 import com.qintess.GerDemanda.repositories.HistoricoRepository;
 import com.qintess.GerDemanda.repositories.UsuarioRepository;
-import com.qintess.GerDemanda.service.dto.ContratoDTO;
-import com.qintess.GerDemanda.service.dto.FuncaoDTO;
-import com.qintess.GerDemanda.service.dto.HistoricoUsuarioDTO;
-import com.qintess.GerDemanda.service.dto.UsuarioDTO;
+import com.qintess.GerDemanda.service.dto.*;
+import com.qintess.GerDemanda.service.mapper.HistoricoOperacaoMapper;
 import com.qintess.GerDemanda.service.mapper.HistoricoUsuarioMapper;
 import com.qintess.GerDemanda.service.mapper.UsuarioMapper;
 import org.hibernate.ObjectNotFoundException;
@@ -31,12 +30,18 @@ public class UsuarioService {
     @Autowired
     HistoricoRepository historicoRepository;
 
+    @Autowired
+    HistoricoOperacaoRepository historicoOperacaoRepository;
+
 
     @Autowired
     private UsuarioMapper usuarioMapper;
 
     @Autowired
     private HistoricoUsuarioMapper historicoMapper;
+
+    @Autowired
+    private HistoricoOperacaoMapper historicoOperacaoMapper;
 
 
     public UsuarioDTO getUsuarioByRe(String re) {
@@ -78,6 +83,7 @@ public class UsuarioService {
         return usuarioRepository.findByOrderByNomeAsc().stream().map(obj -> usuarioToDTO(obj)).collect(Collectors.toList());
     }
 
+
     public List<UsuarioDTO> getListaUsuariosPorOperacao(Integer idOperacao) {
         return usuarioRepository.listarUsuarioPorOperacao(idOperacao).stream().map(obj -> usuarioToDTO(obj)).collect(Collectors.toList());
     }
@@ -86,6 +92,9 @@ public class UsuarioService {
         return  historicoRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoToDTO(obj)).collect(Collectors.toList());
     }
 
+    public List<HistoricoOperacaoDTO> getListaHistoricoOperacao() {
+        return  historicoOperacaoRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoOperacaoToDTO(obj)).collect(Collectors.toList());
+    }
 
 
     @Transactional
@@ -183,4 +192,12 @@ public class UsuarioService {
         dto.setVigente(obj.getVigente());
         return dto;
     }
+
+    private HistoricoOperacaoDTO historicoOperacaoToDTO(HistoricoOperacao obj) {
+        HistoricoOperacaoDTO dto = historicoOperacaoMapper.toDto(obj);
+        dto.setVigente(obj.getVigente());
+        return dto;
+    }
+
+
 }

@@ -95,6 +95,13 @@ public class UsuarioController {
         return (listahistorico.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listahistorico);
     }
 
+    @GetMapping("/historicooperacao")
+    ResponseEntity<List<HistoricoOperacaoDTO>> getListaHistoricoOperacao() {
+        List<HistoricoOperacaoDTO> listahistorico = usuarioService.getListaHistoricoOperacao();
+        return (listahistorico.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listahistorico);
+    }
+
+
     @GetMapping("/historicooperacao/{re}")
     ResponseEntity<List<HistoricoOperacaoDTO>> getListaHistoricoOperacaoComRe(@PathVariable String re) {
         Usuario usuario = usuarioMapper.toEntity(usuarioService.getUsuarioByRe(re));
