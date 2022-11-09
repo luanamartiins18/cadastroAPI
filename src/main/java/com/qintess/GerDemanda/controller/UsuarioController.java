@@ -5,6 +5,7 @@ import com.qintess.GerDemanda.model.*;
 import com.qintess.GerDemanda.service.*;
 import com.qintess.GerDemanda.service.dto.*;
 import com.qintess.GerDemanda.service.mapper.CargoMapper;
+import com.qintess.GerDemanda.service.mapper.ModeloMapper;
 import com.qintess.GerDemanda.service.mapper.OperacaoMapper;
 import  com.qintess.GerDemanda.service.mapper.UsuarioMapper;
 import org.json.JSONObject;
@@ -43,11 +44,22 @@ public class UsuarioController {
     OperacaoMapper operacaoMapper;
 
     @Autowired
-    UsuarioRepository usuarioRepository;
+    ModeloMapper modeloMapper;
 
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
     @Autowired
     TipoService tipoService;
+
+    @Autowired
+    ModeloService modeloService;
+
+    @Autowired
+    EquipamentoService equipamentoService;
+
+    @Autowired
+    MemoriaService memoriaService;
 
     @Autowired
     Buservice buService;
@@ -57,6 +69,12 @@ public class UsuarioController {
 
     @Autowired
     HistoricoOperacao historicoOperacao;
+
+    @Autowired
+    HistoricoMaquinas historicoMaquinas;
+
+    @Autowired
+    HistoricoMaquinasService historicoMaquinasService;
 
     @Autowired
     HistoricoOperacaoService historicoOperacaoService;
@@ -110,6 +128,13 @@ public class UsuarioController {
     }
 
 
+    @GetMapping("/historicomaquinas/{re}")
+    ResponseEntity<List<HistoricoMaquinasDTO>> getListaHistoricoMaquinasComRe(@PathVariable String re) {
+        Usuario usuario = usuarioMapper.toEntity(usuarioService.getUsuarioByRe(re));
+        List<HistoricoMaquinasDTO> listahistoricoMaquinas = historicoMaquinasService.findByMaquinasOrderByDataInicioDesc(usuario.getId());
+        return (listahistoricoMaquinas.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listahistoricoMaquinas);
+    }
+
     @DeleteMapping("/historico/{id}")
     public ResponseEntity<?> deleteHistorico(@PathVariable Integer id) {
         historicoUsuarioService.deleteById(id);
@@ -122,16 +147,36 @@ public class UsuarioController {
         return (cargo == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(cargo);
     }
 
+
     @GetMapping("/usuario/{re}/tipo")
     ResponseEntity<TipoDTO> getTipoUsuarioByRe(@PathVariable String re) {
         TipoDTO tipo = tipoService.getTipoUsuarioByRe(re);
         return (tipo == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(tipo);
     }
 
+
     @GetMapping("/usuario/{re}/bu")
     ResponseEntity<BuDTO> getBuUsuarioByRe(@PathVariable String re) {
         BuDTO bu = buService.getBuUsuarioByRe(re);
         return (bu == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(bu);
+    }
+
+    @GetMapping("/usuario/{re}/equipamento")
+    ResponseEntity<EquipamentoDTO> getEquipamentoUsuarioByRe(@PathVariable String re) {
+        EquipamentoDTO equipamento = equipamentoService.getEquipamentoUsuarioByRe(re);
+        return (equipamento == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(equipamento);
+    }
+
+    @GetMapping("/usuario/{re}/modelo")
+    ResponseEntity<ModeloDTO> getModeloUsuarioByRe(@PathVariable String re) {
+        ModeloDTO modelo = modeloService.getModeloUsuarioByRe(re);
+        return (modelo == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(modelo);
+    }
+
+    @GetMapping("/usuario/{re}/memoria")
+    ResponseEntity<MemoriaDTO> getMemoriaUsuarioByRe(@PathVariable String re) {
+        MemoriaDTO memoria = memoriaService.getMemoriaUsuarioByRe(re);
+        return (memoria == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(memoria);
     }
 
     @GetMapping("/usuarios/{id}")
@@ -188,6 +233,25 @@ public class UsuarioController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping(value = "/maquinas")
+    public ResponseEntity<String> insereMaquinas(@Valid @RequestBody MaquinasDTO dto) {
+        Usuario usuario = usuarioRepository.findFirstByCodigoRe(dto.getCodigoRe());
+        usuarioService.atualizaMaquinas(usuario.getId(), dto);
+        Modelo modelo = modeloMapper.toEntity(dto.getModelo());
+        Date dt = new Date();
+        //Atualizar historico anterior
+        HistoricoMaquinas historico = historicoMaquinasService.findUltimoHistoricoByMaquinas(usuario.getId());
+        if(historico != null) {
+            historicoMaquinasService.updateUltimoHistoricoMaquinas(dt, "Não", historico.getId());
+        }
+        //Insere novo historico
+        historicoMaquinas.setData_inicio(dt);
+        historicoMaquinas.setModelo(modelo);
+        historicoMaquinas.setVigente("Sim");
+        historicoMaquinas.setUsuario(usuario);
+        historicoMaquinasService.insereHistoricoMaquinas(historicoMaquinas);
+        return ResponseEntity.ok().build();
+    }
 
     @PutMapping(value = "/usuarios/{id}")
     public ResponseEntity<String> atualizaUsuario (@PathVariable Integer id, @Valid @RequestBody UsuarioDTO dto) {

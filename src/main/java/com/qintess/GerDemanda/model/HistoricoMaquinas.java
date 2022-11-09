@@ -6,7 +6,6 @@ import lombok.*;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import java.time.DateTimeException;
 import java.util.Date;
 
 @Entity
@@ -15,9 +14,9 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "historico_usuario")
+@Table(name = "historico_maquinas")
 @Component
-public class HistoricoUsuario {
+public class HistoricoMaquinas {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,20 +34,11 @@ public class HistoricoUsuario {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "fk_cargo")
-    private Cargo cargo;
+    @JoinColumn(name = "fk_modelo")
+    private Modelo modelo;
 
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "fk_usuario")
     private Usuario usuario;
-
-
-    public String getVigente() {
-        return vigente;
-    }
-
-    public void setVigente(String vigente) {
-        this.vigente = vigente;
-    }
 }

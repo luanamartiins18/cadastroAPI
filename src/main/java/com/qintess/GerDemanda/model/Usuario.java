@@ -62,6 +62,12 @@ public class Usuario {
     @Column
     private String uf;
 
+    @Column
+    private String tag;
+
+    @Column
+    private String patrimonio;
+
 
     @Column(name = "codigo_re")
     private String codigoRe;
@@ -86,6 +92,8 @@ public class Usuario {
     @JoinColumn(name = "fk_bu")
     private Bu bu;
 
+
+
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "fk_demanda")
@@ -105,5 +113,22 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "fk_centro")
     private CentroCusto centro;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_equipamento")
+    private Equipamento equipamento;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_modelo")
+    private Modelo modelo;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_memoria")
+    private Memoria memoria;
+
+
 
 }

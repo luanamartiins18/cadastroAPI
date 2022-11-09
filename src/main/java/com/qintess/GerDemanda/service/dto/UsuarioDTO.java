@@ -1,11 +1,6 @@
 package com.qintess.GerDemanda.service.dto;
 
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.qintess.GerDemanda.model.Cliente;
-import com.qintess.GerDemanda.model.Demanda;
-import com.qintess.GerDemanda.model.Operacao;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,8 +8,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -96,5 +89,11 @@ public class UsuarioDTO {
     private ClienteDTO cliente;
 
     private CentroCustoDTO centro;
+
+    private EquipamentoDTO equipamento;
+
+    private ModeloDTO modelo;
+
+    private MemoriaDTO memoria;
 
 }

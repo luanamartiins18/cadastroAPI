@@ -1,10 +1,12 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.model.*;
+import com.qintess.GerDemanda.repositories.HistoricoMaquinasRepository;
 import com.qintess.GerDemanda.repositories.HistoricoOperacaoRepository;
 import com.qintess.GerDemanda.repositories.HistoricoRepository;
 import com.qintess.GerDemanda.repositories.UsuarioRepository;
 import com.qintess.GerDemanda.service.dto.*;
+import com.qintess.GerDemanda.service.mapper.HistoricoMaquinasMapper;
 import com.qintess.GerDemanda.service.mapper.HistoricoOperacaoMapper;
 import com.qintess.GerDemanda.service.mapper.HistoricoUsuarioMapper;
 import com.qintess.GerDemanda.service.mapper.UsuarioMapper;
@@ -33,6 +35,9 @@ public class UsuarioService {
     @Autowired
     HistoricoOperacaoRepository historicoOperacaoRepository;
 
+    @Autowired
+    HistoricoMaquinasRepository historicoMaquinasRepository;
+
 
     @Autowired
     private UsuarioMapper usuarioMapper;
@@ -42,6 +47,9 @@ public class UsuarioService {
 
     @Autowired
     private HistoricoOperacaoMapper historicoOperacaoMapper;
+
+    @Autowired
+    private HistoricoMaquinasMapper historicoMaquinasMapper;
 
 
     public UsuarioDTO getUsuarioByRe(String re) {
@@ -83,7 +91,6 @@ public class UsuarioService {
         return usuarioRepository.findByOrderByNomeAsc().stream().map(obj -> usuarioToDTO(obj)).collect(Collectors.toList());
     }
 
-
     public List<UsuarioDTO> getListaUsuariosPorOperacao(Integer idOperacao) {
         return usuarioRepository.listarUsuarioPorOperacao(idOperacao).stream().map(obj -> usuarioToDTO(obj)).collect(Collectors.toList());
     }
@@ -96,9 +103,12 @@ public class UsuarioService {
         return  historicoOperacaoRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoOperacaoToDTO(obj)).collect(Collectors.toList());
     }
 
-
+    public List<HistoricoMaquinasDTO> getListaHistoricoMaquinas() {
+        return  historicoMaquinasRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoMaquinasToDTO(obj)).collect(Collectors.toList());
+    }
     @Transactional
-    public void insereUsuario(UsuarioDTO dto) {
+    public void
+    insereUsuario(UsuarioDTO dto) {
         validacao(dto);
         Usuario obj = usuarioMapper.toEntity(dto);
         obj.setNome(obj.getNome().toUpperCase());
@@ -131,15 +141,18 @@ public class UsuarioService {
     @Transactional
     public void atualizaFuncao(Integer idUsuario, FuncaoDTO dto) {
         usuarioRepository.updateFuncao(dto.getCargo().getId(), dto.getBu().getId(),dto.getTipo().getId(),idUsuario);
-
     }
 
     @Transactional
     public void atualizaContrato(Integer idUsuario, ContratoDTO dto) {
+        usuarioRepository.updateContrato(dto.getOperacao().getId(), dto.getCliente().getId(),dto.getDemanda().getId(),dto.getCentro().getId(),idUsuario);
+    }
+
+    @Transactional
+    public void atualizaMaquinas(Integer idUsuario, MaquinasDTO dto) {
         System.out.println(idUsuario);
         System.out.println(dto);
-        usuarioRepository.updateContrato(dto.getOperacao().getId(), dto.getCliente().getId(),dto.getDemanda().getId(),dto.getCentro().getId(),idUsuario);
-
+        usuarioRepository.updateMaquinas(dto.getModelo().getId(), dto.getEquipamento().getId(),dto.getMemoria().getId(), dto.getTag(), dto.getPatrimonio(),  idUsuario);
     }
 
     private void usuarioMapperUpdate(UsuarioDTO dto, Usuario objOld) {
@@ -166,6 +179,9 @@ public class UsuarioService {
         objOld.setCliente(objNew.getCliente());
         objOld.setOperacao(objNew.getOperacao());
         objOld.setCentro(objNew.getCentro());
+        objOld.setEquipamento(objNew.getEquipamento());
+        objOld.setModelo(objNew.getModelo());
+        objOld.setMemoria(objNew.getMemoria());
     }
 
     public void deleteById(Integer id) {
@@ -198,6 +214,10 @@ public class UsuarioService {
         dto.setVigente(obj.getVigente());
         return dto;
     }
-
+    private HistoricoMaquinasDTO historicoMaquinasToDTO(HistoricoMaquinas obj) {
+        HistoricoMaquinasDTO dto = historicoMaquinasMapper.toDto(obj);
+        dto.setVigente(obj.getVigente());
+        return dto;
+    }
 
 }

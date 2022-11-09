@@ -1,7 +1,6 @@
 package com.qintess.GerDemanda.repositories;
 
 
-import com.qintess.GerDemanda.model.HistoricoUsuario;
 import com.qintess.GerDemanda.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -29,6 +28,13 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     )
     void updateContrato(Integer idOperacao, Integer idCliente, Integer idDemanda, Integer idCentro, Integer idUsuario);
 
+    @Modifying
+    @Query(
+            value = "UPDATE usuario SET fk_modelo = ?1, fk_equipamento = ?2, fk_memoria = ?3, tag = ?4, patrimonio = ?5 WHERE id = ?6",
+            nativeQuery = true
+    )
+    void updateMaquinas(Integer idModelo, Integer idEquipamento, Integer idMemoria, String Patrimonio, String tag,  Integer idUsuario);
+
 
     @Query(
             value = "SELECT * FROM usuario WHERE fk_operacao = ?1",
@@ -47,6 +53,4 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     Usuario findFirstByCodigoReAndIdNot(String re, Integer id);
 
     Usuario findFirstByCodigoRe(String re);
-
-
 }

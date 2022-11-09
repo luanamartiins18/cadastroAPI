@@ -1,8 +1,5 @@
 package com.qintess.GerDemanda.service.dto;
 
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+
 
 @Data
 @AllArgsConstructor
