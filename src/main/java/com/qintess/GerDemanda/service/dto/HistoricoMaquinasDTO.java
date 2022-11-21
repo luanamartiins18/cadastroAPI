@@ -30,9 +30,15 @@ public class HistoricoMaquinasDTO {
     @NotNull(message = "O campo usuario é obrigatório!")
     private UsuarioDTO usuario;
 
+    private String tag;
+
+    private String patrimonio;
+
     @NotNull(message = "o campo modelo é obrigatorio!")
     private ModeloDTO modelo;
 
+    @NotNull(message = "o campo equipamento é obrigatorio!")
+    private EquipamentoDTO equipamento;
 
     public void setVigente(String vigente) {
         this.vigente = vigente;
@@ -42,4 +48,19 @@ public class HistoricoMaquinasDTO {
         return vigente;
     }
 
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setPatrimonio(String patrimonio) {
+        this.patrimonio = patrimonio;
+    }
+
+    public String getPatrimonio() {
+        return patrimonio;
+    }
 }

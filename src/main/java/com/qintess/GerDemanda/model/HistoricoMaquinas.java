@@ -39,6 +39,14 @@ public class HistoricoMaquinas {
 
     @JsonBackReference
     @ManyToOne
+    @JoinColumn(name = "fk_equipamento")
+    private Equipamento equipamento;
+
+    @JsonBackReference
+    @ManyToOne
     @JoinColumn(name = "fk_usuario")
     private Usuario usuario;
+
+
+
 }

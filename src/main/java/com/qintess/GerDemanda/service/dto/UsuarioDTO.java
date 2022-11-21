@@ -76,6 +76,10 @@ public class UsuarioDTO {
 
     private String status;
 
+    private String tag;
+
+    private String patrimonio;
+
     private TipoDTO tipo;
 
     private BuDTO bu;
@@ -96,4 +100,20 @@ public class UsuarioDTO {
 
     private MemoriaDTO memoria;
 
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setPatrimonio(String patrimonio) {
+        this.patrimonio = patrimonio;
+    }
+
+    public String getPatrimonio() {
+        return patrimonio;
+    }
 }

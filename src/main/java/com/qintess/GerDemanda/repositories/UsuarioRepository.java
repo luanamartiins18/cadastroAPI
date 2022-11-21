@@ -53,4 +53,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     Usuario findFirstByCodigoReAndIdNot(String re, Integer id);
 
     Usuario findFirstByCodigoRe(String re);
+
+
 }

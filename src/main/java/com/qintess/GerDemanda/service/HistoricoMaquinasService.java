@@ -36,6 +36,7 @@ public class HistoricoMaquinasService {
         usuario.setData_inicio(obj.getData_inicio());
         usuario.setVigente(obj.getVigente());
         usuario.setModelo(obj.getModelo());
+        usuario.setEquipamento(obj.getEquipamento());
         usuario.setUsuario(obj.getUsuario());
         historicoMaquinasRepository.save(usuario);
     }

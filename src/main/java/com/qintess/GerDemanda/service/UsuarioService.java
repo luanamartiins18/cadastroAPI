@@ -11,6 +11,7 @@ import com.qintess.GerDemanda.service.mapper.HistoricoOperacaoMapper;
 import com.qintess.GerDemanda.service.mapper.HistoricoUsuarioMapper;
 import com.qintess.GerDemanda.service.mapper.UsuarioMapper;
 import org.hibernate.ObjectNotFoundException;
+import org.hibernate.loader.collection.OneToManyJoinWalker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,10 +52,18 @@ public class UsuarioService {
     @Autowired
     private HistoricoMaquinasMapper historicoMaquinasMapper;
 
+    public UsuarioDTO newUsuarioMapper(Usuario usuario){
+        UsuarioDTO usuarioDTO = usuarioMapper.toDto(usuario);
+        usuarioDTO.setTag(usuario.getTag());
+        usuarioDTO.setPatrimonio(usuario.getPatrimonio());
+        return usuarioDTO;
+    }
 
     public UsuarioDTO getUsuarioByRe(String re) {
-        return usuarioMapper.toDto(usuarioRepository.findFirstByCodigoRe(re));
+       // return usuarioMapper.toDto(usuarioRepository.findFirstByCodigoRe(re));]
+        return this.newUsuarioMapper(usuarioRepository.findFirstByCodigoRe(re));
     }
+
 
     public UsuarioDTO getUsuarioByRE(String re, Integer id) {
         return usuarioMapper.toDto(usuarioRepository.findFirstByCodigoReAndIdNot(re, id));
@@ -150,10 +159,9 @@ public class UsuarioService {
 
     @Transactional
     public void atualizaMaquinas(Integer idUsuario, MaquinasDTO dto) {
-        System.out.println(idUsuario);
-        System.out.println(dto);
         usuarioRepository.updateMaquinas(dto.getModelo().getId(), dto.getEquipamento().getId(),dto.getMemoria().getId(), dto.getTag(), dto.getPatrimonio(),  idUsuario);
     }
+
 
     private void usuarioMapperUpdate(UsuarioDTO dto, Usuario objOld) {
         Usuario objNew = usuarioMapper.toEntity(dto);
@@ -182,6 +190,8 @@ public class UsuarioService {
         objOld.setEquipamento(objNew.getEquipamento());
         objOld.setModelo(objNew.getModelo());
         objOld.setMemoria(objNew.getMemoria());
+        objOld.setTag(objNew.getTag());
+        objOld.setPatrimonio(objNew.getPatrimonio());
     }
 
     public void deleteById(Integer id) {
@@ -200,6 +210,8 @@ public class UsuarioService {
 
     private UsuarioDTO usuarioToDTO(Usuario obj) {
         UsuarioDTO dto = usuarioMapper.toDto(obj);
+        dto.setTag(obj.getTag());
+        dto.setPatrimonio(obj.getPatrimonio());
         return dto;
     }
 
