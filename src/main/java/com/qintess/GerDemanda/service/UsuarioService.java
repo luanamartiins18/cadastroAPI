@@ -11,7 +11,7 @@ import com.qintess.GerDemanda.service.mapper.HistoricoOperacaoMapper;
 import com.qintess.GerDemanda.service.mapper.HistoricoUsuarioMapper;
 import com.qintess.GerDemanda.service.mapper.UsuarioMapper;
 import org.hibernate.ObjectNotFoundException;
-import org.hibernate.loader.collection.OneToManyJoinWalker;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

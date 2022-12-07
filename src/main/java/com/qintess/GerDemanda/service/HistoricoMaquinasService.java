@@ -30,10 +30,11 @@ public class HistoricoMaquinasService {
 
     @Transactional
     public void insereHistoricoMaquinas(HistoricoMaquinas obj) {
-        System.out.println(obj.getData_inicio());
         HistoricoMaquinas usuario = new HistoricoMaquinas();
         usuario.setData_final(obj.getData_final());
         usuario.setData_inicio(obj.getData_inicio());
+        usuario.setTag(obj.getTag());
+        usuario.setPatrimonio(obj.getPatrimonio());
         usuario.setVigente(obj.getVigente());
         usuario.setModelo(obj.getModelo());
         usuario.setEquipamento(obj.getEquipamento());

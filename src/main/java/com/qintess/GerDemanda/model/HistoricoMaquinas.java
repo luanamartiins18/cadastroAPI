@@ -32,6 +32,12 @@ public class HistoricoMaquinas {
     @Column
     private String vigente;
 
+    @Column
+    private String patrimonio;
+
+    @Column
+    private String tag;
+
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "fk_modelo")
@@ -46,7 +52,5 @@ public class HistoricoMaquinas {
     @ManyToOne
     @JoinColumn(name = "fk_usuario")
     private Usuario usuario;
-
-
 
 }

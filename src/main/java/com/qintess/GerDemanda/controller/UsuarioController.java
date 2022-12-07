@@ -247,19 +247,34 @@ public class UsuarioController {
         Equipamento equipamento = equipamentoMapper.toEntity(dto.getEquipamento());
         Date dt = new Date();
         //Atualizar historico anterior
-        HistoricoMaquinas historico = historicoMaquinasService.findUltimoHistoricoByMaquinas(usuario.getId());
-        if(historico != null) {
-            historicoMaquinasService.updateUltimoHistoricoMaquinas(dt, "Não", historico.getId());
-        }
-        //Insere novo historico
-        historicoMaquinas.setData_inicio(dt);
+        historicoMaquinas.setData_inicio(dto.getData_inicio());
         historicoMaquinas.setModelo(modelo);
         historicoMaquinas.setEquipamento(equipamento);
         historicoMaquinas.setVigente("Sim");
+        historicoMaquinas.setPatrimonio(dto.getPatrimonio());
+        historicoMaquinas.setTag(dto.getTag());
         historicoMaquinas.setUsuario(usuario);
         historicoMaquinasService.insereHistoricoMaquinas(historicoMaquinas);
         return ResponseEntity.ok().build();
     }
+
+
+    @PostMapping(value = "/atualizarmaquinas")
+    public ResponseEntity<String> utualizarMaquinas(@Valid @RequestBody MaquinasDTO dto) {
+        Usuario usuario = usuarioRepository.findFirstByCodigoRe(dto.getCodigoRe());
+        usuarioService.atualizaMaquinas(usuario.getId(), dto);
+        Modelo modelo = modeloMapper.toEntity(dto.getModelo());
+        Equipamento equipamento = equipamentoMapper.toEntity(dto.getEquipamento());
+        Date dt = new Date();
+        //Atualizar historico anterior
+        HistoricoMaquinas historico = historicoMaquinasService.findUltimoHistoricoByMaquinas(usuario.getId());
+        if(historico != null) {
+            historicoMaquinasService.updateUltimoHistoricoMaquinas(dto.getData_final(), "Não", historico.getId());
+        }
+        return ResponseEntity.ok().build();
+    }
+
+
 
     @PutMapping(value = "/usuarios/{id}")
     public ResponseEntity<String> atualizaUsuario (@PathVariable Integer id, @Valid @RequestBody UsuarioDTO dto) {

@@ -19,8 +19,10 @@ import java.util.Date;
 public class HistoricoMaquinasDTO {
     private Integer id;
 
+    @NotNull(message = "O campo Data inicio é obrigatório!")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date data_inicio;
+
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date data_final;
