@@ -42,6 +42,10 @@ public class HistoricoMaquinasDTO {
     @NotNull(message = "o campo equipamento é obrigatorio!")
     private EquipamentoDTO equipamento;
 
+    @NotNull(message = "o campo memoria é obrigatorio!")
+    private MemoriaDTO memoria;
+
+
     public void setVigente(String vigente) {
         this.vigente = vigente;
     }

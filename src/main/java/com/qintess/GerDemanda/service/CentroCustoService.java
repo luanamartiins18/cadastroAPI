@@ -1,6 +1,6 @@
 package com.qintess.GerDemanda.service;
 
-import com.qintess.GerDemanda.repositories.CentroCustoRepository;
+import com.qintess.GerDemanda.service.mapper.repositories.CentroCustoRepository;
 import com.qintess.GerDemanda.service.dto.CentroCustoDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
 import com.qintess.GerDemanda.service.mapper.CentroCustoMapper;

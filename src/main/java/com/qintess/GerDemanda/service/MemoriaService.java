@@ -1,7 +1,6 @@
 package com.qintess.GerDemanda.service;
 
-import com.qintess.GerDemanda.repositories.MemoriaRepository;
-import com.qintess.GerDemanda.service.dto.EquipamentoDTO;
+import com.qintess.GerDemanda.service.mapper.repositories.MemoriaRepository;
 import com.qintess.GerDemanda.service.dto.MemoriaDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
 import com.qintess.GerDemanda.service.mapper.MemoriaMapper;

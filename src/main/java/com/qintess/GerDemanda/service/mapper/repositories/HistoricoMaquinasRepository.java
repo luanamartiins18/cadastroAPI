@@ -1,4 +1,4 @@
-package com.qintess.GerDemanda.repositories;
+package com.qintess.GerDemanda.service.mapper.repositories;
 
 import com.qintess.GerDemanda.model.HistoricoMaquinas;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,10 +28,10 @@ public interface HistoricoMaquinasRepository extends JpaRepository<HistoricoMaqu
 
         @Modifying
         @Query(
-                value = "UPDATE historico_maquinas SET data_final = ?1, vigente = ?2 WHERE id = ?3",
+                value = "UPDATE historico_maquinas SET data_inicio = ?1, data_final = ?2, vigente = ?3 WHERE id = ?4",
                 nativeQuery = true
         )
-        void updateUltimoHistoricoMaquinas(Date data_final, String vigente, Integer id);
+        void updateUltimoHistoricoMaquinas(Date data_inicio, Date data_final, String vigente, Integer id);
 
 
         @Query(

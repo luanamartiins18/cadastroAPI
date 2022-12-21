@@ -1,4 +1,4 @@
-package com.qintess.GerDemanda.repositories;
+package com.qintess.GerDemanda.service.mapper.repositories;
 
 import com.qintess.GerDemanda.model.Equipamento;
 import org.springframework.data.jpa.repository.JpaRepository;

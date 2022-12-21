@@ -1,10 +1,9 @@
 package com.qintess.GerDemanda.service;
 
-import com.qintess.GerDemanda.repositories.ModeloRepository;
+import com.qintess.GerDemanda.service.mapper.repositories.ModeloRepository;
 
 import java.util.List;
 
-import com.qintess.GerDemanda.service.dto.MemoriaDTO;
 import com.qintess.GerDemanda.service.dto.ModeloDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
 import com.qintess.GerDemanda.service.mapper.ModeloMapper;

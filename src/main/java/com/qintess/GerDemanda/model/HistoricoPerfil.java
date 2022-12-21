@@ -1,6 +1,5 @@
 package com.qintess.GerDemanda.model;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.springframework.stereotype.Component;
@@ -14,9 +13,9 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "historico_maquinas")
+@Table(name = "historico_perfil")
 @Component
-public class HistoricoMaquinas {
+public class HistoricoPerfil {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,30 +31,22 @@ public class HistoricoMaquinas {
     @Column
     private String vigente;
 
-    @Column
-    private String patrimonio;
-
-    @Column
-    private String tag;
-
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "fk_modelo")
-    private Modelo modelo;
-
-    @JsonBackReference
-    @ManyToOne
-    @JoinColumn(name = "fk_equipamento")
-    private Equipamento equipamento;
-
-    @JsonBackReference
-    @ManyToOne
-    @JoinColumn(name = "fk_memoria")
-    private Memoria memoria;
+    @JoinColumn(name = "fk_perfil")
+    private Perfil perfil;
 
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "fk_usuario")
     private Usuario usuario;
 
+
+    public String getVigente() {
+        return vigente;
+    }
+
+    public void setVigente(String vigente) {
+        this.vigente = vigente;
+    }
 }

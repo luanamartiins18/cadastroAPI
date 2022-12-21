@@ -1,10 +1,7 @@
 package com.qintess.GerDemanda.service;
 
-import com.qintess.GerDemanda.repositories.ClienteRepository;
-import com.qintess.GerDemanda.service.dto.BuDTO;
+import com.qintess.GerDemanda.service.mapper.repositories.ClienteRepository;
 import com.qintess.GerDemanda.service.dto.ClienteDTO;
-import com.qintess.GerDemanda.service.dto.ContratoDTO;
-import com.qintess.GerDemanda.service.dto.UsuarioDTO;
 import com.qintess.GerDemanda.service.mapper.ClienteMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

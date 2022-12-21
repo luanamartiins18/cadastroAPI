@@ -1,9 +1,7 @@
 package com.qintess.GerDemanda.service;
 
-import com.qintess.GerDemanda.repositories.EquipamentoRepository;
-import com.qintess.GerDemanda.service.dto.BuDTO;
+import com.qintess.GerDemanda.service.mapper.repositories.EquipamentoRepository;
 import com.qintess.GerDemanda.service.dto.EquipamentoDTO;
-import com.qintess.GerDemanda.service.dto.MemoriaDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
 import com.qintess.GerDemanda.service.mapper.EquipamentoMapper;
 import org.springframework.beans.factory.annotation.Autowired;

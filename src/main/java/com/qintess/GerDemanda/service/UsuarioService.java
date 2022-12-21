@@ -1,15 +1,9 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.model.*;
-import com.qintess.GerDemanda.repositories.HistoricoMaquinasRepository;
-import com.qintess.GerDemanda.repositories.HistoricoOperacaoRepository;
-import com.qintess.GerDemanda.repositories.HistoricoRepository;
-import com.qintess.GerDemanda.repositories.UsuarioRepository;
+import com.qintess.GerDemanda.service.mapper.repositories.*;
 import com.qintess.GerDemanda.service.dto.*;
-import com.qintess.GerDemanda.service.mapper.HistoricoMaquinasMapper;
-import com.qintess.GerDemanda.service.mapper.HistoricoOperacaoMapper;
-import com.qintess.GerDemanda.service.mapper.HistoricoUsuarioMapper;
-import com.qintess.GerDemanda.service.mapper.UsuarioMapper;
+import com.qintess.GerDemanda.service.mapper.*;
 import org.hibernate.ObjectNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +27,10 @@ public class UsuarioService {
     @Autowired
     HistoricoRepository historicoRepository;
 
+
+    @Autowired
+    HistoricoPerfilRepository historicoPerfilRepository;
+
     @Autowired
     HistoricoOperacaoRepository historicoOperacaoRepository;
 
@@ -47,10 +45,26 @@ public class UsuarioService {
     private HistoricoUsuarioMapper historicoMapper;
 
     @Autowired
+    private HistoricoPerfilMapper historicoPerfilMapper;
+
+    @Autowired
     private HistoricoOperacaoMapper historicoOperacaoMapper;
 
     @Autowired
     private HistoricoMaquinasMapper historicoMaquinasMapper;
+
+    @Autowired
+    private ModeloMapper modeloMapper;
+
+    @Autowired
+    private EquipamentoMapper equipamentoMapper;
+
+    @Autowired
+    private  MemoriaMapper memoriaMapper;
+
+
+    @Autowired
+    private  PerfilMapper perfilMapper;
 
     public UsuarioDTO newUsuarioMapper(Usuario usuario){
         UsuarioDTO usuarioDTO = usuarioMapper.toDto(usuario);
@@ -92,8 +106,17 @@ public class UsuarioService {
                 .orElseThrow(() -> new ObjectNotFoundException("id", Usuario.class.getName()));
     }
 
+    public HistoricoMaquinas findByIdHistorico(Integer id) {
+        return historicoMaquinasRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("id", HistoricoMaquinas.class.getName()));
+    }
+
     public UsuarioDTO findByIdDTO(Integer id) {
         return usuarioToDTO(this.findById(id));
+    }
+
+    public HistoricoMaquinasDTO findByIdHistoricoDTO(Integer id) {
+        return maquinasToDTO(this.findByIdHistorico(id));
     }
 
     public List<UsuarioDTO> getListaUsuarios() {
@@ -107,6 +130,11 @@ public class UsuarioService {
     public List<HistoricoUsuarioDTO> getListaHistorico() {
         return  historicoRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoToDTO(obj)).collect(Collectors.toList());
     }
+
+    public List<HistoricoPerfilDTO> getListaHistoricoPerfil() {
+        return  historicoPerfilRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoPerfilToDTO(obj)).collect(Collectors.toList());
+    }
+
 
     public List<HistoricoOperacaoDTO> getListaHistoricoOperacao() {
         return  historicoOperacaoRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoOperacaoToDTO(obj)).collect(Collectors.toList());
@@ -153,6 +181,11 @@ public class UsuarioService {
     }
 
     @Transactional
+    public void atualizaPerfil(Integer idUsuario, PerfilHDTO dto) {
+        usuarioRepository.updatePerfil(dto.getPerfil().getId(),idUsuario);
+    }
+
+    @Transactional
     public void atualizaContrato(Integer idUsuario, ContratoDTO dto) {
         usuarioRepository.updateContrato(dto.getOperacao().getId(), dto.getCliente().getId(),dto.getDemanda().getId(),dto.getCentro().getId(),idUsuario);
     }
@@ -192,12 +225,9 @@ public class UsuarioService {
         objOld.setMemoria(objNew.getMemoria());
         objOld.setTag(objNew.getTag());
         objOld.setPatrimonio(objNew.getPatrimonio());
+        objOld.setPerfil(objNew.getPerfil());
     }
 
-    public void deleteById(Integer id) {
-        Usuario usuario = this.findById(id);
-        usuarioRepository.delete(usuario);
-    }
 
     public void alteraStatus(Integer id, String acao) {
         Usuario usuario = this.findById(id);
@@ -210,14 +240,37 @@ public class UsuarioService {
 
     private UsuarioDTO usuarioToDTO(Usuario obj) {
         UsuarioDTO dto = usuarioMapper.toDto(obj);
+        dto.setPatrimonio(obj.getPatrimonio());
+        dto.setTag(obj.getTag());
+        return dto;
+    }
+
+    private HistoricoMaquinasDTO maquinasToDTO(HistoricoMaquinas obj) {
+        HistoricoMaquinasDTO dto = historicoMaquinasMapper.toDto(obj);
+        ModeloDTO modelo = modeloMapper.toDto(obj.getModelo());
+        EquipamentoDTO equipamento = equipamentoMapper.toDto(obj.getEquipamento());
+        MemoriaDTO memoria = memoriaMapper.toDto(obj.getMemoria());
         dto.setTag(obj.getTag());
         dto.setPatrimonio(obj.getPatrimonio());
+        dto.setEquipamento(equipamento);
+        dto.setModelo(modelo);
+        dto.setMemoria(memoria);
+        dto.setData_inicio(obj.getData_inicio());
+        dto.setData_final(obj.getData_final());
         return dto;
     }
 
     private HistoricoUsuarioDTO historicoToDTO(HistoricoUsuario obj) {
         HistoricoUsuarioDTO dto = historicoMapper.toDto(obj);
         dto.setVigente(obj.getVigente());
+        return dto;
+    }
+
+    private HistoricoPerfilDTO historicoPerfilToDTO(HistoricoPerfil obj) {
+        HistoricoPerfilDTO dto = historicoPerfilMapper.toDto(obj);
+        PerfilDTO perfil = perfilMapper.toDto(obj.getPerfil());
+        dto.setVigente(obj.getVigente());
+        dto.setPerfil(perfil);
         return dto;
     }
 
@@ -228,7 +281,11 @@ public class UsuarioService {
     }
     private HistoricoMaquinasDTO historicoMaquinasToDTO(HistoricoMaquinas obj) {
         HistoricoMaquinasDTO dto = historicoMaquinasMapper.toDto(obj);
+        MemoriaDTO memoria = memoriaMapper.toDto(obj.getMemoria());
         dto.setVigente(obj.getVigente());
+        dto.setPatrimonio(obj.getPatrimonio());
+        dto.setTag(obj.getTag());
+        dto.setMemoria(memoria);
         return dto;
     }
 

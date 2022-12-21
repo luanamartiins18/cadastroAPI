@@ -1,4 +1,4 @@
-package com.qintess.GerDemanda.repositories;
+package com.qintess.GerDemanda.service.mapper.repositories;
 
 
 import com.qintess.GerDemanda.model.Usuario;
@@ -20,6 +20,14 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             nativeQuery = true
     )
      void updateFuncao(Integer idCargo, Integer idBu, Integer idTipo, Integer idUsuario);
+
+    @Modifying
+    @Query(
+            value = "UPDATE usuario SET fk_perfil = ?1 WHERE id = ?2",
+            nativeQuery = true
+    )
+    void updatePerfil(Integer idPerfil, Integer idUsuario);
+
 
     @Modifying
     @Query(

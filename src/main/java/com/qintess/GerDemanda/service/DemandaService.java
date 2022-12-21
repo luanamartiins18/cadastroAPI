@@ -1,7 +1,7 @@
 package com.qintess.GerDemanda.service;
 
 
-import com.qintess.GerDemanda.repositories.DemandaRepository;
+import com.qintess.GerDemanda.service.mapper.repositories.DemandaRepository;
 import com.qintess.GerDemanda.service.dto.DemandaDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
 import com.qintess.GerDemanda.service.mapper.DemandaMapper;

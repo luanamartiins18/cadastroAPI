@@ -1,12 +1,13 @@
 package com.qintess.GerDemanda.service.dto;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
+
+
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -15,7 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @Component
-public class HistoricoUsuarioDTO {
+public class HistoricoPerfilDTO {
     private Integer id;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -29,8 +30,8 @@ public class HistoricoUsuarioDTO {
     @NotNull(message = "O campo usuario é obrigatório!")
     private UsuarioDTO usuario;
 
-    @NotNull(message = "O campo cargo é obrigatório!")
-    private CargoDTO cargo;
+    @NotNull(message = "O campo perfil é obrigatório!")
+    private PerfilDTO perfil;
 
     public void setVigente(String vigente) {
         this.vigente = vigente;

@@ -86,6 +86,8 @@ public class UsuarioDTO {
 
     private CargoDTO cargo;
 
+    private PerfilDTO perfil;
+
     private DemandaDTO demanda;
 
     private OperacaoDTO operacao;

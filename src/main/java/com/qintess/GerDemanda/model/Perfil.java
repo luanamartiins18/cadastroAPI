@@ -1,9 +1,8 @@
 package com.qintess.GerDemanda.model;
 
-
 import lombok.*;
-import javax.persistence.*;
 
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -11,8 +10,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "cargo")
-public class Cargo {
+@Table(name = "perfil")
+public class Perfil {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

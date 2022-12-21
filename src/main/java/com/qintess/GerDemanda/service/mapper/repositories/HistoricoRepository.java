@@ -1,4 +1,4 @@
-package com.qintess.GerDemanda.repositories;
+package com.qintess.GerDemanda.service.mapper.repositories;
 
 
 import com.qintess.GerDemanda.model.HistoricoUsuario;
@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-
 public interface HistoricoRepository extends JpaRepository<HistoricoUsuario, Integer> {
 
 

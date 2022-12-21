@@ -92,7 +92,10 @@ public class Usuario {
     @JoinColumn(name = "fk_bu")
     private Bu bu;
 
-
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_perfil")
+    private Perfil perfil;
 
     @JsonBackReference
     @ManyToOne

@@ -2,7 +2,7 @@ package com.qintess.GerDemanda.service;
 
 
 import com.qintess.GerDemanda.model.HistoricoMaquinas;
-import com.qintess.GerDemanda.repositories.HistoricoMaquinasRepository;
+import com.qintess.GerDemanda.service.mapper.repositories.HistoricoMaquinasRepository;
 import com.qintess.GerDemanda.service.dto.HistoricoMaquinasDTO;
 import com.qintess.GerDemanda.service.mapper.HistoricoMaquinasMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +37,7 @@ public class HistoricoMaquinasService {
         usuario.setPatrimonio(obj.getPatrimonio());
         usuario.setVigente(obj.getVigente());
         usuario.setModelo(obj.getModelo());
+        usuario.setMemoria(obj.getMemoria());
         usuario.setEquipamento(obj.getEquipamento());
         usuario.setUsuario(obj.getUsuario());
         historicoMaquinasRepository.save(usuario);
@@ -51,8 +52,8 @@ public class HistoricoMaquinasService {
     }
 
     @Transactional
-    public void updateUltimoHistoricoMaquinas(Date data_final, String vigente, Integer id) {
-        historicoMaquinasRepository.updateUltimoHistoricoMaquinas(data_final, vigente, id);
+    public void updateUltimoHistoricoMaquinas(Date data_inicio, Date data_final, String vigente, Integer id) {
+        historicoMaquinasRepository.updateUltimoHistoricoMaquinas(data_inicio,data_final, vigente, id);
     }
 
     private HistoricoMaquinasDTO historicoToDTO(HistoricoMaquinas obj) {
