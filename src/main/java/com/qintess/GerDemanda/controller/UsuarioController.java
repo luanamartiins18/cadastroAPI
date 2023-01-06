@@ -231,6 +231,7 @@ public class UsuarioController {
         return Objects.isNull(usuario) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(usuario);
     }
 
+
     @GetMapping("/historicomaquinaslista/{id}")
     ResponseEntity<HistoricoMaquinasDTO> getHistoricoMaquinasId(@PathVariable Integer id) {
         HistoricoMaquinasDTO maquinas = usuarioService.findByIdHistoricoDTO(id);
@@ -313,7 +314,6 @@ public class UsuarioController {
         Modelo modelo = modeloMapper.toEntity(dto.getModelo());
         Equipamento equipamento = equipamentoMapper.toEntity(dto.getEquipamento());
         Memoria memoria = memoriaMapper.toEntity(dto.getMemoria());
-        Date dt = new Date();
         //Atualizar historico anterior
         historicoMaquinas.setData_inicio(dto.getData_inicio());
         historicoMaquinas.setModelo(modelo);

@@ -1,15 +1,11 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.model.HistoricoPerfil;
-import com.qintess.GerDemanda.model.HistoricoUsuario;
 import com.qintess.GerDemanda.service.dto.HistoricoPerfilDTO;
 import com.qintess.GerDemanda.service.dto.PerfilDTO;
 import com.qintess.GerDemanda.service.mapper.HistoricoPerfilMapper;
 import com.qintess.GerDemanda.service.mapper.PerfilMapper;
 import com.qintess.GerDemanda.service.mapper.repositories.HistoricoPerfilRepository;
-import com.qintess.GerDemanda.service.mapper.repositories.HistoricoRepository;
-import com.qintess.GerDemanda.service.dto.HistoricoUsuarioDTO;
-import com.qintess.GerDemanda.service.mapper.HistoricoUsuarioMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

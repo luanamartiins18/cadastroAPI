@@ -143,6 +143,7 @@ public class UsuarioService {
     public List<HistoricoMaquinasDTO> getListaHistoricoMaquinas() {
         return  historicoMaquinasRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoMaquinasToDTO(obj)).collect(Collectors.toList());
     }
+
     @Transactional
     public void
     insereUsuario(UsuarioDTO dto) {
