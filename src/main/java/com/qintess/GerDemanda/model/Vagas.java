@@ -13,31 +13,17 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "rh")
-public class Rh {
+@Table(name = "vagas")
+public class Vagas {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Integer id;
 
-    @Column
-    private String candidato;
 
     @Column
-    private String numero_zoro;
-
-    @Column
-    private String cpf;
-
-    @Column
-    private String rg;
-
-    @Column
-    private String telefone;
-
-    @Column
-    private String email;
+    private String qualitor;
 
     @Column
     private String vale_alimentacao;
@@ -51,10 +37,6 @@ public class Rh {
     @Column
     private String bonus;
 
-
-    @Column
-    private String plano_saude;
-
     @Column
     private String cesta;
 
@@ -64,6 +46,9 @@ public class Rh {
 
     @Temporal(TemporalType.DATE)
     private Date data_inicio;
+
+    @Temporal(TemporalType.DATE)
+    private Date data_final;
 
 
     @JsonBackReference
@@ -102,5 +87,11 @@ public class Rh {
     @ManyToOne
     @JoinColumn(name = "fk_status")
     private Status status;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_plano")
+    private PlanoSaude planoSaude;
+
 
 }

@@ -1,7 +1,6 @@
 package com.qintess.GerDemanda.controller;
 
 import com.qintess.GerDemanda.service.MemoriaService;
-import com.qintess.GerDemanda.service.dto.BuDTO;
 import com.qintess.GerDemanda.service.dto.MemoriaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

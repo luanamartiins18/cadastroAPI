@@ -1,7 +1,7 @@
 package com.qintess.GerDemanda.controller;
 
-import com.qintess.GerDemanda.service.PerfilService;
-import com.qintess.GerDemanda.service.dto.PerfilDTO;
+import com.qintess.GerDemanda.service.PlanoSaudeService;
+import com.qintess.GerDemanda.service.dto.PlanoSaudeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,18 +11,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/perfil")
-public class PerfilController {
+@RequestMapping(value = "/plano")
+public class PlanoSaudeController {
 
     @Autowired
-    PerfilService perfilService;
-
+    PlanoSaudeService planoService;
 
     @GetMapping()
-    ResponseEntity<List<PerfilDTO>> getPerfil() {
-        List<PerfilDTO> listaPerfil = perfilService.getPerfil();
-        return (listaPerfil.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listaPerfil);
+    ResponseEntity<List<PlanoSaudeDTO>> getPlanoSaude() {
+        List<PlanoSaudeDTO> listaPlano = planoService.getPlanoSaude();
+        return (listaPlano.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listaPlano);
     }
 }

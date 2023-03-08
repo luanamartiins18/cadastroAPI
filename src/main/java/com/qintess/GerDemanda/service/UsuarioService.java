@@ -144,6 +144,10 @@ public class UsuarioService {
         return  historicoMaquinasRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoMaquinasToDTO(obj)).collect(Collectors.toList());
     }
 
+    public UsuarioDTO getUsuarioByCelular(String celular, Integer id) {
+        return usuarioMapper.toDto(usuarioRepository.findFirstByCelularAndIdNot(celular, id));
+    }
+
     @Transactional
     public void
     insereUsuario(UsuarioDTO dto) {
@@ -165,6 +169,10 @@ public class UsuarioService {
         if (Objects.nonNull(getUsuarioByRE(dto.getCodigoRe(), id))) {
             throw new ValidationException("O códigoRe já está em uso");
         }
+        if (Objects.nonNull(getUsuarioByCelular(dto.getCelular(), id))) {
+            throw new ValidationException("O celular já esta em uso");
+        }
+
     }
 
     @Transactional

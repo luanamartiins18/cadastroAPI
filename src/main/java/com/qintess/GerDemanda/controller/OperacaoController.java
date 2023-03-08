@@ -2,7 +2,6 @@ package com.qintess.GerDemanda.controller;
 
 
 import com.qintess.GerDemanda.service.OperacaoService;
-import com.qintess.GerDemanda.service.dto.ClienteDTO;
 import com.qintess.GerDemanda.service.dto.OperacaoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
