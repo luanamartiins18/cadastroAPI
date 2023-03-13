@@ -26,7 +26,11 @@ public interface CandidatosRepository extends JpaRepository<Candidatos, Integer>
     List<Candidatos> listarCandidatoPorStatus(Integer idStatus);
 
 
-
+    @Query(
+            value = "SELECT * FROM candidatos WHERE fk_status_candidato = 6",
+            nativeQuery = true
+    )
+    List<Candidatos> listarCandidatoDisponivel();
 
     List<Candidatos> findByOrderByCandidatosAsc();
 

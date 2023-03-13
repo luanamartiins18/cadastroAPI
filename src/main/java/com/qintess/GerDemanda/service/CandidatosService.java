@@ -62,9 +62,15 @@ public class CandidatosService {
         return candidatosRepository.listarCandidatosPorVaga(id).stream().map(obj -> candidatosToDTO(obj)).collect(Collectors.toList());
     }
 
+    public List<CandidatosDTO> getListaCandidatoDisponivel() {
+        return candidatosRepository.listarCandidatoDisponivel().stream().map(obj -> candidatosToDTO(obj)).collect(Collectors.toList());
+    }
+
     public List<CandidatosDTO> getListaCandidatoPorStatus(Integer idStatus) {
         return candidatosRepository.listarCandidatoPorStatus(idStatus).stream().map(obj -> candidatosToDTO(obj)).collect(Collectors.toList());
     }
+
+
 
     @Transactional
     public void
@@ -75,7 +81,6 @@ public class CandidatosService {
         dto.setStatus_candidato(status);
         dto.setTelefone(obj.getTelefone());
         obj.setStatus_candidato(StatusCandidato.builder().id(6).build());
-       // obj.setStatus_candidato(StatusCandidato.builder().id(1).build());
         candidatosRepository.save(obj);
     }
 
@@ -122,7 +127,8 @@ public class CandidatosService {
         objOld.setPlanoSaude(objNew.getPlanoSaude());
         objOld.setPlanoPretensao(objNew.getPlanoPretensao());
         objOld.setVagas(objNew.getVagas());
-        objOld.setStatus_candidato(objNew.getStatus_candidato());
+        //objOld.setStatus_candidato(objNew.getStatus_candidato());
+        objOld.setStatus_candidato(StatusCandidato.builder().id(1).build());
         objOld.setObservacao(objNew.getObservacao());
         objOld.setMotivo(null);
     }
@@ -130,9 +136,7 @@ public class CandidatosService {
     private CandidatosDTO candidatosToDTO(Candidatos obj) {
         CandidatosDTO dto = candidatosMapper.toDto(obj);
         StatusCandidatoDTO status = statusCandidatoMapper.toDto(obj.getStatus_candidato());
-
         dto.setStatus_candidato(status);
-
         dto.setTelefone(obj.getTelefone());
         return dto;
     }

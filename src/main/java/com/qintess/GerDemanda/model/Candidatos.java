@@ -98,4 +98,9 @@ public class Candidatos {
     @JoinColumn(name = "fk_planoPretensao")
     private PlanoSaudePretensao planoPretensao;
 
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_curriculo")
+    private Curriculo curriculo;
+
 }

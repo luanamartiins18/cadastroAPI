@@ -84,4 +84,6 @@ public class CandidatosDTO {
     private PlanoSaudeDTO planoSaude;
 
     private PlanoSaudePretensaoDTO planoPretensao;
+
+    private CurriculoDTO curriculo;
 }
