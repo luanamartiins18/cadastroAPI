@@ -4,14 +4,13 @@ import com.qintess.GerDemanda.model.Curriculo;
 import com.qintess.GerDemanda.service.CandidatosService;
 import com.qintess.GerDemanda.service.VagasService;
 import com.qintess.GerDemanda.service.dto.CandidatosDTO;
-import com.qintess.GerDemanda.service.mapper.repositories.CandidatosRepository;
-import com.qintess.GerDemanda.service.mapper.repositories.CurriculoRepository;
-import com.qintess.GerDemanda.service.mapper.repositories.VagasRepository;
+import com.qintess.GerDemanda.service.repositories.CandidatosRepository;
+import com.qintess.GerDemanda.service.repositories.CurriculoRepository;
+import com.qintess.GerDemanda.service.repositories.VagasRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -22,7 +21,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,7 +28,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 
 @Controller

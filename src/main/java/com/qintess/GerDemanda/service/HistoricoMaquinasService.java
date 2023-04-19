@@ -2,7 +2,7 @@ package com.qintess.GerDemanda.service;
 
 
 import com.qintess.GerDemanda.model.HistoricoMaquinas;
-import com.qintess.GerDemanda.service.mapper.repositories.HistoricoMaquinasRepository;
+import com.qintess.GerDemanda.service.repositories.HistoricoMaquinasRepository;
 import com.qintess.GerDemanda.service.dto.HistoricoMaquinasDTO;
 import com.qintess.GerDemanda.service.mapper.HistoricoMaquinasMapper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -5,7 +5,7 @@ import com.qintess.GerDemanda.model.*;
 import com.qintess.GerDemanda.service.dto.*;
 import com.qintess.GerDemanda.service.mapper.CandidatosMapper;
 import com.qintess.GerDemanda.service.mapper.VagasMapper;
-import com.qintess.GerDemanda.service.mapper.repositories.VagasRepository;
+import com.qintess.GerDemanda.service.repositories.VagasRepository;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

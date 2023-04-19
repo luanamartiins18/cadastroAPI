@@ -1,6 +1,6 @@
 package com.qintess.GerDemanda.service;
 
-import com.qintess.GerDemanda.service.mapper.repositories.ClienteRepository;
+import com.qintess.GerDemanda.service.repositories.ClienteRepository;
 import com.qintess.GerDemanda.service.dto.ClienteDTO;
 import com.qintess.GerDemanda.service.mapper.ClienteMapper;
 import org.springframework.beans.factory.annotation.Autowired;

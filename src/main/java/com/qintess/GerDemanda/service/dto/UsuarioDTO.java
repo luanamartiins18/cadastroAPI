@@ -102,6 +102,9 @@ public class UsuarioDTO {
 
     private MemoriaDTO memoria;
 
+    private String senha;
+    private String primeiroAcesso;
+
 
     public void setTag(String tag) {
         this.tag = tag;

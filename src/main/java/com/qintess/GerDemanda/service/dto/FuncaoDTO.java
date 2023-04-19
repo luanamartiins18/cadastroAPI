@@ -22,6 +22,8 @@ public class FuncaoDTO {
 
     private CargoDTO cargo;
 
+    private PerfilDTO perfil;
+
     @NotNull(message = "O campo codigoRe é obrigatório!")
     @Length(min=6,max=12, message = "O campo Matricula precisa ter no máximo 8 caracteres.")
     private String codigoRe;

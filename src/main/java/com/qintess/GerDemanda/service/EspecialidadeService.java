@@ -3,7 +3,7 @@ package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.service.dto.EspecialidadeDTO;
 import com.qintess.GerDemanda.service.mapper.EspecialidadeMapper;
-import com.qintess.GerDemanda.service.mapper.repositories.EspecialidadeRepository;
+import com.qintess.GerDemanda.service.repositories.EspecialidadeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

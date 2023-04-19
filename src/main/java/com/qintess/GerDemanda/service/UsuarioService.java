@@ -1,12 +1,13 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.model.*;
-import com.qintess.GerDemanda.service.mapper.repositories.*;
 import com.qintess.GerDemanda.service.dto.*;
 import com.qintess.GerDemanda.service.mapper.*;
+import com.qintess.GerDemanda.service.repositories.*;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.ObjectNotFoundException;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,6 +25,16 @@ public class UsuarioService {
     @Autowired
     UsuarioRepository usuarioRepository;
 
+
+    @Autowired
+    TipoRepository tipoRepository;
+
+    @Autowired
+    BuRepository buRepository;
+
+    @Autowired
+    PerfilRepository perfilRepository;
+
     @Autowired
     HistoricoRepository historicoRepository;
 
@@ -37,6 +48,8 @@ public class UsuarioService {
     @Autowired
     HistoricoMaquinasRepository historicoMaquinasRepository;
 
+    @Autowired
+    private JavaMailSender emailSender;
 
     @Autowired
     private UsuarioMapper usuarioMapper;
@@ -60,13 +73,27 @@ public class UsuarioService {
     private EquipamentoMapper equipamentoMapper;
 
     @Autowired
-    private  MemoriaMapper memoriaMapper;
+    private MemoriaMapper memoriaMapper;
 
 
     @Autowired
-    private  PerfilMapper perfilMapper;
+    private PerfilMapper perfilMapper;
 
-    public UsuarioDTO newUsuarioMapper(Usuario usuario){
+    @Autowired
+    private LoginMapper loginMapper;
+
+    @Autowired
+    private PasswordResetTokenRepository tokenRepository;
+
+
+    public LoginDTO checkUsuario(LoginDTO dto) {
+        LoginDTO usuarioResumidoDTO = loginMapper.toDto(
+                this.usuarioRepository.findFirstByCodigoReAndSenha(dto.getCodigoRe(), dto.getSenha()));
+        validaStatus(usuarioResumidoDTO);
+        return usuarioResumidoDTO;
+    }
+
+    public UsuarioDTO newUsuarioMapper(Usuario usuario) {
         UsuarioDTO usuarioDTO = usuarioMapper.toDto(usuario);
         usuarioDTO.setTag(usuario.getTag());
         usuarioDTO.setPatrimonio(usuario.getPatrimonio());
@@ -74,7 +101,6 @@ public class UsuarioService {
     }
 
     public UsuarioDTO getUsuarioByRe(String re) {
-       // return usuarioMapper.toDto(usuarioRepository.findFirstByCodigoRe(re));]
         return this.newUsuarioMapper(usuarioRepository.findFirstByCodigoRe(re));
     }
 
@@ -128,24 +154,29 @@ public class UsuarioService {
     }
 
     public List<HistoricoUsuarioDTO> getListaHistorico() {
-        return  historicoRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoToDTO(obj)).collect(Collectors.toList());
+        return historicoRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoToDTO(obj)).collect(Collectors.toList());
     }
 
     public List<HistoricoPerfilDTO> getListaHistoricoPerfil() {
-        return  historicoPerfilRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoPerfilToDTO(obj)).collect(Collectors.toList());
+        return historicoPerfilRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoPerfilToDTO(obj)).collect(Collectors.toList());
     }
 
 
     public List<HistoricoOperacaoDTO> getListaHistoricoOperacao() {
-        return  historicoOperacaoRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoOperacaoToDTO(obj)).collect(Collectors.toList());
+        return historicoOperacaoRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoOperacaoToDTO(obj)).collect(Collectors.toList());
     }
 
     public List<HistoricoMaquinasDTO> getListaHistoricoMaquinas() {
-        return  historicoMaquinasRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoMaquinasToDTO(obj)).collect(Collectors.toList());
+        return historicoMaquinasRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoMaquinasToDTO(obj)).collect(Collectors.toList());
     }
 
     public UsuarioDTO getUsuarioByCelular(String celular, Integer id) {
         return usuarioMapper.toDto(usuarioRepository.findFirstByCelularAndIdNot(celular, id));
+    }
+
+    public void createPasswordResetTokenForUser(Usuario usuario, String token) {
+        PasswordResetToken myToken = new PasswordResetToken(token, usuario);
+        tokenRepository.save(myToken);
     }
 
     @Transactional
@@ -155,6 +186,8 @@ public class UsuarioService {
         Usuario obj = usuarioMapper.toEntity(dto);
         obj.setNome(obj.getNome().toUpperCase());
         obj.setStatus(STATUS_ATIVO_DESCRICAO);
+        obj.setSenha(DigestUtils.sha256Hex(dto.getCpf()));
+        obj.setPrimeiroAcesso(true);
         usuarioRepository.save(obj);
     }
 
@@ -175,6 +208,15 @@ public class UsuarioService {
 
     }
 
+    private void validaStatus(LoginDTO dto) {
+        if (Objects.isNull(dto)) {
+            throw new RuntimeException("Usuário ou senha inválida");
+        }
+        if (!dto.getStatus().equals(STATUS_ATIVO_DESCRICAO)) {
+            throw new RuntimeException("Sua conta está desativada!");
+        }
+    }
+
     @Transactional
     public void updateUsuario(Integer id, UsuarioDTO dto) {
         dto.setId(id);
@@ -185,27 +227,37 @@ public class UsuarioService {
     }
 
     @Transactional
+    public void updateSenhaUsuario(Integer id, UsuarioDTO dto) {
+        dto.setId(id);
+        validacao(dto);
+        Usuario objOld = findById(id);
+        usuarioSenhaMapperUpdate(dto, objOld);
+        usuarioRepository.save(objOld);
+    }
+
+
+    @Transactional
     public void atualizaFuncao(Integer idUsuario, FuncaoDTO dto) {
-        usuarioRepository.updateFuncao(dto.getCargo().getId(), dto.getBu().getId(),dto.getTipo().getId(),idUsuario);
+        usuarioRepository.updateFuncao(dto.getCargo().getId(), dto.getBu().getId(), dto.getTipo().getId(), dto.getPerfil().getId() ,idUsuario);
     }
 
     @Transactional
     public void atualizaPerfil(Integer idUsuario, PerfilHDTO dto) {
-        usuarioRepository.updatePerfil(dto.getPerfil().getId(),idUsuario);
+        usuarioRepository.updatePerfil(dto.getPerfil().getId(), idUsuario);
     }
 
     @Transactional
     public void atualizaContrato(Integer idUsuario, ContratoDTO dto) {
-        usuarioRepository.updateContrato(dto.getOperacao().getId(), dto.getCliente().getId(),dto.getDemanda().getId(),dto.getCentro().getId(),idUsuario);
+        usuarioRepository.updateContrato(dto.getOperacao().getId(), dto.getCliente().getId(), dto.getDemanda().getId(), dto.getCentro().getId(), idUsuario);
     }
 
     @Transactional
     public void atualizaMaquinas(Integer idUsuario, MaquinasDTO dto) {
-        usuarioRepository.updateMaquinas(dto.getModelo().getId(), dto.getEquipamento().getId(),dto.getMemoria().getId(), dto.getTag(), dto.getPatrimonio(),  idUsuario);
+        usuarioRepository.updateMaquinas(dto.getModelo().getId(), dto.getEquipamento().getId(), dto.getMemoria().getId(), dto.getTag(), dto.getPatrimonio(), idUsuario);
     }
 
-
     private void usuarioMapperUpdate(UsuarioDTO dto, Usuario objOld) {
+        Usuario obj = usuarioRepository.findByCpf(dto.getCpf());
         Usuario objNew = usuarioMapper.toEntity(dto);
         objOld.setNome(objNew.getNome().toUpperCase());
         objOld.setCpf(objNew.getCpf());
@@ -235,10 +287,25 @@ public class UsuarioService {
         objOld.setTag(objNew.getTag());
         objOld.setPatrimonio(objNew.getPatrimonio());
         objOld.setPerfil(objNew.getPerfil());
+
+        if (!dto.getSenha().isEmpty() && !dto.getSenha().equals(obj.getSenha())) {
+            obj.setSenha(DigestUtils.sha256Hex(dto.getSenha()));
+        }
+        objOld.setPrimeiroAcesso(false);
+        usuarioRepository.save(objOld);
+
     }
 
+    private void usuarioSenhaMapperUpdate(UsuarioDTO dto, Usuario objOld) {
+        Usuario obj = usuarioRepository.findByCpf(dto.getCpf());
+        if (!dto.getSenha().isEmpty() && !dto.getSenha().equals(obj.getSenha())) {
+            obj.setSenha(DigestUtils.sha256Hex(dto.getSenha()));
+        }
+        objOld.setPrimeiroAcesso(false);
+        usuarioRepository.save(objOld);
+    }
 
-    public void alteraStatus(Integer id, String acao) {
+        public void alteraStatus(Integer id, String acao) {
         Usuario usuario = this.findById(id);
         usuario.setStatus("Ativo");
         if (acao.equals("desativar")) {
@@ -297,5 +364,4 @@ public class UsuarioService {
         dto.setMemoria(memoria);
         return dto;
     }
-
 }

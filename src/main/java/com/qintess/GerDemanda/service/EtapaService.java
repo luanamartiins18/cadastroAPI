@@ -2,7 +2,7 @@ package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.service.dto.EtapaDTO;
 import com.qintess.GerDemanda.service.mapper.EtapaMapper;
-import com.qintess.GerDemanda.service.mapper.repositories.EtapaRepository;
+import com.qintess.GerDemanda.service.repositories.EtapaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

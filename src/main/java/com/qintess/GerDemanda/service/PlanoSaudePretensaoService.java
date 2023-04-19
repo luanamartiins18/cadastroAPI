@@ -3,7 +3,7 @@ package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.service.dto.PlanoSaudePretensaoDTO;
 import com.qintess.GerDemanda.service.mapper.PlanoSaudePretensaoMapper;
-import com.qintess.GerDemanda.service.mapper.repositories.PlanoSaudePretensaoRepository;
+import com.qintess.GerDemanda.service.repositories.PlanoSaudePretensaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package com.qintess.GerDemanda.service;
 
-import com.qintess.GerDemanda.service.mapper.repositories.CargoRepository;
+import com.qintess.GerDemanda.service.repositories.CargoRepository;
 import com.qintess.GerDemanda.service.dto.CargoDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
 import com.qintess.GerDemanda.service.mapper.CargoMapper;

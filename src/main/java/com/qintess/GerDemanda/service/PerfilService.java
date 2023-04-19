@@ -1,9 +1,7 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
-import com.qintess.GerDemanda.service.mapper.CargoMapper;
-import com.qintess.GerDemanda.service.mapper.repositories.CargoRepository;
-import com.qintess.GerDemanda.service.mapper.repositories.PerfilRepository;
+import com.qintess.GerDemanda.service.repositories.PerfilRepository;
 import com.qintess.GerDemanda.service.dto.PerfilDTO;
 import com.qintess.GerDemanda.service.mapper.PerfilMapper;
 import org.springframework.beans.factory.annotation.Autowired;

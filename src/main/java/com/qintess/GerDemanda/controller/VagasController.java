@@ -2,7 +2,7 @@ package com.qintess.GerDemanda.controller;
 
 import com.qintess.GerDemanda.service.VagasService;
 import com.qintess.GerDemanda.service.dto.VagasDTO;
-import com.qintess.GerDemanda.service.mapper.repositories.CandidatosRepository;
+import com.qintess.GerDemanda.service.repositories.CandidatosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

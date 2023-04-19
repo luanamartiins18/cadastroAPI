@@ -131,7 +131,10 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "fk_memoria")
     private Memoria memoria;
+    @Column
+    private String senha;
 
-
+    @Column(name = "primeiro_acesso")
+    private Boolean primeiroAcesso;
 
 }

@@ -5,7 +5,7 @@ import com.qintess.GerDemanda.service.dto.HistoricoPerfilDTO;
 import com.qintess.GerDemanda.service.dto.PerfilDTO;
 import com.qintess.GerDemanda.service.mapper.HistoricoPerfilMapper;
 import com.qintess.GerDemanda.service.mapper.PerfilMapper;
-import com.qintess.GerDemanda.service.mapper.repositories.HistoricoPerfilRepository;
+import com.qintess.GerDemanda.service.repositories.HistoricoPerfilRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.model.HistoricoUsuario;
-import com.qintess.GerDemanda.service.mapper.repositories.HistoricoRepository;
+import com.qintess.GerDemanda.service.repositories.HistoricoRepository;
 import com.qintess.GerDemanda.service.dto.HistoricoUsuarioDTO;
 import com.qintess.GerDemanda.service.mapper.HistoricoUsuarioMapper;
 import org.springframework.beans.factory.annotation.Autowired;

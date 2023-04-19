@@ -2,7 +2,7 @@ package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.service.dto.StatusDTO;
 import com.qintess.GerDemanda.service.mapper.StatusMapper;
-import com.qintess.GerDemanda.service.mapper.repositories.StatusRepository;
+import com.qintess.GerDemanda.service.repositories.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

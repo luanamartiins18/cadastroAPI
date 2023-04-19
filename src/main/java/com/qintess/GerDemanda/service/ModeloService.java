@@ -1,6 +1,6 @@
 package com.qintess.GerDemanda.service;
 
-import com.qintess.GerDemanda.service.mapper.repositories.ModeloRepository;
+import com.qintess.GerDemanda.service.repositories.ModeloRepository;
 
 import java.util.List;
 

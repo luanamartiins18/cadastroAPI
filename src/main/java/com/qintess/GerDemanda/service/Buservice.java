@@ -1,7 +1,7 @@
 package com.qintess.GerDemanda.service;
 
 
-import com.qintess.GerDemanda.service.mapper.repositories.BuRepository;
+import com.qintess.GerDemanda.service.repositories.BuRepository;
 import com.qintess.GerDemanda.service.dto.BuDTO;
 import com.qintess.GerDemanda.service.dto.UsuarioDTO;
 import com.qintess.GerDemanda.service.mapper.BuMapper;

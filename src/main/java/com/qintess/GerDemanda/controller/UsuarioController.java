@@ -4,8 +4,11 @@ package com.qintess.GerDemanda.controller;
 import com.qintess.GerDemanda.model.*;
 import com.qintess.GerDemanda.service.*;
 import com.qintess.GerDemanda.service.dto.*;
+import com.qintess.GerDemanda.service.exception.InvalidTokenException;
+import com.qintess.GerDemanda.service.exception.UsuarioNotFoundException;
 import com.qintess.GerDemanda.service.mapper.*;
-import com.qintess.GerDemanda.service.mapper.repositories.UsuarioRepository;
+import com.qintess.GerDemanda.service.repositories.PasswordResetTokenRepository;
+import com.qintess.GerDemanda.service.repositories.UsuarioRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -96,10 +99,13 @@ public class UsuarioController {
     @Autowired
     HistoricoOperacaoService historicoOperacaoService;
 
+    @Autowired
+    PasswordResetTokenRepository passwordResetTokenRepository;
+
 
 
     @GetMapping("/usuario/{re}")
-    ResponseEntity<UsuarioDTO> getUsuario(@PathVariable String re) {
+    ResponseEntity<UsuarioDTO> getUsuarioRe(@PathVariable String re) {
         UsuarioDTO usuario = usuarioService.getUsuarioByRe(re);
         return (usuario == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(usuario);
     }
@@ -329,7 +335,7 @@ public class UsuarioController {
 
 
     @PostMapping(value = "/atualizarmaquinas")
-    public ResponseEntity<String> utualizarMaquinas(@Valid @RequestBody MaquinasDTO dto) {
+    public ResponseEntity<String> atualizarMaquinas(@Valid @RequestBody MaquinasDTO dto) {
         Usuario usuario = usuarioRepository.findFirstByCodigoRe(dto.getCodigoRe());
         usuarioService.atualizaMaquinas(usuario.getId(), dto);
         Date dt = new Date();
@@ -344,13 +350,19 @@ public class UsuarioController {
 
 
     @PutMapping(value = "/usuarios/{id}")
-    public ResponseEntity<String> atualizaUsuario (@PathVariable Integer id, @Valid @RequestBody UsuarioDTO dto) {
+    public ResponseEntity<String> atualizaUsuario(@PathVariable Integer id, @Valid @RequestBody UsuarioDTO dto) {
         usuarioService.updateUsuario(id, dto);
         Date dt = new Date();
         Usuario usuario = usuarioService.findById(id);
         historicoUsuario.setData_inicio(dt);
         historicoUsuario.setVigente("Sim");
         historicoUsuario.setUsuario(usuario);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(value = "/usuariosenha/{id}")
+    public ResponseEntity<String> atualizaUsuarioSenha(@PathVariable Integer id, @Valid @RequestBody UsuarioDTO dto) {
+        usuarioService.updateSenhaUsuario(id, dto);
         return ResponseEntity.ok().build();
     }
 
@@ -362,5 +374,19 @@ public class UsuarioController {
         usuarioService.alteraStatus(id, acao);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
+
+    @GetMapping("/usuario/token/{token}")
+    public Usuario getUsuarioByToken(@PathVariable String token) {
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
+        if (passwordResetToken == null) {
+            throw new InvalidTokenException();
+        }
+        Usuario usuario = passwordResetToken.getUsuario();
+        if (usuario == null) {
+            throw new UsuarioNotFoundException();
+        }
+        return usuario;
+    }
+
 
 }
