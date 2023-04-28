@@ -89,6 +89,7 @@ public class UsuarioService {
     public LoginDTO checkUsuario(LoginDTO dto) {
         LoginDTO usuarioResumidoDTO = loginMapper.toDto(
                 this.usuarioRepository.findFirstByCodigoReAndSenha(dto.getCodigoRe(), dto.getSenha()));
+        // Verificar o primeiro acesso do usuário
         validaStatus(usuarioResumidoDTO);
         return usuarioResumidoDTO;
     }
@@ -202,10 +203,6 @@ public class UsuarioService {
         if (Objects.nonNull(getUsuarioByRE(dto.getCodigoRe(), id))) {
             throw new ValidationException("O códigoRe já está em uso");
         }
-        if (Objects.nonNull(getUsuarioByCelular(dto.getCelular(), id))) {
-            throw new ValidationException("O celular já esta em uso");
-        }
-
     }
 
     private void validaStatus(LoginDTO dto) {
@@ -238,7 +235,7 @@ public class UsuarioService {
 
     @Transactional
     public void atualizaFuncao(Integer idUsuario, FuncaoDTO dto) {
-        usuarioRepository.updateFuncao(dto.getCargo().getId(), dto.getBu().getId(), dto.getTipo().getId(), dto.getPerfil().getId() ,idUsuario);
+        usuarioRepository.updateFuncao(dto.getCargo().getId(), dto.getBu().getId(), dto.getTipo().getId(),idUsuario);
     }
 
     @Transactional

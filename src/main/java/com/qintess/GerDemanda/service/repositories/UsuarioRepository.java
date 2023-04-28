@@ -17,10 +17,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     @Modifying
     @Query(
-            value = "UPDATE usuario SET fk_cargo = ?1, fk_bu = ?2, fk_tipo = ?3, fk_perfil = ?4 WHERE id = ?5",
+            value = "UPDATE usuario SET fk_cargo = ?1, fk_bu = ?2, fk_tipo = ?3 WHERE id = ?4",
             nativeQuery = true
     )
-     void updateFuncao(Integer idCargo, Integer idBu, Integer idTipo, Integer idPerfil , Integer idUsuario);
+     void updateFuncao(Integer idCargo, Integer idBu, Integer idTipo, Integer idUsuario);
 
     @Modifying
     @Query(
