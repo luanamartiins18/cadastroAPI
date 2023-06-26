@@ -1,6 +1,5 @@
 package com.qintess.GerDemanda.service.repositories;
 
-import com.qintess.GerDemanda.model.Candidatos;
 import com.qintess.GerDemanda.model.Vagas;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,6 +21,8 @@ public interface VagasRepository extends JpaRepository<Vagas, Integer> {
     List<Vagas> findByOrderByCargoAsc();
 
     List<Vagas> findByOrderByIdAsc();
+
+    Vagas findFirstByQualitor(String nr);
 
     Vagas findFirstByQualitorAndIdNot (String qualitor, Integer id);
 }

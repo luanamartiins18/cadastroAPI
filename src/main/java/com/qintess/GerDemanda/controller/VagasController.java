@@ -38,12 +38,6 @@ public class VagasController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/vagas/{id}")
-    ResponseEntity<VagasDTO> getVagasId(@PathVariable Integer id) {
-        VagasDTO vagas = rhService.findByIdDTO(id);
-        return Objects.isNull(vagas) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(vagas);
-    }
-
     @GetMapping("/vagas")
     ResponseEntity<List<VagasDTO>> getListaVagas() {
         List<VagasDTO> listaVagas = rhService.getListaVagas();
@@ -60,6 +54,18 @@ public class VagasController {
     ResponseEntity<List<VagasDTO>> getListaVagasPorEtapa(@PathVariable Integer idEtapa) {
         List<VagasDTO> listausuario = rhService.getListaVagasPorEtapa(idEtapa);
         return (listausuario.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listausuario);
+    }
+
+    @GetMapping("/vagasqualitor/{nr}")
+    ResponseEntity<VagasDTO> getVagasQualitor(@PathVariable String nr) {
+        VagasDTO vagas = rhService.getVagasByNrQualitor(nr);
+        return (vagas == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(vagas);
+    }
+
+    @GetMapping("/vagas/{id}")
+    ResponseEntity<VagasDTO> getVagasId(@PathVariable Integer id) {
+        VagasDTO vagas = rhService.findByIdDTO(id);
+        return Objects.isNull(vagas) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(vagas);
     }
 
 }

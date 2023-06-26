@@ -88,13 +88,7 @@ public class UsuarioDTO {
 
     private PerfilDTO perfil;
 
-    private DemandaDTO demanda;
-
-    private OperacaoDTO operacao;
-
-    private ClienteDTO cliente;
-
-    private CentroCustoDTO centro;
+    private ContratoDTO contrato;
 
     private EquipamentoDTO equipamento;
 
@@ -104,6 +98,12 @@ public class UsuarioDTO {
 
     private String senha;
     private String primeiroAcesso;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date data_inicio;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date data_final;
 
 
     public void setTag(String tag) {

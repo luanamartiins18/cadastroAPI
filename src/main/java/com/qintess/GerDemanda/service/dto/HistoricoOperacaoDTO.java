@@ -30,9 +30,6 @@ public class HistoricoOperacaoDTO {
      @NotNull(message = "O campo usuario é obrigatório!")
      private UsuarioDTO usuario;
 
-     @NotNull(message = "O campo Operação é obrigatório!")
-     private OperacaoDTO operacao;
-
 
      public void setVigente(String vigente) {
           this.vigente = vigente;

@@ -29,12 +29,10 @@ public class HistoricoOperacaoService {
 
     @Transactional
     public void insereHistoricoOperacao(HistoricoOperacao obj) {
-        System.out.println(obj.getData_inicio());
          HistoricoOperacao usuario = new HistoricoOperacao();
          usuario.setData_final(obj.getData_final());
          usuario.setData_inicio(obj.getData_inicio());
          usuario.setVigente(obj.getVigente());
-         usuario.setOperacao(obj.getOperacao());
          usuario.setUsuario(obj.getUsuario());
          historicoOperacaoRepository.save(usuario);
     }

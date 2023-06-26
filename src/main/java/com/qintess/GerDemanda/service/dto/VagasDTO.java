@@ -48,8 +48,6 @@ public class VagasDTO {
 
     private BuDTO bu;
 
-    private OperacaoDTO operacao;
-
     private PlanoSaudeDTO planoSaude;
 
     private String flash;

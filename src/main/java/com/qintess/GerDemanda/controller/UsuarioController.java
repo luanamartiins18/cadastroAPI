@@ -52,7 +52,7 @@ public class UsuarioController {
     PerfilMapper perfilMapper;
 
     @Autowired
-    OperacaoMapper operacaoMapper;
+    ContratoMapper contratoMapper;
 
     @Autowired
     ModeloMapper modeloMapper;
@@ -116,9 +116,9 @@ public class UsuarioController {
         return (listausuario.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listausuario);
     }
 
-    @GetMapping("/usuariosoperacao/{idOperacao}")
-    ResponseEntity<List<UsuarioDTO>> getListaUsuariosPorOperacao(@PathVariable Integer idOperacao) {
-        List<UsuarioDTO> listausuario = usuarioService.getListaUsuariosPorOperacao(idOperacao);
+    @GetMapping("/usuariosoperacao/{idContrato}")
+    ResponseEntity<List<UsuarioDTO>> getListaUsuariosPorOperacao(@PathVariable Integer idContrato) {
+        List<UsuarioDTO> listausuario = usuarioService.getListaUsuariosPorOperacao(idContrato);
         return (listausuario.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listausuario);
     }
 
@@ -294,10 +294,9 @@ public class UsuarioController {
 
 
     @PostMapping(value = "/contrato")
-    public ResponseEntity<String> insereContrato(@Valid @RequestBody ContratoDTO dto) {
+    public ResponseEntity<String> insereContrato(@Valid @RequestBody ContratoHDTO dto) {
         Usuario usuario = usuarioRepository.findFirstByCodigoRe(dto.getCodigoRe());
         usuarioService.atualizaContrato(usuario.getId(), dto);
-        Operacao operacao = operacaoMapper.toEntity(dto.getOperacao());
         Date dt = new Date();
         //Atualizar historico anterior
         HistoricoOperacao historico = historicoOperacaoService.findUltimoHistoricoByOperacao(usuario.getId());
@@ -306,7 +305,6 @@ public class UsuarioController {
         }
         //Insere novo historico
         historicoOperacao.setData_inicio(dt);
-        historicoOperacao.setOperacao(operacao);
         historicoOperacao.setVigente("Sim");
         historicoOperacao.setUsuario(usuario);
         historicoOperacaoService.insereHistoricoOperacao(historicoOperacao);
@@ -352,11 +350,6 @@ public class UsuarioController {
     @PutMapping(value = "/usuarios/{id}")
     public ResponseEntity<String> atualizaUsuario(@PathVariable Integer id, @Valid @RequestBody UsuarioDTO dto) {
         usuarioService.updateUsuario(id, dto);
-        Date dt = new Date();
-        Usuario usuario = usuarioService.findById(id);
-        historicoUsuario.setData_inicio(dt);
-        historicoUsuario.setVigente("Sim");
-        historicoUsuario.setUsuario(usuario);
         return ResponseEntity.ok().build();
     }
 

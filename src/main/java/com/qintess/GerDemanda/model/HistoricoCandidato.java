@@ -1,6 +1,5 @@
 package com.qintess.GerDemanda.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +12,10 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "historico_operacao")
+@Table(name = "historico_candidato")
 @Component
-public class HistoricoOperacao {
 
+public class HistoricoCandidato {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -25,15 +24,19 @@ public class HistoricoOperacao {
     @Temporal(TemporalType.TIMESTAMP)
     private Date data_inicio;
 
-     @Temporal(TemporalType.TIMESTAMP)
-     private Date data_final;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date data_final;
 
     @Column
     private String vigente;
 
-    @JsonBackReference
-    @ManyToOne
-    @JoinColumn(name = "fk_usuario")
-    private Usuario usuario;
 
+    @ManyToOne
+    @JoinColumn(name = "fk_candidato")
+    private Candidatos candidatos;
+
+
+    @ManyToOne
+    @JoinColumn(name = "fk_status_candidato")
+    private StatusCandidato status_candidato;
 }

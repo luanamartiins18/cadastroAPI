@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import javax.validation.ValidationException;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -71,18 +70,33 @@ public class CandidatosService {
     }
 
 
+    public CandidatosDTO newCandidatoMapper(Candidatos candidatos) {
+        CandidatosDTO candidatosDTO = candidatosMapper.toDto(candidatos);
+        StatusCandidatoDTO statusCandiato = statusCandidatoMapper.toDto(candidatos.getStatus_candidato());
+        candidatosDTO.setStatus_candidato(statusCandiato);
+        return candidatosDTO;
+    }
+
+    public CandidatosDTO getCandidatoById(Integer id) {
+        return this.newCandidatoMapper(candidatosRepository.findFirstById(id));
+    }
+
+
 
     @Transactional
-    public void
-    insereCandidatos(CandidatosDTO dto) {
+    public void insereCandidatos(CandidatosDTO dto) {
         validacao(dto);
         Candidatos obj = candidatosMapper.toEntity(dto);
-        StatusCandidatoDTO status = statusCandidatoMapper.toDto(obj.getStatus_candidato());
-        dto.setStatus_candidato(status);
         dto.setTelefone(obj.getTelefone());
-        obj.setStatus_candidato(StatusCandidato.builder().id(6).build());
+        // Verificar se o candidato está vinculado a uma vaga
+        if (obj.getVagas() != null) {
+            obj.setStatus_candidato(StatusCandidato.builder().id(1).build()); // Vinculado à vaga (id = 1)
+        } else {
+            obj.setStatus_candidato(StatusCandidato.builder().id(6).build()); // Disponível (id = 6)
+        }
         candidatosRepository.save(obj);
     }
+
 
     private void validacao(CandidatosDTO dto) {
         Integer id = Objects.isNull(dto.getId()) ? 0 : dto.getId();
@@ -91,9 +105,6 @@ public class CandidatosService {
         }
         if (Objects.nonNull(getCandidatoByEmail(dto.getEmail(), id))) {
             throw new ValidationException("O e-mail já está em uso");
-        }
-        if (Objects.nonNull(getCandidatoByTelefone(dto.getTelefone(), id))) {
-            throw new ValidationException("O Telefone já está em uso");
         }
     }
 
@@ -127,8 +138,7 @@ public class CandidatosService {
         objOld.setPlanoSaude(objNew.getPlanoSaude());
         objOld.setPlanoPretensao(objNew.getPlanoPretensao());
         objOld.setVagas(objNew.getVagas());
-        //objOld.setStatus_candidato(objNew.getStatus_candidato());
-        objOld.setStatus_candidato(StatusCandidato.builder().id(1).build());
+        objOld.setStatus_candidato(objNew.getStatus_candidato());
         objOld.setObservacao(objNew.getObservacao());
         objOld.setMotivo(null);
     }

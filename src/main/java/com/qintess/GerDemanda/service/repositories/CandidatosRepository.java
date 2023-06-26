@@ -12,6 +12,8 @@ import java.util.List;
 public interface CandidatosRepository extends JpaRepository<Candidatos, Integer> {
 
 
+    boolean existsByCpf(String cpf);
+
     @Query(
             value = "SELECT * FROM candidatos WHERE fk_vagas = ?1",
             nativeQuery = true
@@ -38,8 +40,9 @@ public interface CandidatosRepository extends JpaRepository<Candidatos, Integer>
 
     Candidatos  findFirstByEmailAndIdNot(String email, Integer id);
 
-    Candidatos findFirstByTelefoneAndIdNot(String telefone, Integer id);
+    Candidatos findFirstById(Integer id);
 
+    Candidatos findFirstByTelefoneAndIdNot(String telefone, Integer id);
 
 
 }

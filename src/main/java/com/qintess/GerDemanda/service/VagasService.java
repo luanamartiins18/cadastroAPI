@@ -37,6 +37,14 @@ public class VagasService {
         return vagasRepository.findByOrderByCargoAsc().stream().map(obj -> vagasToDTO(obj)).collect(Collectors.toList());
     }
 
+    public VagasDTO getVagasByNrQualitor(String nr) {
+        return this.newVagasMapper(vagasRepository.findFirstByQualitor(nr));
+    }
+
+    public VagasDTO newVagasMapper(Vagas vagas) {
+        VagasDTO vagasDTO = vagasMapper.toDto(vagas);
+        return vagasDTO;
+    }
 
     public Vagas findById(Integer id) {
         return vagasRepository.findById(id)
@@ -102,7 +110,6 @@ public class VagasService {
         objOld.setCargo(objNew.getCargo());
         objOld.setEspecialidade(objNew.getEspecialidade());
         objOld.setBu(objNew.getBu());
-        objOld.setOperacao(objNew.getOperacao());
         objOld.setRecrutador(objNew.getRecrutador());
         objOld.setPlanoSaude(objNew.getPlanoSaude());
         objOld.setData_final(null);

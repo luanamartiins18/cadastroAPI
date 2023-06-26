@@ -38,6 +38,12 @@ public class Usuario {
     @Temporal(TemporalType.DATE)
     private Date data_emissao;
 
+    @Temporal(TemporalType.DATE)
+    private Date data_inicio;
+
+    @Temporal(TemporalType.DATE)
+    private Date data_final;
+
     @Column
     private String endereco;
 
@@ -99,23 +105,8 @@ public class Usuario {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "fk_demanda")
-    private Demanda demanda;
-
-    @JsonBackReference
-    @ManyToOne
-    @JoinColumn(name = "fk_operacao")
-    private Operacao operacao;
-
-    @JsonBackReference
-    @ManyToOne
-    @JoinColumn(name = "fk_cliente")
-    private Cliente cliente;
-
-    @JsonBackReference
-    @ManyToOne
-    @JoinColumn(name = "fk_centro")
-    private CentroCusto centro;
+    @JoinColumn(name = "fk_contrato")
+    private Contrato contrato;
 
     @JsonBackReference
     @ManyToOne
@@ -136,5 +127,7 @@ public class Usuario {
 
     @Column(name = "primeiro_acesso")
     private Boolean primeiroAcesso;
+
+
 
 }

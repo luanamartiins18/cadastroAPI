@@ -32,10 +32,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     @Modifying
     @Query(
-            value = "UPDATE usuario SET fk_operacao = ?1, fk_cliente = ?2, fk_demanda = ?3, fk_centro = ?4 WHERE id = ?5",
+            value = "UPDATE usuario SET fk_contrato = ?1 WHERE id = ?2",
             nativeQuery = true
     )
-    void updateContrato(Integer idOperacao, Integer idCliente, Integer idDemanda, Integer idCentro, Integer idUsuario);
+    void updateContrato(Integer idContrato, Integer idUsuario);
 
     @Modifying
     @Query(
@@ -46,10 +46,11 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
 
     @Query(
-            value = "SELECT * FROM usuario WHERE fk_operacao = ?1",
+            value = "SELECT * FROM usuario WHERE fk_contrato = ?1",
             nativeQuery = true
     )
-    List<Usuario> listarUsuarioPorOperacao(Integer idOperacao);
+    List<Usuario> listarUsuarioPorOperacao(Integer idContrato);
+
 
     Usuario findFirstByEmailAndIdNot(String email, Integer id);
 

@@ -51,12 +51,12 @@ public class LoginController {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.host", "smtp.office365.com");
         props.put("mail.smtp.port", "587");
 
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("controlqintess2023@gmail.com", "svkebmnovayqzwac");
+                return new PasswordAuthentication("backofficedg@qintess.com", "Qin#1006");
             }
         });
         Usuario usuario = usuarioRepository.findFirstByCodigoRe(dto.getCodigoRe());
@@ -74,7 +74,7 @@ public class LoginController {
 
         try {
             Message msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress("controlqintess2023@gmail.com"));
+            msg.setFrom(new InternetAddress("backofficedg@qintess.com"));
             msg.addRecipient(Message.RecipientType.TO,
                     new InternetAddress(email));
             msg.setSubject("Redefinir Senha");

@@ -1,16 +1,11 @@
 package com.qintess.GerDemanda.service.dto;
 
-import com.qintess.GerDemanda.model.Vagas;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.tomcat.jni.File;
-import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.web.multipart.MultipartFile;
-
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;

@@ -1,9 +1,16 @@
 package com.qintess.GerDemanda.controller;
 
+import com.qintess.GerDemanda.model.Candidatos;
 import com.qintess.GerDemanda.model.Curriculo;
+import com.qintess.GerDemanda.model.HistoricoCandidato;
+import com.qintess.GerDemanda.model.StatusCandidato;
 import com.qintess.GerDemanda.service.CandidatosService;
+import com.qintess.GerDemanda.service.HistoricoCandidatoService;
 import com.qintess.GerDemanda.service.VagasService;
 import com.qintess.GerDemanda.service.dto.CandidatosDTO;
+import com.qintess.GerDemanda.service.dto.HistoricoCandidatoDTO;
+import com.qintess.GerDemanda.service.mapper.CandidatosMapper;
+import com.qintess.GerDemanda.service.mapper.StatusCandidatoMapper;
 import com.qintess.GerDemanda.service.repositories.CandidatosRepository;
 import com.qintess.GerDemanda.service.repositories.CurriculoRepository;
 import com.qintess.GerDemanda.service.repositories.VagasRepository;
@@ -11,7 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +36,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,7 +48,19 @@ import java.util.Objects;
 public class CandidatosController {
 
     @Autowired
+    HistoricoCandidato historicoCandidato;
+
+    @Autowired
+    StatusCandidatoMapper statusCandidatoMapper;
+
+    @Autowired
+    CandidatosMapper candidatoMapper;
+
+    @Autowired
     CandidatosService candidatoService;
+
+    @Autowired
+    HistoricoCandidatoService historicoCandidatoService;
 
     @Autowired
     VagasService vagasService;
@@ -78,10 +101,8 @@ public class CandidatosController {
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         // Obter o caminho completo do arquivo
         Path filePath = Paths.get("C:\\Users\\Qintess\\bdCadastro\\GerDemandaAPI\\src\\main\\uploads\\" + fileName);
-
         // Criar um objeto Resource
         Resource resource = new FileSystemResource(filePath);
-
         // Obter o tipo MIME do arquivo
         String contentType = null;
         try {
@@ -100,9 +121,30 @@ public class CandidatosController {
     @PostMapping(value = "/candidatos")
     public ResponseEntity<String> insereCandidatos(@Valid @RequestBody CandidatosDTO dto) {
         candidatoService.insereCandidatos(dto);
-        System.out.println(dto);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping(value = "/candidatos/{id}")
+    public ResponseEntity<String> atualizaCandidatos (@PathVariable Integer id, @Valid @RequestBody CandidatosDTO dto) {
+       Candidatos candidatos = candidatosRepository.findFirstById(dto.getId());
+        candidatoService.updateCandidatos(id, dto);
+        StatusCandidato statusCandidato = statusCandidatoMapper.toEntity(dto.getStatus_candidato());
+        Date dt = new Date();
+        //Atualizar historico anterior
+        HistoricoCandidato historico = historicoCandidatoService.findUltimoHistoricoByCandidato(candidatos.getId());
+        if(historico != null) {
+            historicoCandidatoService.updateUltimoHistoricoCandidato(dt, "Não", historico.getId());
+        }
+        //Insere novo historico
+        historicoCandidato.setData_inicio(dt);
+        historicoCandidato.setStatus_candidato(statusCandidato);
+        historicoCandidato.setVigente("Sim");
+        historicoCandidato.setCandidatos(candidatos);
+        historicoCandidatoService.insereHistoricoCandidato(historicoCandidato);
+        return ResponseEntity.ok().build();
+    }
+
+
 
     @GetMapping("/candidatosvaga/{id}")
     ResponseEntity<List<CandidatosDTO>> getListaCandidatosPorVagas(@PathVariable Integer id ){
@@ -110,11 +152,6 @@ public class CandidatosController {
         return (listacandidato.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listacandidato);
     }
 
-    @PutMapping(value = "/candidatos/{id}")
-    public ResponseEntity<String> atualizaCandidatos (@PathVariable Integer id, @Valid @RequestBody CandidatosDTO dto) {
-        candidatoService.updateCandidatos(id, dto);
-        return ResponseEntity.ok().build();
-    }
 
     @GetMapping("/candidatos/{id}")
     ResponseEntity<CandidatosDTO> getCandidatosId(@PathVariable Integer id) {
@@ -145,6 +182,13 @@ public class CandidatosController {
     public ResponseEntity<String> desvincularCandidato (@PathVariable Integer id) {
         candidatoService.desvincularCandidato(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/historicocandidatos/{id}")
+    ResponseEntity<List<HistoricoCandidatoDTO>> getListaHistoricoCandidatoComId(@PathVariable Integer id) {
+        Candidatos candidatos = candidatoMapper.toEntity(candidatoService.getCandidatoById(id));
+        List<HistoricoCandidatoDTO> listahistoricoCandidato = historicoCandidatoService.findByCandiatoOrderByDataInicioDesc(candidatos.getId());
+        return (listahistoricoCandidato.size() == 0) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(listahistoricoCandidato);
     }
 
 }

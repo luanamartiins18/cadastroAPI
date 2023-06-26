@@ -25,7 +25,6 @@ public class UsuarioService {
     @Autowired
     UsuarioRepository usuarioRepository;
 
-
     @Autowired
     TipoRepository tipoRepository;
 
@@ -37,7 +36,6 @@ public class UsuarioService {
 
     @Autowired
     HistoricoRepository historicoRepository;
-
 
     @Autowired
     HistoricoPerfilRepository historicoPerfilRepository;
@@ -75,7 +73,6 @@ public class UsuarioService {
     @Autowired
     private MemoriaMapper memoriaMapper;
 
-
     @Autowired
     private PerfilMapper perfilMapper;
 
@@ -105,11 +102,9 @@ public class UsuarioService {
         return this.newUsuarioMapper(usuarioRepository.findFirstByCodigoRe(re));
     }
 
-
     public UsuarioDTO getUsuarioByRE(String re, Integer id) {
         return usuarioMapper.toDto(usuarioRepository.findFirstByCodigoReAndIdNot(re, id));
     }
-
 
     public UsuarioDTO getUsuarioByEmail(String email, Integer id) {
         return usuarioMapper.toDto(usuarioRepository.findFirstByEmailAndIdNot(email, id));
@@ -150,8 +145,8 @@ public class UsuarioService {
         return usuarioRepository.findByOrderByNomeAsc().stream().map(obj -> usuarioToDTO(obj)).collect(Collectors.toList());
     }
 
-    public List<UsuarioDTO> getListaUsuariosPorOperacao(Integer idOperacao) {
-        return usuarioRepository.listarUsuarioPorOperacao(idOperacao).stream().map(obj -> usuarioToDTO(obj)).collect(Collectors.toList());
+    public List<UsuarioDTO> getListaUsuariosPorOperacao(Integer idContrato) {
+        return usuarioRepository.listarUsuarioPorOperacao(idContrato).stream().map(obj -> usuarioToDTO(obj)).collect(Collectors.toList());
     }
 
     public List<HistoricoUsuarioDTO> getListaHistorico() {
@@ -161,7 +156,6 @@ public class UsuarioService {
     public List<HistoricoPerfilDTO> getListaHistoricoPerfil() {
         return historicoPerfilRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoPerfilToDTO(obj)).collect(Collectors.toList());
     }
-
 
     public List<HistoricoOperacaoDTO> getListaHistoricoOperacao() {
         return historicoOperacaoRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoOperacaoToDTO(obj)).collect(Collectors.toList());
@@ -185,8 +179,10 @@ public class UsuarioService {
     insereUsuario(UsuarioDTO dto) {
         validacao(dto);
         Usuario obj = usuarioMapper.toEntity(dto);
+        obj.setData_inicio(dto.getData_inicio());
         obj.setNome(obj.getNome().toUpperCase());
         obj.setStatus(STATUS_ATIVO_DESCRICAO);
+        obj.setData_final(null);
         obj.setSenha(DigestUtils.sha256Hex(dto.getCpf()));
         obj.setPrimeiroAcesso(true);
         usuarioRepository.save(obj);
@@ -244,8 +240,8 @@ public class UsuarioService {
     }
 
     @Transactional
-    public void atualizaContrato(Integer idUsuario, ContratoDTO dto) {
-        usuarioRepository.updateContrato(dto.getOperacao().getId(), dto.getCliente().getId(), dto.getDemanda().getId(), dto.getCentro().getId(), idUsuario);
+    public void atualizaContrato(Integer idUsuario, ContratoHDTO dto) {
+        usuarioRepository.updateContrato(dto.getContrato().getId(), idUsuario);
     }
 
     @Transactional
@@ -274,16 +270,15 @@ public class UsuarioService {
         objOld.setUf(objNew.getUf());
         objOld.setTipo(objNew.getTipo());
         objOld.setBu(objNew.getBu());
-        objOld.setDemanda(objNew.getDemanda());
-        objOld.setCliente(objNew.getCliente());
-        objOld.setOperacao(objNew.getOperacao());
-        objOld.setCentro(objNew.getCentro());
+        objOld.setContrato(objNew.getContrato());
         objOld.setEquipamento(objNew.getEquipamento());
         objOld.setModelo(objNew.getModelo());
         objOld.setMemoria(objNew.getMemoria());
         objOld.setTag(objNew.getTag());
         objOld.setPatrimonio(objNew.getPatrimonio());
         objOld.setPerfil(objNew.getPerfil());
+        objOld.setData_inicio(objNew.getData_inicio());
+        objOld.setData_final(objNew.getData_final());
 
         if (!dto.getSenha().isEmpty() && !dto.getSenha().equals(obj.getSenha())) {
             obj.setSenha(DigestUtils.sha256Hex(dto.getSenha()));
@@ -304,7 +299,8 @@ public class UsuarioService {
 
         public void alteraStatus(Integer id, String acao) {
         Usuario usuario = this.findById(id);
-        usuario.setStatus("Ativo");
+        if(acao.equals(("Ativo")));
+            usuario.setStatus("Ativo");
         if (acao.equals("desativar")) {
             usuario.setStatus("Desligado");
         }
@@ -313,6 +309,8 @@ public class UsuarioService {
 
     private UsuarioDTO usuarioToDTO(Usuario obj) {
         UsuarioDTO dto = usuarioMapper.toDto(obj);
+        dto.setData_final(obj.getData_final());
+        dto.setData_inicio(obj.getData_inicio());
         dto.setPatrimonio(obj.getPatrimonio());
         dto.setTag(obj.getTag());
         return dto;

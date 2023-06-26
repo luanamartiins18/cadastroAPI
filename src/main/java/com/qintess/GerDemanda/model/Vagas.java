@@ -74,12 +74,6 @@ public class Vagas {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "fk_operacao")
-    private Operacao operacao;
-
-
-    @JsonBackReference
-    @ManyToOne
     @JoinColumn(name = "fk_especialidade")
     private Especialidade especialidade;
 
