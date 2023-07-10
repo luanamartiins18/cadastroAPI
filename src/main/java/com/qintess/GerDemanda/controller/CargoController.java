@@ -16,6 +16,7 @@ import java.util.List;
 @RequestMapping(value = "/cargo")
 public class CargoController {
 
+
     @Autowired
     CargoService cargoService;
 

@@ -3,8 +3,10 @@ package com.qintess.GerDemanda.service;
 import com.qintess.GerDemanda.model.Candidatos;
 import com.qintess.GerDemanda.model.StatusCandidato;
 import com.qintess.GerDemanda.service.dto.CandidatosDTO;
+import com.qintess.GerDemanda.service.dto.CurriculoDTO;
 import com.qintess.GerDemanda.service.dto.StatusCandidatoDTO;
 import com.qintess.GerDemanda.service.mapper.CandidatosMapper;
+import com.qintess.GerDemanda.service.mapper.CurriculoMapper;
 import com.qintess.GerDemanda.service.mapper.StatusCandidatoMapper;
 import com.qintess.GerDemanda.service.repositories.CandidatosRepository;
 import org.hibernate.ObjectNotFoundException;
@@ -29,6 +31,9 @@ public class CandidatosService {
 
     @Autowired
     private CandidatosMapper candidatosMapper;
+
+    @Autowired
+    private CurriculoMapper curriculoMapper;
 
 
 
@@ -87,12 +92,15 @@ public class CandidatosService {
     public void insereCandidatos(CandidatosDTO dto) {
         validacao(dto);
         Candidatos obj = candidatosMapper.toEntity(dto);
+        CurriculoDTO curriculo = curriculoMapper.toDto(obj.getCurriculo());
+        dto.setCurriculo(curriculo);
         dto.setTelefone(obj.getTelefone());
+
         // Verificar se o candidato está vinculado a uma vaga
         if (obj.getVagas() != null) {
-            obj.setStatus_candidato(StatusCandidato.builder().id(1).build()); // Vinculado à vaga (id = 1)
+            obj.setStatus_candidato(StatusCandidato.builder().id(1).build()); // Vinculado a vaga ( id = 1)
         } else {
-            obj.setStatus_candidato(StatusCandidato.builder().id(6).build()); // Disponível (id = 6)
+            obj.setStatus_candidato(StatusCandidato.builder().id(6).build()); // Disponivel (id = 6)
         }
         candidatosRepository.save(obj);
     }

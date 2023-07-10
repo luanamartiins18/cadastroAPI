@@ -79,7 +79,7 @@ public class CandidatosController {
         try {
             // Salvar arquivo no diretório local
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-            Path path = Paths.get("C:\\Users\\Qintess\\bdCadastro\\GerDemandaAPI\\src\\main\\uploads\\" + fileName);
+            Path path = Paths.get("C:\\Users\\Qintess\\cadastroControl\\cadastroAPI\\src\\main\\uploads\\" + fileName);
             Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
             // Após ter salvo o documento no diretorio, esse codigo abaixo salva link no table de curriculo
@@ -100,7 +100,7 @@ public class CandidatosController {
     @GetMapping("/download/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         // Obter o caminho completo do arquivo
-        Path filePath = Paths.get("C:\\Users\\Qintess\\bdCadastro\\GerDemandaAPI\\src\\main\\uploads\\" + fileName);
+        Path filePath = Paths.get("C:\\Users\\Qintess\\cadastroControl\\cadastroAPI\\src\\main\\uploads\\" + fileName);
         // Criar um objeto Resource
         Resource resource = new FileSystemResource(filePath);
         // Obter o tipo MIME do arquivo

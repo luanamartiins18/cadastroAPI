@@ -15,7 +15,6 @@ public class MailConfig {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.office365.com");
         mailSender.setPort(587);
-
         mailSender.setUsername("backofficedg@qintess.com");
         mailSender.setPassword("Qin#1006");
 

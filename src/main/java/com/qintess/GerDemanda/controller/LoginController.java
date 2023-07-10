@@ -60,6 +60,7 @@ public class LoginController {
             }
         });
         Usuario usuario = usuarioRepository.findFirstByCodigoRe(dto.getCodigoRe());
+        System.out.println(usuario);
         if (usuario == null) {
             throw new UserNotFoundException();
         }
