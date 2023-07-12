@@ -4,16 +4,17 @@
 
 github instalado https://git-scm.com/downloads
 
-IntelliJ IDEA instalado https://www.jetbrains.com/idea/download/?section=windows
+IntelliJ IDEA instalado https://www.jetbrains.com/idea/download/?section=window
 
 **2- Criar um APPLICATION.PROPERTIES na pasta do resources -> META-INF :**
 
 *Dados do BD
+
 spring.datasource.url = jdbc:mysql://localhost:3306/ **NOME DO PROJETO DO BANCO DE DADOS** ?serverTimezone=UTC  
   
-spring.datasource.username = 
+spring.datasource.username = *USUARIO DO BD*
   
-spring.datasource.password = 
+spring.datasource.password = *Senha do BD*
 
 spring.jpa.hibernate.ddl-auto=update
 
