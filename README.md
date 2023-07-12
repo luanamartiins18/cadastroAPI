@@ -2,9 +2,9 @@
 
 **1- Partindo do pressuposto:**
 
-github instalado no seu notebook/PC https://git-scm.com/downloads
+github instalado https://git-scm.com/downloads
 
-IntelliJ IDEA https://www.jetbrains.com/idea/download/?section=windows
+IntelliJ IDEA instalado https://www.jetbrains.com/idea/download/?section=windows
 
 **2- Criar um APPLICATION.PROPERTIES na pasta do resources -> META-INF :**
 
