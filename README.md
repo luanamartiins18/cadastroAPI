@@ -9,7 +9,7 @@ IntelliJ IDEA instalado https://www.jetbrains.com/idea/download/?section=windows
 **2- Criar um APPLICATION.PROPERTIES na pasta do resources -> META-INF :**
 
 *Dados do BD
-spring.datasource.url = jdbc:mysql://localhost:3306/<NOME DO PROJETO DO BANCO DE DADOS>?serverTimezone=UTC  
+spring.datasource.url = jdbc:mysql://localhost:3306/ **NOME DO PROJETO DO BANCO DE DADOS** ?serverTimezone=UTC  
   
 spring.datasource.username = 
   
