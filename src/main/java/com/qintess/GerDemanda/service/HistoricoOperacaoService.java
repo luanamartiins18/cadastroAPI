@@ -1,9 +1,9 @@
 package com.qintess.GerDemanda.service;
 
 import com.qintess.GerDemanda.model.HistoricoOperacao;
-import com.qintess.GerDemanda.service.repositories.HistoricoOperacaoRepository;
 import com.qintess.GerDemanda.service.dto.HistoricoOperacaoDTO;
 import com.qintess.GerDemanda.service.mapper.HistoricoOperacaoMapper;
+import com.qintess.GerDemanda.service.repositories.HistoricoOperacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
