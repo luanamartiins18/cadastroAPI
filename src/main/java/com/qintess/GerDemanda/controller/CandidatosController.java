@@ -97,25 +97,25 @@ public class CandidatosController {
         }
     }
 
-        @GetMapping("/download/{fileName:.+}")
-        public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
-            // Obter o caminho completo do arquivo
-            Path filePath = Paths.get("C:\\Users\\Qintess\\cadastroControl\\cadastroAPI\\src\\main\\uploads\\" + fileName);
-            // Criar um objeto Resource
-            Resource resource = new FileSystemResource(filePath);
-            // Obter o tipo MIME do arquivo
-            String contentType = null;
-            try {
-                contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-            } catch (IOException ex) {
-                // Tratar erro
-            }
-            // Retornar o arquivo
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(contentType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                    .body(resource);
+    @GetMapping("/download/{fileName:.+}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
+        // Obter o caminho completo do arquivo
+        Path filePath = Paths.get("C:\\Users\\Qintess\\cadastroControl\\cadastroAPI\\src\\main\\uploads\\" + fileName);
+        // Criar um objeto Resource
+        Resource resource = new FileSystemResource(filePath);
+        // Obter o tipo MIME do arquivo
+        String contentType = null;
+        try {
+            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+        } catch (IOException ex) {
+            // Tratar erro
         }
+        // Retornar o arquivo
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
+    }
 
 
     @PostMapping(value = "/candidatos")
@@ -126,7 +126,7 @@ public class CandidatosController {
 
     @PutMapping(value = "/candidatos/{id}")
     public ResponseEntity<String> atualizaCandidatos (@PathVariable Integer id, @Valid @RequestBody CandidatosDTO dto) {
-       Candidatos candidatos = candidatosRepository.findFirstById(dto.getId());
+        Candidatos candidatos = candidatosRepository.findFirstById(dto.getId());
         candidatoService.updateCandidatos(id, dto);
         StatusCandidato statusCandidato = statusCandidatoMapper.toEntity(dto.getStatus_candidato());
         Date dt = new Date();

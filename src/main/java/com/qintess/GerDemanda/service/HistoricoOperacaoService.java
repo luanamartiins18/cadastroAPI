@@ -29,29 +29,29 @@ public class HistoricoOperacaoService {
 
     @Transactional
     public void insereHistoricoOperacao(HistoricoOperacao obj) {
-         HistoricoOperacao usuario = new HistoricoOperacao();
-         usuario.setData_final(obj.getData_final());
-         usuario.setData_inicio(obj.getData_inicio());
-         usuario.setVigente(obj.getVigente());
-         usuario.setUsuario(obj.getUsuario());
-         historicoOperacaoRepository.save(usuario);
+        HistoricoOperacao usuario = new HistoricoOperacao();
+        usuario.setData_final(obj.getData_final());
+        usuario.setData_inicio(obj.getData_inicio());
+        usuario.setVigente(obj.getVigente());
+        usuario.setUsuario(obj.getUsuario());
+        historicoOperacaoRepository.save(usuario);
     }
 
-     public List<HistoricoOperacaoDTO> findByOperacaoOrderByDataInicioDesc(Integer id) {
+    public List<HistoricoOperacaoDTO> findByOperacaoOrderByDataInicioDesc(Integer id) {
         return historicoOperacaoRepository.findByByOperacaoOrderByDataInicioDesc(id).stream().map(obj -> historicoToDTO(obj)).collect(Collectors.toList());
 
     }
-     public HistoricoOperacao findUltimoHistoricoByOperacao(Integer id) {
+    public HistoricoOperacao findUltimoHistoricoByOperacao(Integer id) {
         return historicoOperacaoRepository.findUltimoHistoricoByOperacao(id);
     }
 
-     @Transactional
-     public void updateUltimoHistoricoOperacao(Date data_final, String vigente, Integer id) {
+    @Transactional
+    public void updateUltimoHistoricoOperacao(Date data_final, String vigente, Integer id) {
         historicoOperacaoRepository.updateUltimoHistoricoOperacao(data_final, vigente, id);
-     }
+    }
 
-     private HistoricoOperacaoDTO historicoToDTO(HistoricoOperacao obj) {
+    private HistoricoOperacaoDTO historicoToDTO(HistoricoOperacao obj) {
         HistoricoOperacaoDTO dto = historicoOperacaoMapper.toDto(obj);
         return dto;
-     }
-  }
+    }
+}
