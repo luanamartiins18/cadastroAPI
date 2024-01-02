@@ -162,7 +162,7 @@ public class UsuarioService {
     }
 
     public List<HistoricoMaquinasDTO> getListaHistoricoMaquinas() {
-        return historicoMaquinasRepository.findAllByOrderByDataInicioDesc().stream().map(obj -> historicoMaquinasToDTO(obj)).collect(Collectors.toList());
+        return historicoMaquinasRepository.findAllByOrderByIDAsc().stream().map(obj -> historicoMaquinasToDTO(obj)).collect(Collectors.toList());
     }
 
     public UsuarioDTO getUsuarioByCelular(String celular, Integer id) {
@@ -264,6 +264,7 @@ public class UsuarioService {
         objOld.setCep(objNew.getCep());
         objOld.setCelular(objNew.getCelular());
         objOld.setEmail(objNew.getEmail());
+        objOld.setEmailPessoal(objNew.getEmailPessoal());
         objOld.setCodigoRe(objNew.getCodigoRe());
         objOld.setCargo(objNew.getCargo());
         objOld.setCidade(objNew.getCidade());

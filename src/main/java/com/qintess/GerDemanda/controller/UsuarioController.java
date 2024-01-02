@@ -252,25 +252,25 @@ public class UsuarioController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "/funcao")
-    public ResponseEntity<String> insereFuncao(@Valid @RequestBody FuncaoDTO dto) {
-        Usuario usuario = usuarioRepository.findFirstByCodigoRe(dto.getCodigoRe());
-        usuarioService.atualizaFuncao(usuario.getId(), dto);
-        Cargo cargo = cargoMapper.toEntity(dto.getCargo());
-        Date dt = new Date();
+    //@PostMapping(value = "/funcao")
+    //public ResponseEntity<String> insereFuncao(@Valid @RequestBody FuncaoDTO dto) {
+      //  Usuario usuario = usuarioRepository.findFirstByCodigoRe(dto.getCodigoRe());
+        //usuarioService.atualizaFuncao(usuario.getId(), dto);
+    //  Cargo cargo = cargoMapper.toEntity(dto.getCargo());
+    //  Date dt = new Date();
         //Atualizar historico anterior
-        HistoricoUsuario historico = historicoUsuarioService.findUltimoHistoricoByUsuario(usuario.getId());
-        if(historico != null) {
-            historicoUsuarioService.updateUltimoHistorico(dt, "Não", historico.getId());
-        }
+    // HistoricoUsuario historico = historicoUsuarioService.findUltimoHistoricoByUsuario(usuario.getId());
+    //  if(historico != null) {
+        //      historicoUsuarioService.updateUltimoHistorico(dt, "Não", historico.getId());
+    //  }
         //Insere novo historico
-        historicoUsuario.setData_inicio(dt);
-        historicoUsuario.setCargo(cargo);
-        historicoUsuario.setVigente("Sim");
-        historicoUsuario.setUsuario(usuario);
-        historicoUsuarioService.insereHistoricoUsuario(historicoUsuario);
-        return ResponseEntity.ok().build();
-    }
+    //  historicoUsuario.setData_inicio(dt);
+    //  historicoUsuario.setCargo(cargo);
+    //  historicoUsuario.setVigente("Sim");
+    //   historicoUsuario.setUsuario(usuario);
+    //  historicoUsuarioService.insereHistoricoUsuario(historicoUsuario);
+    //  return ResponseEntity.ok().build();
+    // }
 
     @PostMapping(value = "/perfil")
     public ResponseEntity<String> inserePerfil(@Valid @RequestBody PerfilHDTO dto) {
@@ -340,7 +340,7 @@ public class UsuarioController {
         //Atualizar historico anterior
         HistoricoMaquinas historico = historicoMaquinasService.findUltimoHistoricoByMaquinas(usuario.getId());
         if(historico != null) {
-            historicoMaquinasService.updateUltimoHistoricoMaquinas(dto.getData_inicio(), dto.getData_final(), "Não", historico.getId());
+           historicoMaquinasService.updateUltimoHistoricoMaquinas(dto.getData_inicio(), dto.getData_final(), "Não", historico.getId());
         }
         return ResponseEntity.ok().build();
     }

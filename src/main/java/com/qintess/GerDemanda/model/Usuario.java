@@ -63,6 +63,9 @@ public class Usuario {
     private String email;
 
     @Column
+    private String emailPessoal;
+
+    @Column
     private String cidade;
 
     @Column

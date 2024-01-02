@@ -46,8 +46,18 @@ public class LoginController {
         return Objects.nonNull(usuarioDTO) ? ResponseEntity.ok().body(usuarioDTO) : ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
+
+
     @PostMapping(value = "/redefinirsenha")
     public ResponseEntity<GenericResponse> resetSenha(@RequestBody UsuarioDTO dto) {
+        System.out.println("CodigoRe recebido no backend: " + dto.getCodigoRe());
+        Usuario usuario = this.usuarioRepository.findFirstByCodigoRe(dto.getCodigoRe());
+        System.out.println(usuario);
+
+
+        if (usuario == null) {
+            throw new UserNotFoundException();
+        }
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -59,15 +69,10 @@ public class LoginController {
                 return new PasswordAuthentication("backofficedg@qintess.com", "Qin#1006");
             }
         });
-        Usuario usuario = usuarioRepository.findFirstByCodigoRe(dto.getCodigoRe());
-        System.out.println(usuario);
-        if (usuario == null) {
-            throw new UserNotFoundException();
-        }
         String email = usuario.getEmail();
         String token = UUID.randomUUID().toString();
         usuarioService.createPasswordResetTokenForUser(usuario, token);
-        String url = "http://localhost:4200/redefinirSenha/" + token;
+        String url = "http://192.168.2.55:8080/redefinirSenha/" + token;
         String emailBody = "Olá,\n\nVocê solicitou a redefinição da senha da sua conta.\n\n"
                 + "Por favor, clique no link abaixo para redefinir sua senha:\n" + url +"\n\n"
                 + "Se você não solicitou esta redefinição, por favor ignore este e-mail.\n\n"

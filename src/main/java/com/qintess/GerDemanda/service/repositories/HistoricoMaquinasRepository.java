@@ -35,10 +35,10 @@ public interface HistoricoMaquinasRepository extends JpaRepository<HistoricoMaqu
 
 
         @Query(
-                value = "SELECT * FROM historico_maquinas ORDER BY data_inicio DESC",
+                value = "SELECT * FROM historico_maquinas ORDER BY ID ASC",
                 nativeQuery = true
         )
-        List<HistoricoMaquinas> findAllByOrderByDataInicioDesc();
+        List<HistoricoMaquinas> findAllByOrderByIDAsc();
 
         List<HistoricoMaquinas> findAll();
 
