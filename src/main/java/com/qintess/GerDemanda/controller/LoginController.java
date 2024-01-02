@@ -48,6 +48,7 @@ public class LoginController {
 
 
 
+
     @PostMapping(value = "/redefinirsenha")
     public ResponseEntity<GenericResponse> resetSenha(@RequestBody UsuarioDTO dto) {
         System.out.println("CodigoRe recebido no backend: " + dto.getCodigoRe());
