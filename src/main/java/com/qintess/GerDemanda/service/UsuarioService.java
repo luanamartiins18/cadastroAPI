@@ -83,6 +83,8 @@ public class UsuarioService {
     private PasswordResetTokenRepository tokenRepository;
 
 
+
+
     public LoginDTO checkUsuario(LoginDTO dto) {
         LoginDTO usuarioResumidoDTO = loginMapper.toDto(
                 this.usuarioRepository.findFirstByCodigoReAndSenha(dto.getCodigoRe(), dto.getSenha()));
@@ -190,12 +192,6 @@ public class UsuarioService {
 
     private void validacao(UsuarioDTO dto) {
         Integer id = Objects.isNull(dto.getId()) ? 0 : dto.getId();
-        if (Objects.nonNull(getUsuarioByCpf(dto.getCpf(), id))) {
-            throw new ValidationException("O CPF já está em uso");
-        }
-        if (Objects.nonNull(getUsuarioByEmail(dto.getEmail(), id))) {
-            throw new ValidationException("O e-mail já está em uso");
-        }
         if (Objects.nonNull(getUsuarioByRE(dto.getCodigoRe(), id))) {
             throw new ValidationException("O códigoRe já está em uso");
         }
@@ -360,4 +356,8 @@ public class UsuarioService {
         dto.setMemoria(memoria);
         return dto;
     }
+
+
+
+
 }

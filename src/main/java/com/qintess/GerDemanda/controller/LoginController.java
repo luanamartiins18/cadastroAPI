@@ -46,15 +46,11 @@ public class LoginController {
         return Objects.nonNull(usuarioDTO) ? ResponseEntity.ok().body(usuarioDTO) : ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-
-
-
     @PostMapping(value = "/redefinirsenha")
     public ResponseEntity<GenericResponse> resetSenha(@RequestBody UsuarioDTO dto) {
         System.out.println("CodigoRe recebido no backend: " + dto.getCodigoRe());
-        Usuario usuario = this.usuarioRepository.findFirstByCodigoRe(dto.getCodigoRe());
+        Usuario usuario = usuarioRepository.findFirstByCodigoRe(dto.getCodigoRe());
         System.out.println(usuario);
-
 
         if (usuario == null) {
             throw new UserNotFoundException();
