@@ -54,7 +54,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Usuario findFirstByEmailAndIdNot(String email, Integer id);
 
-    Usuario findFirstByCpfAndIdNot(String cpf, Integer id);
+    //Usuario findFirstByCpfAndIdNot(String cpf, Integer id);
 
     Usuario findByCpf(String cpf);
 

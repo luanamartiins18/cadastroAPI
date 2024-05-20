@@ -110,9 +110,9 @@ public class UsuarioService {
         return usuarioMapper.toDto(usuarioRepository.findFirstByEmailAndIdNot(email, id));
     }
 
-    public UsuarioDTO getUsuarioByCpf(String cpf, Integer id) {
-        return usuarioMapper.toDto(usuarioRepository.findFirstByCpfAndIdNot(cpf, id));
-    }
+    //public UsuarioDTO getUsuarioByCpf(String cpf, Integer id) {
+     //   return usuarioMapper.toDto(usuarioRepository.findFirstByCpfAndIdNot(cpf, id));
+  //  }
 
 
     public List<Usuario> getUsuariosAtivos() {
@@ -177,29 +177,29 @@ public class UsuarioService {
     @Transactional
     public void
     insereUsuario(UsuarioDTO dto) {
-        validacao(dto);
+        // validacao(dto);
         Usuario obj = usuarioMapper.toEntity(dto);
         obj.setData_inicio(dto.getData_inicio());
         obj.setNome(obj.getNome().toUpperCase());
         obj.setStatus(STATUS_ATIVO_DESCRICAO);
         obj.setData_final(null);
-        obj.setSenha(DigestUtils.sha256Hex(dto.getCpf()));
+        obj.setSenha(DigestUtils.sha256Hex(dto.getNome()));
         obj.setPrimeiroAcesso(true);
         usuarioRepository.save(obj);
     }
 
-    private void validacao(UsuarioDTO dto) {
-        Integer id = Objects.isNull(dto.getId()) ? 0 : dto.getId();
-        if (Objects.nonNull(getUsuarioByCpf(dto.getCpf(), id))) {
-            throw new ValidationException("O CPF já está em uso");
-        }
-        if (Objects.nonNull(getUsuarioByEmail(dto.getEmail(), id))) {
-            throw new ValidationException("O e-mail já está em uso");
-        }
-        if (Objects.nonNull(getUsuarioByRE(dto.getCodigoRe(), id))) {
-            throw new ValidationException("O códigoRe já está em uso");
-        }
-    }
+    //  private void validacao(UsuarioDTO dto) {
+        //   Integer id = Objects.isNull(dto.getId()) ? 0 : dto.getId();
+        //   if (Objects.nonNull(getUsuarioByCpf(dto.getCpf(), id))) {
+            //        throw new ValidationException("O CPF já está em uso");
+            //    }
+        //    if (Objects.nonNull(getUsuarioByEmail(dto.getEmail(), id))) {
+        //         throw new ValidationException("O e-mail já está em uso");
+            //    }
+        //    if (Objects.nonNull(getUsuarioByRE(dto.getCodigoRe(), id))) {
+            //       throw new ValidationException("O códigoRe já está em uso");
+     //   }
+    //}
 
     private void validaStatus(LoginDTO dto) {
         if (Objects.isNull(dto)) {
@@ -213,7 +213,7 @@ public class UsuarioService {
     @Transactional
     public void updateUsuario(Integer id, UsuarioDTO dto) {
         dto.setId(id);
-        validacao(dto);
+        // validacao(dto);
         Usuario objOld = findById(id);
         usuarioMapperUpdate(dto, objOld);
         usuarioRepository.save(objOld);
@@ -222,7 +222,7 @@ public class UsuarioService {
     @Transactional
     public void updateSenhaUsuario(Integer id, UsuarioDTO dto) {
         dto.setId(id);
-        validacao(dto);
+        //  validacao(dto);
         Usuario objOld = findById(id);
         usuarioSenhaMapperUpdate(dto, objOld);
         usuarioRepository.save(objOld);
@@ -264,6 +264,7 @@ public class UsuarioService {
         objOld.setCep(objNew.getCep());
         objOld.setCelular(objNew.getCelular());
         objOld.setEmail(objNew.getEmail());
+        objOld.setEmail_pessoal(objNew.getEmail_pessoal());
         objOld.setCodigoRe(objNew.getCodigoRe());
         objOld.setCargo(objNew.getCargo());
         objOld.setCidade(objNew.getCidade());
@@ -279,12 +280,12 @@ public class UsuarioService {
         objOld.setPerfil(objNew.getPerfil());
         objOld.setData_inicio(objNew.getData_inicio());
         objOld.setData_final(objNew.getData_final());
-
         if (!dto.getSenha().isEmpty() && !dto.getSenha().equals(obj.getSenha())) {
             obj.setSenha(DigestUtils.sha256Hex(dto.getSenha()));
         }
         objOld.setPrimeiroAcesso(false);
         usuarioRepository.save(objOld);
+
 
     }
 

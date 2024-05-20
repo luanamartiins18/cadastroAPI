@@ -63,6 +63,9 @@ public class Usuario {
     private String email;
 
     @Column
+    private String email_pessoal;
+
+    @Column
     private String cidade;
 
     @Column
@@ -122,6 +125,7 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "fk_memoria")
     private Memoria memoria;
+
     @Column
     private String senha;
 
