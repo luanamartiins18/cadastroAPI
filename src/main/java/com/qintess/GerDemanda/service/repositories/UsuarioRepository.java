@@ -14,6 +14,8 @@ import java.util.List;
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Usuario findFirstByCodigoReAndSenha(String re, String senha);
+    Usuario findFirstByCodigoRe(String codigoRe);
+
 
     @Modifying
     @Query(
@@ -63,8 +65,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<Usuario> findByOrderByNomeAsc();
 
     Usuario findFirstByCodigoReAndIdNot(String re, Integer id);
-
-    Usuario findFirstByCodigoRe(String re);
 
     Usuario findFirstByCelularAndIdNot(String celular, Integer id);
 

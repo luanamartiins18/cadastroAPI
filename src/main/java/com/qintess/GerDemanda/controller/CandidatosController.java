@@ -84,7 +84,7 @@ public class CandidatosController {
 
             // Após ter salvo o documento no diretorio, esse codigo abaixo salva link no table de curriculo
             Curriculo arquivo = new Curriculo();
-            String fileUrl = "http://127.0.0.1:8080/download/" + fileName; // mudança aqui
+            String fileUrl = "http://192.168.2.55:4200/download/" + fileName; // mudança aqui
             arquivo.setLink(fileUrl);
             curriculoRepository.save(arquivo);
 
